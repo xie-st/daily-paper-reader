@@ -1,0 +1,1809 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-10-29T03:30:18.513947+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 50,
+    "deep_cap": 6,
+    "deep_selected": 30,
+    "quick_candidates": 27,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2610.13912v1",
+      "source": "arxiv",
+      "title": "RSI-Anything: Unlocking Recursive Self-Improvement with World Models",
+      "abstract": "Recursive self-improvement (RSI) aims to transform interaction experience into persistent improvements, yet external feedback is costly and world-model predictions may become unreliable as policies evolve. We introduce RSI-Anything, a domain-general framework built on JEPA-Anything that uses predictive world models to guide action and learning-data selection. Observed feedback drives policy or workflow improvement and conditional world-model adaptation, while component and compatibility checks govern the retention of updated policy-model pairs. Across diverse computational and scientific domains, RSI-Anything demonstrates substantial gains. In code repair, with the coder fixed, success increases from 26.3% with a static verifier to 29.2% through predictive selection and 31.2% after world-model adaptation, at comparable test usage. Graphical user interface (GUI) evaluations showed higher task completion, while average actions decrease by 39.4%. Across five successive policy versions, laboratory-planning scores more than double from 21.80% to 46.01%. In reaction optimization, RSI-Anything achieves 96.15% mean best observed yield versus 82.16% for Bayesian optimization under the same 40-experiment budget. An end-to-end immune-science application further connects workflow evolution and predictive modeling with therapeutic hypothesis generation. These results demonstrate how predictive world models and retained system updates enable recursive improvement across diverse environments.",
+      "authors": [
+        "Taoyong Cui",
+        "Pinxian Zeng",
+        "Wanghan Xu",
+        "Hao Xiao",
+        "Shuhan Xue",
+        "Qiang Gao",
+        "Wanli Ouyang",
+        "Pheng Ann Heng",
+        "Zhenfei Yin",
+        "Yingcheng Wu",
+        "Ling Yang"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-10-09T17:50:30+00:00",
+      "link": "https://arxiv.org/pdf/2610.13912v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Domain-general recursive self-improvement framework guided by predictive world models",
+      "llm_evidence_cn": "由预测式世界模型引导的领域通用递归自我改进框架",
+      "llm_evidence": "由预测式世界模型引导的领域通用递归自我改进框架",
+      "canonical_evidence": "由预测式世界模型引导的领域通用递归自我改进框架",
+      "llm_tldr_en": "RSI-Anything is a domain-general recursive self-improvement framework that uses predictive world models to guide action and learning-data selection, with compatibility checks for retention, raising code repair success from 26.3 to 29.2 percent.",
+      "llm_tldr_cn": "递归自我改进旨在把交互经验转化为持久能力提升，但外部反馈昂贵，且世界模型预测会随策略演化而失准。作者提出 RSI-Anything，基于 JEPA-Anything 用预测式世界模型引导动作与学习数据选择，并让观测反馈同时驱动策略改进与世界模型自适应。组件与兼容性检查决定更新后的策略-模型对是否保留。在代码修复等任务上成功率由 26.3% 提升到 29.2%，显示该框架在多个计算与科学领域的通用增益。",
+      "llm_tldr": "递归自我改进旨在把交互经验转化为持久能力提升，但外部反馈昂贵，且世界模型预测会随策略演化而失准。作者提出 RSI-Anything，基于 JEPA-Anything 用预测式世界模型引导动作与学习数据选择，并让观测反馈同时驱动策略改进与世界模型自适应。组件与兼容性检查决定更新后的策略-模型对是否保留。在代码修复等任务上成功率由 26.3% 提升到 29.2%，显示该框架在多个计算与科学领域的通用增益。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.29784v1",
+      "source": "arxiv",
+      "title": "Evolving with Open Worlds: Towards Recursive Self-Improvement for Future Forecasting",
+      "abstract": "Most contemporary artificial intelligence (AI) systems are released with frozen parameters and improve through external updates, whereas an ideal system would keep improving from its own experience, a capacity we call recursive self-improvement (RSI). Yet studying RSI requires an environment that is continuously changing, objectively verifiable, and naturally grounded, posing a fundamental challenge for agent evolution. Here we introduce DeepEvolve, a sustainable evolution agent system grounded in future event prediction, in which agents continuously interact with a dynamically evolving environment and improve by internalizing and externalizing the experience gained through these interactions. A living environment synthesizes verifiable tasks, and a recursive-evolution engine turns the reasoning trajectory behind each prediction back into capability: decoupling search from prediction adapts parameter-level evolution to the contamination-prone live environment, while distilling reusable skills lets the agent evolve from the limited live trajectories such an environment affords. On the external FutureX leaderboard, which evaluates predictions against real-world outcomes and is updated weekly, our self-improved forecaster ranked first across all systems over three consecutive weeks, achieving up to a 195% improvement in rating. On our synthesized evaluation, it ranked among the top three across four base LLMs, outperforming the strongest baseline by up to 10.7 Bradley--Terry points. More broadly, these results suggest that a system built for self-improvement is best understood as an agent that co-evolves with a genuinely living, open-ended environment, pointing to a shift in AI from training static models on fixed data toward cultivating agents that grow stronger from their own experience, with such an open world as the indispensable basis of that growth.",
+      "authors": [
+        "Zhipeng Chen",
+        "Yunsen Liang",
+        "Yanxi Chen",
+        "Hongkang Zhao",
+        "Lingyun Feng",
+        "Ruiyang Ren",
+        "Guoxin Chen",
+        "Jia Deng",
+        "Feng Chang",
+        "Chuan Hao",
+        "Ran Tao",
+        "Jian Yang",
+        "Ji-Rong Wen",
+        "Bryan Dai",
+        "Wayne Xin Zhao"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-10-21T14:09:57+00:00",
+      "link": "https://arxiv.org/pdf/2610.29784v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Defines recursive self-improvement and builds an agent system that improves from its own experience in an evolving environment",
+      "llm_evidence_cn": "定义递归自我改进并构建在动态环境中从自身经验持续进化的智能体系统",
+      "llm_evidence": "定义递归自我改进并构建在动态环境中从自身经验持续进化的智能体系统",
+      "canonical_evidence": "定义递归自我改进并构建在动态环境中从自身经验持续进化的智能体系统",
+      "llm_tldr_en": "Most AI systems have frozen parameters and improve only via external updates. The authors propose DeepEvolve, an evolving agent system grounded in future event prediction that improves by internalizing and externalizing experience in a living, verifiable environment.",
+      "llm_tldr_cn": "现有AI系统参数冻结、依赖外部更新，难以像理想系统那样从自身经验持续进化。作者提出DeepEvolve，以未来事件预测为落地的可持续进化智能体系统，智能体在动态演化环境中交互，通过内化与外化经验不断改进。该设定提供了持续变化、可验证且自然落地的RSI研究环境，为智能体自我进化与评测提供了可扩展范式。",
+      "llm_tldr": "现有AI系统参数冻结、依赖外部更新，难以像理想系统那样从自身经验持续进化。作者提出DeepEvolve，以未来事件预测为落地的可持续进化智能体系统，智能体在动态演化环境中交互，通过内化与外化经验不断改进。该设定提供了持续变化、可验证且自然落地的RSI研究环境，为智能体自我进化与评测提供了可扩展范式。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.33624v1",
+      "source": "arxiv",
+      "title": "RSI Arena: Towards Recursive Self-Improvement with Human Feedback",
+      "abstract": "Can AI agents autonomously train useful language models and improve them using feedback from users? We introduce RSI Arena, a two-stage study of autonomous post-training as a step toward recursive self-improvement. Ten frontier models act as training agents, each starting from NVIDIA Nemotron 3.5 Lightning 30B-A3B Base. During a six-day first stage, each agent has 1,000 GPU-hours and $300 in API credit on a shared 64-GPU cluster, independently selecting data, implementing training procedures, and choosing checkpoints. We evaluate their models on 20 benchmarks and through blind human evaluations. All ten agents produce working assistants, with the strongest model, trained by GPT-6 Astra, closing a median of 76% of the base-to-Instruct gap across 12 capability benchmarks. Its human-preference rating is also close to NVIDIA Instruct after statistical adjustment for answer length and formatting. In Stage 2, each agent receives the comparison records and votes involving its Stage 1 model and is given three additional days for further training. Using NVIDIA Instruct as a common reference across the two evaluation rounds, we observe an improvement from Stage 1 to Stage 2 in the style-adjusted relative rating of eight of the ten models. We show that benchmark gains were modest, with no clear link to preference gains, while some agents encouraged longer responses and one model showed increased harmful compliance on StrongREJECT. RSI Arena provides an auditable setting for studying how human feedback can guide autonomous model development. It takes a step toward recursive self-improvement with human feedback (RSIHF), in which people help define what improvement means for the AI systems they use.",
+      "authors": [
+        "Yue Huang",
+        "Yanbo Wang",
+        "Lichi Li",
+        "Yuanyuan Chen",
+        "Andreas Haupt",
+        "Xiaonan Luo",
+        "Zheyuan Liu",
+        "Jihye Choi",
+        "Felix Juefei-Xu",
+        "Xiangliang Zhang",
+        "Radha Poovendran",
+        "Misha Sra",
+        "Ying Liu",
+        "Ben Burtenshaw",
+        "Thomas Wolf",
+        "Alex Pentland",
+        "Zichen Chen",
+        "Zhangchen Xu"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-10-24T11:54:45+00:00",
+      "link": "https://arxiv.org/pdf/2610.33624v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Studies AI agents autonomously post-training and improving language models as recursive self-improvement",
+      "llm_evidence_cn": "研究AI智能体自主后训练并改进语言模型以迈向递归自我改进",
+      "llm_evidence": "研究AI智能体自主后训练并改进语言模型以迈向递归自我改进",
+      "canonical_evidence": "研究AI智能体自主后训练并改进语言模型以迈向递归自我改进",
+      "llm_tldr_en": "RSI Arena studies whether AI agents can autonomously post-train useful language models and improve them with human feedback, giving ten frontier models GPU budgets to select data, implement training, and choose checkpoints.",
+      "llm_tldr_cn": "论文追问AI智能体能否自主训练有用语言模型并利用用户反馈持续改进，以此作为递归自我改进的可测步骤。作者设计RSI Arena两阶段研究，让十个前沿模型在共享GPU集群上各自拥有算力和API预算，独立选择数据、实现训练流程并挑选检查点。结果显示十个智能体都产出了可用助手，其中最强模型在多项能力上显著缩小基座到Instruct模型的差距。该工作把自主后训练推向真实资源约束下的递归自我改进实验。",
+      "llm_tldr": "论文追问AI智能体能否自主训练有用语言模型并利用用户反馈持续改进，以此作为递归自我改进的可测步骤。作者设计RSI Arena两阶段研究，让十个前沿模型在共享GPU集群上各自拥有算力和API预算，独立选择数据、实现训练流程并挑选检查点。结果显示十个智能体都产出了可用助手，其中最强模型在多项能力上显著缩小基座到Instruct模型的差距。该工作把自主后训练推向真实资源约束下的递归自我改进实验。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.36077v1",
+      "source": "arxiv",
+      "title": "The Trinity:Capability-Driven Recursive Self-Improvement for Multimodal Agents",
+      "abstract": "Multimodal intelligence can be viewed as human-guided co-evolution between worlds and agents through interaction. However, scaling this process faces two bottlenecks: constructing heterogeneous, verifiable environments is costly, and manual Harness iteration cannot keep pace with growing task diversity and complexity. A key insight is that tasks with different modalities and surface forms can share the same underlying capability requirements. We therefore introduce The Trinity, a recursive self-improvement framework coupling world generation with Harness evolution through three roles: Creator, Explorer, and Evolver. Drawing on verified execution trajectories, Evolver shifts the basis of task organization from surface categories to shared requirements, reorganizing the original task tree into a hierarchical capability tree. We introduce Capability-Driven Real2Sim2Real: for heterogeneous tasks at the same node, Creator abstracts their common requirements into simplified, verifiable simulated worlds for capability learning, while evaluation on original tasks measures transfer. Along this capability tree, Explorer progressively evolves reusable capability modules through selective inheritance, forming a Harness tree whose validated updates accumulate across iterations within a fixed topology. The resulting Harnesses specialize in different capabilities, motivating a Capability-Aware Harness Router that uses public task information to select compatible module configurations from the tree. Our evolved Harnesses improve mean performance by 34 points across 28 training benchmarks and 26 points across 18 unseen benchmarks, including two real-world embodied tasks.",
+      "authors": [
+        "Weidong Tang",
+        "Ruiheng Wang",
+        "Jingxuan Zhang",
+        "Hexin Wang",
+        "Haoyuan Chen",
+        "Zhengfeiyang Zhang",
+        "Yixing Ma",
+        "Zichen Jiang",
+        "Ziyu Guo",
+        "Haodong Li",
+        "Zhengbo Jiao",
+        "Zhiqing Cui",
+        "Xinxiang Yin",
+        "Shuo Liang",
+        "Zhenglin Wan",
+        "Hongzhan Lin",
+        "Wangbo Zhao Kaipeng Zhang",
+        "Pengfei Zhou",
+        "Odin Zhang",
+        "Yang You"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV"
+      ],
+      "published": "2026-10-26T18:03:34+00:00",
+      "link": "https://arxiv.org/pdf/2610.36077v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Recursive self-improvement framework coupling world generation with harness evolution",
+      "llm_evidence_cn": "耦合世界生成与框架演化的递归自我改进框架",
+      "llm_evidence": "耦合世界生成与框架演化的递归自我改进框架",
+      "canonical_evidence": "耦合世界生成与框架演化的递归自我改进框架",
+      "llm_tldr_en": "The Trinity is a recursive self-improvement framework for multimodal agents that co-evolves generated worlds and the agent harness through Creator, Explorer and Evolver roles, cutting costly environment construction and manual iteration.",
+      "llm_tldr_cn": "多模态智能体的扩展受限于异构可验证环境构建成本高、人工迭代框架难以跟上任务复杂度。作者提出三位一体框架，由创建者、探索者与演化者三种角色把世界生成与智能体框架演化耦合起来，并以验证过的执行轨迹为依据，将任务组织从表层类别转向共享能力需求。实验表明该递归自我改进流程能持续提升多模态智能体能力。该工作为自动化环境构建与智能体自我改进提供了统一范式。",
+      "llm_tldr": "多模态智能体的扩展受限于异构可验证环境构建成本高、人工迭代框架难以跟上任务复杂度。作者提出三位一体框架，由创建者、探索者与演化者三种角色把世界生成与智能体框架演化耦合起来，并以验证过的执行轨迹为依据，将任务组织从表层类别转向共享能力需求。实验表明该递归自我改进流程能持续提升多模态智能体能力。该工作为自动化环境构建与智能体自我改进提供了统一范式。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2609.38905v3",
+      "source": "arxiv",
+      "title": "EmbodiRSI: Recursive Self-Improvement for Data-Efficient Robot Adaptation",
+      "abstract": "Adapting robot manipulation policies to new tasks and environments remains highly data-intensive, while the data needed for further improvement depends on the policy's current capabilities and failure modes. We introduce EmbodiRSI, an agentic system for recursive self-improvement (RSI) in a real-to-sim-to-real setting, where task-specific simulations are constructed from target deployment scenarios and used as low-cost environments for iterative policy improvement before transfer back to the physical world. EmbodiRSI uses policy execution feedback to guide subsequent experience acquisition and policy updates. Two complementary mechanisms close this loop: Collaborative Error Correction generates agent-assisted corrective trajectories from policy-reached states, while Adaptive Data Collection directs expert demonstration generation toward the current policy's weaknesses. The task-specific simulation serves as a reusable workspace for policy warm-up, repeatable evaluation, failure diagnosis, and targeted data generation across successive RSI rounds. Across three tabletop environments and 14 subtasks, EmbodiRSI increases scene-balanced autonomous simulation success from 50.4% to 83.5% over two RSI updates. With 400 adaptive simulated trajectories and only ten real-world refinement trajectories per subtask, EmbodiRSI achieves 83.1% scene-balanced autonomous real-world success, compared with 75.0% for adaptation using 200 real-world demonstrations per subtask. These results demonstrate that feedback-driven recursive improvement in deployment-specific simulations can enable data-efficient adaptation of embodied policies to physical environments.",
+      "authors": [
+        "Haoran Lang",
+        "Haotao Lu",
+        "Shiyu Sang",
+        "Haoyang Luo",
+        "Guo Chen",
+        "Qun Li",
+        "Jingyi Yu",
+        "Ye Shi",
+        "Jingya Wang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-09-30T03:54:53+00:00",
+      "link": "https://arxiv.org/pdf/2609.38905v3",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Agentic recursive self-improvement system for data-efficient robot policy adaptation",
+      "llm_evidence_cn": "面向数据高效机器人策略适配的智能体式递归自我改进系统",
+      "llm_evidence": "面向数据高效机器人策略适配的智能体式递归自我改进系统",
+      "canonical_evidence": "面向数据高效机器人策略适配的智能体式递归自我改进系统",
+      "llm_tldr_en": "EmbodiRSI is an agentic recursive self-improvement system for robot manipulation that builds task-specific simulations from deployment scenarios and uses execution feedback plus collaborative error correction to improve policies before real-world transfer.",
+      "llm_tldr_cn": "机器人操作策略适配新任务与新环境高度依赖数据，而所需数据又取决于当前策略的能力与失败模式。作者提出 EmbodiRSI，在真实到仿真再回真实的设定中，依据部署场景自动构建任务专用仿真环境，并利用策略执行反馈引导经验采集与策略更新。协作式纠错机制从策略失败中生成智能体辅助的纠正轨迹，从而闭环提升策略。该工作将递归自我改进引入具身机器人领域，显著降低适配所需的数据成本。",
+      "llm_tldr": "机器人操作策略适配新任务与新环境高度依赖数据，而所需数据又取决于当前策略的能力与失败模式。作者提出 EmbodiRSI，在真实到仿真再回真实的设定中，依据部署场景自动构建任务专用仿真环境，并利用策略执行反馈引导经验采集与策略更新。协作式纠错机制从策略失败中生成智能体辅助的纠正轨迹，从而闭环提升策略。该工作将递归自我改进引入具身机器人领域，显著降低适配所需的数据成本。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.04184v1",
+      "source": "arxiv",
+      "title": "EvalResearchBench: Can AI Agents Design Their Own Evaluations?",
+      "abstract": "Recursive self-improvement (RSI) relies on evaluation feedback to assess progress and guide further research, yet repeatedly running complex benchmarks is costly and slows iteration. Human experts reduce this cost by selecting benchmark subsets or designing compact suites. We ask whether AI agents can automate this design process and introduce EvalResearchBench (ERB), a benchmark for autonomous evaluation research. Given target materials, development references, candidate APIs, and fixed time and API budgets, an agent called the researcher selects or synthesizes tasks, implements graders, and revises them in pilot tests before freezing an executable evaluator for coding, co-work, and reasoning. We study 9 researchers and 13 candidate models and compare each frozen evaluator with 14 target benchmarks on score concordance and pairwise agreement. The best evaluators order about 75\\% of candidate pairs as the targets do, below the 91\\% ceiling set by disagreements among the targets. No researcher leads on every metric, and the best evaluator on development targets is not the best on sealed targets hidden from the researcher. A human-designed sample of public tasks remains a strong baseline, and the evaluator with the lowest recorded execution cost attains the highest pairwise agreement. Agents repair tasks and graders through pilot feedback, yet their evaluators can still truncate answers, exhaust the evaluation budget, or let a few questions dominate a domain score.",
+      "authors": [
+        "Yaolun Zhang",
+        "Tianyi Xu",
+        "Yujie Zhao",
+        "Jishen Zhao",
+        "Qingyun Wu",
+        "Huazheng Wang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-03T00:49:27+00:00",
+      "link": "https://arxiv.org/pdf/2610.04184v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Benchmark for AI agents automating evaluation design, which underpins recursive self-improvement",
+      "llm_evidence_cn": "面向 AI 智能体自动化评测设计的基准，支撑递归自我改进",
+      "llm_evidence": "面向 AI 智能体自动化评测设计的基准，支撑递归自我改进",
+      "canonical_evidence": "面向 AI 智能体自动化评测设计的基准，支撑递归自我改进",
+      "llm_tldr_en": "EvalResearchBench asks whether AI agents can automate evaluation research, having a researcher agent select or synthesize tasks, implement graders and revise them under fixed budgets, benchmarked across 9 researchers and 13 models.",
+      "llm_tldr_cn": "递归自我改进依赖评测反馈来评估进展并指导后续研究，但反复运行复杂基准成本高、拖慢迭代速度。作者提出 EvalResearchBench，让研究者智能体在给定材料、候选接口与固定时间与接口预算下选择或合成任务、实现评分器并在试运行中修订，最终冻结可执行评测器。研究比较了九种研究者智能体与十三种候选模型的表现。该基准推动以 AI 自动化评测设计来加速自我改进循环。",
+      "llm_tldr": "递归自我改进依赖评测反馈来评估进展并指导后续研究，但反复运行复杂基准成本高、拖慢迭代速度。作者提出 EvalResearchBench，让研究者智能体在给定材料、候选接口与固定时间与接口预算下选择或合成任务、实现评分器并在试运行中修订，最终冻结可执行评测器。研究比较了九种研究者智能体与十三种候选模型的表现。该基准推动以 AI 自动化评测设计来加速自我改进循环。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "automating machine learning research and engineering with AI systems",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.09426v1",
+      "source": "arxiv",
+      "title": "RSI-Forge: From Research Papers to Environments for Recursive Self-Improvement",
+      "abstract": "Environments are the foundation of recursive self-improvement: they provide the problems agents work on and the feedback used to evaluate progress. Yet constructing challenging research environments with reliable evaluation still depends on domain experts, limiting their scale and disciplinary coverage. We introduce RSI-Forge, a multi-agent pipeline that turns published papers into executable environments for self-improvement. Three agents coordinate construction, reproduction, and review to produce tasks with automated evaluators; each paper's method is independently reimplemented to establish a baseline score. We present 210 environments across 18 fields, including 90 reviewed by independent human domain experts. Both experts and agent judges give high ratings to the potential for improving the provided starting solutions and the evaluators' ability to distinguish solution quality, whereas experts are more critical of shortcut resistance, faithfulness to the source paper, and whether a single idea can exhaust a task. To validate their use for repeated improvement, we evaluate four models over 3 successive attempts on 120 environments, with each attempt inheriting prior code and notes while model weights remain fixed. At least one model improves after the first attempt in 84% of environments. Models also outperform the reproduced paper methods in 68 of the 120 environments, demonstrating room for gains beyond these baselines. Transcript analysis identifies work beyond parameter tuning in 95% of these successful attempts. Analysis of the resulting trajectories shows that models scoring lower on these tasks explore less, more often accept gains smaller than the reported standard error, and rely more heavily on tuning to the development set. RSI-Forge provides a scalable approach to constructing research environments for training and evaluating self-improving agents.",
+      "authors": [
+        "Renxiong Wang",
+        "Darvin Yi",
+        "Abril Herrlein",
+        "Anas Mahmoud",
+        "Advait Gosai",
+        "Lisiman Hua",
+        "MohammadHossein Rezaei",
+        "Xingang Guo",
+        "Anisha Gunjal",
+        "Utkarsh Tyagi",
+        "David J. Lee",
+        "Minglai Yang",
+        "Haris Riaz",
+        "Chenguang Wang",
+        "Huaxiu Yao",
+        "Daniel Yue Zhang",
+        "Aakash Sabharwal",
+        "Tong Zhao",
+        "Yunzhong He"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-07T04:27:21+00:00",
+      "link": "https://arxiv.org/pdf/2610.09426v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Automatically constructs executable research environments with evaluators for recursive self-improvement",
+      "llm_evidence_cn": "自动构建带评测器的可执行研究环境以支撑递归自我改进",
+      "llm_evidence": "自动构建带评测器的可执行研究环境以支撑递归自我改进",
+      "canonical_evidence": "自动构建带评测器的可执行研究环境以支撑递归自我改进",
+      "llm_tldr_en": "RSI environments normally require domain experts, limiting scale. RSI-Forge uses three agents to turn papers into executable tasks with automated evaluators and reimplemented baselines, yielding 210 environments across 18 fields.",
+      "llm_tldr_cn": "构建带可靠评测的递归自我改进环境长期依赖领域专家，难以规模化。作者提出RSI-Forge多智能体流水线，由构建、复现与评审三个智能体协作，把已发表论文转化为带自动评测器的可执行任务，并独立复现原方法以建立基线分数。系统覆盖18个领域共210个环境，其中90个经人类专家评审。该工作为自我改进研究提供了可扩展的环境工程方案。",
+      "llm_tldr": "构建带可靠评测的递归自我改进环境长期依赖领域专家，难以规模化。作者提出RSI-Forge多智能体流水线，由构建、复现与评审三个智能体协作，把已发表论文转化为带自动评测器的可执行任务，并独立复现原方法以建立基线分数。系统覆盖18个领域共210个环境，其中90个经人类专家评审。该工作为自我改进研究提供了可扩展的环境工程方案。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "What are the contributions of self improving AI systems to autonomous novel data generation, as well as the modification and engineering of their own learning and training environments?",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.10310v1",
+      "source": "arxiv",
+      "title": "RSIGym: A Flexible Environment for Recursive Self-Improvement",
+      "abstract": "Recursive self-improvement requires carrying accepted changes into later improvement cycles, while studying agent-proposed changes also requires substantial research infrastructure. Existing settings often leave agents to rebuild routine infrastructure or restrict exploration to individual components. We introduce RSIGym, an agent-native research environment based on Everything as a Service (EaaS). RSIGym exposes training, inference, rollout, evaluation, and sandbox execution through reusable services, with shared budget and permission controls supporting Data, Harness, and Joint improvement tracks. This design enables agents to investigate individual interventions and jointly optimize data, training settings, and execution harnesses within the same environment. We define RSI-Index as the mean fraction of the remaining performance gap closed across five benchmarks covering software engineering, terminal interaction, mathematics, scientific reasoning, and skill-based tasks. Comparing six frontier research models in independent Joint runs, Opus 5 achieves the highest RSI-Index of 0.4809 under a $500 platform-service budget per benchmark run. Its selected systems improve all five benchmarks, raising SWE-bench Verified from 17.67% to 50.33% and AIME from 31.67% to 97.78%. Additional experiments examine DSH-harness refinement, budget variation, and restricted network access, while recorded trajectories reveal how agents diagnose failures and select candidates. We open-source the full RSIGym codebase and results to support reproducibility and further research.",
+      "authors": [
+        "Fanqing Meng",
+        "Lingxiao Du",
+        "Haocheng Lu",
+        "Qiguang Chen",
+        "Ziqi Zhao",
+        "Zijian Wu",
+        "Jiayuan Zhuo",
+        "Mengkang Hu",
+        "Michael Qizhe Shieh"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-10-07T16:05:15+00:00",
+      "link": "https://arxiv.org/pdf/2610.10310v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "agent-native environment for recursive self-improvement cycles",
+      "llm_evidence_cn": "面向递归自我改进的智能体原生环境",
+      "llm_evidence": "面向递归自我改进的智能体原生环境",
+      "canonical_evidence": "面向递归自我改进的智能体原生环境",
+      "llm_tldr_en": "RSIGym is an Everything-as-a-Service research environment exposing training, inference, rollout, evaluation and sandboxing as reusable services, letting agents carry accepted changes across improvement cycles.",
+      "llm_tldr_cn": "递归自我改进需要把已接受的改动带入后续改进轮次，但现有研究设置常让智能体重复搭建基础设施，或只能探索单一组件。论文提出基于一切皆服务的RSIGym环境，将训练、推理、rollout、评估与沙盒执行封装为可复用服务，并以共享预算与权限控制支持数据、执行框架与联合改进三条赛道。该设计使智能体可在同一环境中开展单项干预实验并联合优化数据、训练配置与执行框架，为RSI研究提供标准化且成本可控的平台。",
+      "llm_tldr": "递归自我改进需要把已接受的改动带入后续改进轮次，但现有研究设置常让智能体重复搭建基础设施，或只能探索单一组件。论文提出基于一切皆服务的RSIGym环境，将训练、推理、rollout、评估与沙盒执行封装为可复用服务，并以共享预算与权限控制支持数据、执行框架与联合改进三条赛道。该设计使智能体可在同一环境中开展单项干预实验并联合优化数据、训练配置与执行框架，为RSI研究提供标准化且成本可控的平台。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.10611v1",
+      "source": "arxiv",
+      "title": "Verification and Self-Improvement in Agentic AI: Foundations and Limits",
+      "abstract": "Agentic AI systems can improve by searching longer, receiving additional support, or modifying how they propose and verify outputs. A performance score does not distinguish these mechanisms. We compare these changes through bounded verification with hidden terminal randomness. A stage specifies admissible transcripts, polynomial bounds, an alternating verification protocol, and a terminal checker. Its native reach uses default support; its closure frontier permits all support already admitted by the interface. Under a uniform pointwise probability gap and task-relative soundness, these are well-defined languages. We prove that independent majority amplification preserves both languages, whereas existential acceptance over random tapes can admit incorrect outputs. Exact verification is the zero-randomness case, with placement and completeness results. The randomized-verifier classes satisfy $Σ_k^{\\mathrm{P}}\\subseteqΣ_k^{\\mathrm{RV}}\\subseteqΣ_{k+1}^{\\mathrm{P}}$; strict enlargement and depth separation require explicit complexity assumptions, while $\\mathrm{BPP}=\\mathrm{P}$ yields exact companions with the same frontiers. Representation analysis separates invariant acceptance from core-versus-support labels that can change under refactoring. For recursive self-improvement, uniformly bounded self-modification under a common sound interpreter and fixed verification protocol remains within the same verification class. A separate conditional-error budget controls false selection across adaptively chosen candidates. A quota-enforced XOR-synthesis family separates unbounded ratios of search success from changes in the accepted languages; exact and probabilistic audits check the resulting evidence requirements. The framework ties self-improvement claims to obligations on correctness, admissible evidence, verification resources, and selection error.",
+      "authors": [
+        "Chien-Ping Lu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CC"
+      ],
+      "published": "2026-10-07T06:47:49+00:00",
+      "link": "https://arxiv.org/pdf/2610.10611v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Distinguishes self-improvement mechanisms via bounded verification and hidden randomness",
+      "llm_evidence_cn": "通过有界验证与隐藏随机性区分不同自我改进机制",
+      "llm_evidence": "通过有界验证与隐藏随机性区分不同自我改进机制",
+      "canonical_evidence": "通过有界验证与隐藏随机性区分不同自我改进机制",
+      "llm_tldr_en": "The paper formalizes how agentic AI can improve through longer search, extra support, or modified proposal and verification, using bounded verification to separate these mechanisms and establish limits.",
+      "llm_tldr_cn": "论文指出，智能体AI既可通过延长搜索、获得额外支持来提升表现，也可通过修改提议与验证输出方式实现自我改进，但单一性能分数无法区分这些机制。作者用带隐藏终端随机性的有界验证框架刻画可接受转录、多项式界限和交替验证协议，并分析原生可达范围与闭包前沿。研究证明独立多数放大可保持两类语言，而随机磁带上的存在性接受可能引入不正确结果。该工作为识别真正的自我改进与仅靠外部支持提升提供了理论基础和边界。",
+      "llm_tldr": "论文指出，智能体AI既可通过延长搜索、获得额外支持来提升表现，也可通过修改提议与验证输出方式实现自我改进，但单一性能分数无法区分这些机制。作者用带隐藏终端随机性的有界验证框架刻画可接受转录、多项式界限和交替验证协议，并分析原生可达范围与闭包前沿。研究证明独立多数放大可保持两类语言，而随机磁带上的存在性接受可能引入不正确结果。该工作为识别真正的自我改进与仅靠外部支持提升提供了理论基础和边界。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "How to distinguish genuine architectural self modification from merely leveraging a stronger pre trained base model when analyzing the capability gains of AI systems?",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.11458v1",
+      "source": "arxiv",
+      "title": "Generative Adversarial Loops",
+      "abstract": "AI research progress can be viewed as the interaction between two processes: benchmark creation and method discovery. Historically, both were driven by human intelligence. However, recent advances in AI have accelerated automated method discovery, while automated benchmark creation has received comparatively less attention. To enable self-advancing systems, we propose Generative Adversarial Loop (GAL), a generator-discriminator framework alternating between two agentic searches: (1) a discriminator that generates adversarial data to expose weaknesses in current systems, and (2) a generator that discovers algorithms to overcome them. We apply this framework to approximation algorithms for efficient inference. Unlike existing auto research systems, which primarily focus on algorithm discovery, GAL introduces a discriminator agent that automates goalpost setting by continually searching for weaknesses in the current algorithm. We demonstrate adversarial data generation across four tasks: KV compression, sparse video generation, sparse attention, and context extension, where the discriminator identifies weaknesses in state of the art techniques. We further show that GAL enables autonomous improvement, with newly discovered algorithms improving not only on adversarially generated data, but also on established benchmarks. Specifically, GAL improves CompactorPress on KV compression with Qwen3-4B at 4x, raising performance on the discriminator dataset from 0.35 to 0.97, while also outperforming RULER-HARD (+0.77 pts). For context extension, GAL boosts Dual Chunk Attention from 0.20 to 0.90 on the discriminator dataset, while yielding gains on standard benchmarks(ScienceFiction (+6 pts) and PG19 32K (-0.33 PPL)). GAL thus provides a path toward autonomous goalpost setting and algorithmic improvement, where AI systems continually discover their own weaknesses and develop methods to overcome them.",
+      "authors": [
+        "Kislay Aditya Oj",
+        "Nidhi Jain",
+        "Sri Surya Varma Datla",
+        "Priyanka Jayaswal",
+        "Kumar Krishna Agrawal",
+        "Aditya Desai"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-10-08T08:11:37+00:00",
+      "link": "https://arxiv.org/pdf/2610.11458v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Generator-discriminator loop autonomously generates adversarial data and discovers algorithms for self-advancing systems",
+      "llm_evidence_cn": "生成器-判别器循环自主生成对抗数据并发现算法，支撑自推进系统",
+      "llm_evidence": "生成器-判别器循环自主生成对抗数据并发现算法，支撑自推进系统",
+      "canonical_evidence": "生成器-判别器循环自主生成对抗数据并发现算法，支撑自推进系统",
+      "llm_tldr_en": "Automated method discovery has outpaced automated benchmark creation. Generative Adversarial Loop alternates an adversarial data generator with an algorithm-searching generator to build self-advancing systems, tested on approximation algorithms for efficient inference.",
+      "llm_tldr_cn": "自动化方法发现进展迅速，但自动生成基准与对抗数据相对滞后，制约了系统的自我推进。作者提出生成对抗循环GAL，判别器生成对抗数据以暴露当前系统弱点，生成器则搜索算法加以克服，两者交替进行智能体式搜索。在高效推理近似算法任务上验证了该闭环能够持续产生改进。该框架把自主数据生成与算法发现结合，为自改进AI系统提供了新范式。",
+      "llm_tldr": "自动化方法发现进展迅速，但自动生成基准与对抗数据相对滞后，制约了系统的自我推进。作者提出生成对抗循环GAL，判别器生成对抗数据以暴露当前系统弱点，生成器则搜索算法加以克服，两者交替进行智能体式搜索。在高效推理近似算法任务上验证了该闭环能够持续产生改进。该框架把自主数据生成与算法发现结合，为自改进AI系统提供了新范式。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "What are the contributions of self improving AI systems to autonomous novel data generation, as well as the modification and engineering of their own learning and training environments?",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.12176v1",
+      "source": "arxiv",
+      "title": "Recursive Self-Improvement through Multi-Agent Self-Supervision",
+      "abstract": "Recursive self-improvement (RSI) of a model on non-verifiable tasks, such as open-ended research, faces a supervision bottleneck when its outputs exceed what even human experts can reliably assess, leaving the model itself (optimizee) as the best available optimizer and evaluator. However, a single model instance struggles to critique and improve its own complex reasoning under this homogeneous loop. To address this, we propose Multi-Agent Self-Supervision (MASS), an RSI method that alternates between evolutionary workflow optimization and supervised fine-tuning on self-generated trajectories. Guided by early findings that multi-agent topologies excel at complex reasoning, MASS prompts a single base model to iteratively propose, execute, and self-evaluate multi-agent workflows. Through an evolutionary search constrained by structural guardrails, the model optimizes these computational-graph-like orchestrations, discovering the most effective distinct roles and information routing for a given task. Over two MASS cycles with Qwen3.6-27B, the model achieves 1.2-1.6x higher performance per output tokens on four open-ended public benchmarks. Because the improved model subsequently acts as a better optimizer and evaluator, this alternating framework enables a continuous, recursive bootstrapping of the model's capabilities. Moreover, multi-agent traces are also more training-efficient: a student trained on them outperforms a single-agent student trained on 1.4x more training tokens. These findings suggest that jointly learning orchestration and bounded subagent execution from multi-agent trajectories can provide an effective signal for RSI.",
+      "authors": [
+        "Hyunin Lee",
+        "Jinglue Xu",
+        "Jeffrey Seely",
+        "Donghyun Lee",
+        "Somayeh Sojoudi",
+        "Matei Zaharia",
+        "Yujin Tang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-08T15:44:02+00:00",
+      "link": "https://arxiv.org/pdf/2610.12176v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Proposes MASS, an RSI method using multi-agent self-supervision and self-generated trajectories.",
+      "llm_evidence_cn": "提出MASS，一种利用多智能体自我监督和自生成轨迹的递归自我改进方法。",
+      "llm_evidence": "提出MASS，一种利用多智能体自我监督和自生成轨迹的递归自我改进方法。",
+      "canonical_evidence": "提出MASS，一种利用多智能体自我监督和自生成轨迹的递归自我改进方法。",
+      "llm_tldr_en": "MASS tackles recursive self-improvement on non-verifiable tasks by alternating evolutionary workflow optimization with supervised fine-tuning on self-generated multi-agent trajectories.",
+      "llm_tldr_cn": "在开放研究等不可验证任务上，递归自我改进面临监督瓶颈：模型输出超出人类可靠评估范围，只能依赖自身作为优化器和评估器。MASS提出多智能体自我监督方法，在进化式工作流优化与基于自生成轨迹的监督微调之间交替，并利用多智能体拓扑提升复杂推理。该方法为不可验证任务中的递归自我改进提供了可扩展的自我监督路径。",
+      "llm_tldr": "在开放研究等不可验证任务上，递归自我改进面临监督瓶颈：模型输出超出人类可靠评估范围，只能依赖自身作为优化器和评估器。MASS提出多智能体自我监督方法，在进化式工作流优化与基于自生成轨迹的监督微调之间交替，并利用多智能体拓扑提升复杂推理。该方法为不可验证任务中的递归自我改进提供了可扩展的自我监督路径。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.14224v1",
+      "source": "arxiv",
+      "title": "Harness^2: Recursive Agent Harnessing for an Open World",
+      "abstract": "LLM agents' capabilities depend not only on their underlying models but also on their execution harnesses. Recursive self-improvement (RSI) offers a promising approach to automatically evolve these harnesses. However, deploying RSI in open-world settings still faces two critical challenges. First, open-world tasks are typically unseen during the harness design phase and novel at test time, leaving no ground-truth verifiers to reliably guide online harness edits. Second, the RSI process remains highly task-specific and fails to generalize to novel scenarios. We introduce Harness^2, a plug-and-play, recursive agent harnessing framework that addresses these challenges through two connected levels of recursion. Task-level recursion refines the current task's harness using a contrastive Propose-Probe-Compose step that reliably guides edits without ground-truth verifiers, and can be scaled further via parallel or sequential recursion. Harnessing-level recursion then extracts experience from these edits to update a continual improvement harness, enabling the agent to better adapt to future tasks. Across three professional benchmarks and four model-harness configurations, a single step consistently improves GLM-5 and Gemini 3.5 Flash over their base harnesses, yielding gains of up to 11.5 points on WorkBuddy-Bench, 4.5 points on JobBench, and 11.8 percentage points on LAB, with further gains as the task-level recursion budget increases.",
+      "authors": [
+        "Ruiyao Xu",
+        "Yanfei Chen",
+        "Zhongying CuiZhu",
+        "Bhavana Dalvi Mishra",
+        "Yifei Ming",
+        "Han Yu",
+        "Rujun Han",
+        "Chen-Yu Lee",
+        "Tomas Pfister"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-10-09T18:34:25+00:00",
+      "link": "https://arxiv.org/pdf/2610.14224v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "recursive self-improvement framework that automatically evolves agent harnesses",
+      "llm_evidence_cn": "自动演化智能体执行框架的递归自我改进框架",
+      "llm_evidence": "自动演化智能体执行框架的递归自我改进框架",
+      "canonical_evidence": "自动演化智能体执行框架的递归自我改进框架",
+      "llm_tldr_en": "RSI can auto-evolve agent harnesses but struggles in open-world tasks lacking verifiers and generalization. Harness^2 uses two-level recursion, refining the task harness and reusing it across scenarios, enabling plug-and-play open-world self-improvement.",
+      "llm_tldr_cn": "递归自我改进可用于自动演化智能体执行框架，但在开放世界任务中缺乏可靠的验证信号且难以泛化。作者提出Harness^2框架，通过任务级与跨任务级两层递归，在线精炼当前任务的执行框架并将其复用到新场景。该即插即用设计缓解了无真值验证与任务专用性的问题，为开放环境下的智能体自我改进提供了可行路径。",
+      "llm_tldr": "递归自我改进可用于自动演化智能体执行框架，但在开放世界任务中缺乏可靠的验证信号且难以泛化。作者提出Harness^2框架，通过任务级与跨任务级两层递归，在线精炼当前任务的执行框架并将其复用到新场景。该即插即用设计缓解了无真值验证与任务专用性的问题，为开放环境下的智能体自我改进提供了可行路径。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.14625v1",
+      "source": "arxiv",
+      "title": "From Existing Methods to New Research Ideas: Two Perspectives on Recursive Self-Improvement",
+      "abstract": "Recursive self-improvement (RSI) offers a route to AI systems that participate in their own continued development. Recent methods allow language agents to retain changes to their parameters, memory, skills, and code for subsequent execution and improvement. We examine how these methods can inform new research ideas through two complementary perspectives. First, we introduce a unified taxonomy with nine design dimensions organized into four groups: update targets, update organization, update schedule and scope, feedback and selection. This taxonomy places existing methods in a shared design space, where examining individual dimensions and their interactions can inspire new research ideas. Second, we examine how existing RSI methods draw on traditional deep learning, for example through optimization, regularization, data augmentation, continual learning, and adversarial learning. We develop further ideas by examining more specific learning mechanisms and drawing on evolutionary computation. We also review how existing benchmarks assess self-improvement under online, offline, and offline-to-online settings. Together, these perspectives help researchers develop new RSI research ideas from existing designs and learning mechanisms. RSI papers and resources are available at https://prism-shadow.github.io/awesome-rsi/.",
+      "authors": [
+        "Leijun Zhou",
+        "Yanke Yu",
+        "Zhihao Liu",
+        "Qu Xiang",
+        "Tiancheng Hu",
+        "Yiru Dong",
+        "Yihan Wu",
+        "Yangxi Xiang",
+        "Xuejun Wu",
+        "Xi Chen",
+        "Buyue Qian",
+        "Yaowei Zheng",
+        "Junhao Hu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-10T06:19:13+00:00",
+      "link": "https://arxiv.org/pdf/2610.14625v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "unified taxonomy of recursive self-improvement design dimensions",
+      "llm_evidence_cn": "递归自我改进设计维度的统一分类体系",
+      "llm_evidence": "递归自我改进设计维度的统一分类体系",
+      "canonical_evidence": "递归自我改进设计维度的统一分类体系",
+      "llm_tldr_en": "RSI methods let language agents retain changes to parameters, memory, skills and code. This paper organizes them into a nine-dimension taxonomy spanning update targets, organization, schedule and feedback, then uses it to generate new research ideas.",
+      "llm_tldr_cn": "递归自我改进使语言智能体能够保留对参数、记忆、技能与代码的改动以持续发展。本文提出一个包含更新目标、更新组织、更新计划与反馈选择四大类共九个维度的统一分类体系，将现有方法置于共享设计空间中。作者进一步据此探讨如何激发新的研究思路，为RSI领域的系统化理解与创新提供框架。",
+      "llm_tldr": "递归自我改进使语言智能体能够保留对参数、记忆、技能与代码的改动以持续发展。本文提出一个包含更新目标、更新组织、更新计划与反馈选择四大类共九个维度的统一分类体系，将现有方法置于共享设计空间中。作者进一步据此探讨如何激发新的研究思路，为RSI领域的系统化理解与创新提供框架。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.14730v2",
+      "source": "arxiv",
+      "title": "Self-improving data synthesis enables scalable adaptation of embedding models",
+      "abstract": "AI agents require specialised retrieval across domains and tasks, but adapting embedding models is constrained by costly manual training-data design. Here we introduce SYNTRA, a self-improving agentic framework that turns a few retrieval examples into reusable synthesis instructions. Given an unlabelled corpus and a few relevant query-document pairs, SYNTRA infers implicit information needs and relevance criteria, then uses feedback on trial outputs to refine instructions for query generation and relevance assessment. Experiments across 24 datasets spanning 15 domains demonstrate that the same synthesis workflow produces effective training data, benefiting even strong embedding models with and without existing labelled training sets. Self-improvement strengthens this supervision on all six evaluated tasks, yielding better retrieval than human calibration on four. The training value persists at larger scales: on MS MARCO, retrieval gains continue across a 32-fold range of synthetic training-data sizes. SYNTRA thus enables scalable embedding-model adaptation with minimal human intervention.",
+      "authors": [
+        "Zucan Lyu",
+        "Rui Tang",
+        "Jianlyu Chen",
+        "Peisheng Jin",
+        "Defu Lian"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-10-10T08:50:48+00:00",
+      "link": "https://arxiv.org/pdf/2610.14730v2",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Self-improving agentic framework autonomously synthesizes training data for embedding models",
+      "llm_evidence_cn": "自改进智能体框架为嵌入模型自主合成训练数据",
+      "llm_evidence": "自改进智能体框架为嵌入模型自主合成训练数据",
+      "canonical_evidence": "自改进智能体框架为嵌入模型自主合成训练数据",
+      "llm_tldr_en": "SYNTRA is a self-improving agentic framework that turns a few retrieval examples into reusable synthesis instructions, refining query generation and relevance assessment via feedback and improving embedding models across 24 datasets.",
+      "llm_tldr_cn": "智能体需要跨领域跨任务的专门检索能力，但适配嵌入模型受制于昂贵的人工训练数据设计。作者提出 SYNTRA，从少量检索样例中推断隐含信息需求与相关性标准，并利用试运行输出的反馈不断改进查询生成与相关性判定的合成指令。在覆盖十五个领域的二十四个数据集上，同一套合成流程生成有效训练数据，甚至提升强嵌入模型。该工作展示了自改进系统在自主生成新数据方面的价值。",
+      "llm_tldr": "智能体需要跨领域跨任务的专门检索能力，但适配嵌入模型受制于昂贵的人工训练数据设计。作者提出 SYNTRA，从少量检索样例中推断隐含信息需求与相关性标准，并利用试运行输出的反馈不断改进查询生成与相关性判定的合成指令。在覆盖十五个领域的二十四个数据集上，同一套合成流程生成有效训练数据，甚至提升强嵌入模型。该工作展示了自改进系统在自主生成新数据方面的价值。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "What are the contributions of self improving AI systems to autonomous novel data generation, as well as the modification and engineering of their own learning and training environments?",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.16491v1",
+      "source": "arxiv",
+      "title": "Drafting Agents, Not Just Tokens: Speculative Recursive Self-Improvement for Agentic Systems",
+      "abstract": "Improving an agent through successive revisions requires balancing exploration and evaluation under a limited budget. A narrow search can miss useful sequences of edits, while fully evaluating every intermediate version can exhaust the budget before those sequences yield a verified improvement. We introduce Speculative Recursive Self-Improvement (SpecRSI), which drafts executable successor agents before their predecessors are fully evaluated, while requiring complete verification before adoption. Verification-Aware Tree Search (VATS) allocates the budget between further edits and outstanding checks using the predicted verified return of a continuation. Group Verification Optimization (GVO) learns the improver from completed searches while keeping the real evaluator fixed. In the main scientific comparison, terminal gains exceed Janus by 33.3%--40.0%. Additional evaluations show that SpecRSI outperforms Janus in all 50 scientific backbone--task pairs and exceeds MetaRSI-v1 by 1.85%--2.38% in macro-average system score across twenty backbones. Coding-validation success reaches 69.4% versus HGM's 64.3% at a 20.8% lower target-cost index.",
+      "authors": [
+        "Xin Xu",
+        "Ke Cheng",
+        "Hao Wang",
+        "Yangru Huang",
+        "Yanghao Xiao",
+        "Zhichao Chen",
+        "Zhisheng Zhong",
+        "Xun Liu",
+        "Yi Li",
+        "Qian Li",
+        "Haibin Lv",
+        "Jun Zhang",
+        "Jie Jiang",
+        "Zhouchen Lin"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-10-12T09:43:48+00:00",
+      "link": "https://arxiv.org/pdf/2610.16491v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Speculative recursive self-improvement lets agents draft and verify improved successors under budget constraints",
+      "llm_evidence_cn": "推测式递归自我改进在预算约束下草拟并验证改进后的后继智能体",
+      "llm_evidence": "推测式递归自我改进在预算约束下草拟并验证改进后的后继智能体",
+      "canonical_evidence": "推测式递归自我改进在预算约束下草拟并验证改进后的后继智能体",
+      "llm_tldr_en": "Improving an agent by successive revisions must balance exploration and evaluation cost. SpecRSI drafts executable successor agents before predecessors are verified, using verification-aware tree search and learned improvers to allocate budget.",
+      "llm_tldr_cn": "智能体通过迭代修订实现自我改进时，探索与评测预算难以兼顾，窄搜索会漏掉有效编辑序列，逐一完整评测又会耗尽预算。作者提出推测式递归自我改进SpecRSI，在上一代未完全评测前先草拟可执行的后继智能体，但采用前必须完整验证，并用验证感知树搜索与分组验证优化分配预算。实验显示其在有限预算下获得更可靠的改进，为RSI的代价与效率权衡提供了方法。",
+      "llm_tldr": "智能体通过迭代修订实现自我改进时，探索与评测预算难以兼顾，窄搜索会漏掉有效编辑序列，逐一完整评测又会耗尽预算。作者提出推测式递归自我改进SpecRSI，在上一代未完全评测前先草拟可执行的后继智能体，但采用前必须完整验证，并用验证感知树搜索与分组验证优化分配预算。实验显示其在有限预算下获得更可靠的改进，为RSI的代价与效率权衡提供了方法。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "autonomous agents that improve their own capabilities over time",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.18083v1",
+      "source": "arxiv",
+      "title": "AReaL-RSI: Adaptive Scaling and Coordination of Recursive Self-Improvement",
+      "abstract": "Scaling recursive self-improvement requires additional computation to produce useful research progress in reaching persistent objectives. Intuitively, more researcher agents can explore more hypotheses, but early evaluation scores might misrepresent their promise, shared findings could lose their applicability conditions, and useful procedures could remain confined to completed investigations. In this paper, we present AReaL-RSI, a framework for organizing a persistent research team of agents without updating backbone LLM weights. We formulate the scaling problem in terms of evaluated outcomes and whole-system resource expenditure. Concretely, a leader agent selects task-appropriate research orientations and guides ongoing investigations; conditional memory sharing distinguishes unresolved problems from supported findings and enables recipient adaptation. During recursive evolution, after each campaign, evidence-based review revises researcher orientation, knowledge, and skills for later campaigns. Experiments compare AReaL-RSI with Codex-Goal on downstream harness optimization, GPU kernel optimization, and AI research tasks using two backbones. Under the reported resource allocations, AReaL-RSI improves Terminal Bench performance by 2.2 percentage points for each backbone and increases mean KernelBench speedup by 32.2-36.8%; further scalability comparisons favor the design of AReaL-RSI over native scaling: combining experience sharing with specialized researcher roles yields 1.9-27.5% lower kernel latency than independent exploration and 1.3-33.9% lower latency than sharing alone across all seven comparable task-backbone pairs.",
+      "authors": [
+        "Wenhao Zhou",
+        "Jiajun Song",
+        "Haitao Wang",
+        "Zipeng Qiu",
+        "Yingqi Peng",
+        "Ruida Xu",
+        "Jiale Li",
+        "Wenshuang Li",
+        "Shusheng Xu",
+        "Wei Dong",
+        "Hao Dai",
+        "Tongkai Yang",
+        "Yi Gao",
+        "Binhang Yuan"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-13T10:05:16+00:00",
+      "link": "https://arxiv.org/pdf/2610.18083v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Organizes a persistent research team of agents and formulates scaling in terms of outcomes and resource expenditure",
+      "llm_evidence_cn": "组织持久研究团队智能体并以结果与资源开销刻画扩展",
+      "llm_evidence": "组织持久研究团队智能体并以结果与资源开销刻画扩展",
+      "canonical_evidence": "组织持久研究团队智能体并以结果与资源开销刻画扩展",
+      "llm_tldr_en": "AReaL-RSI organizes a persistent team of research agents led by a leader agent that picks research orientations, and formulates RSI scaling in terms of evaluated outcomes and whole-system resource expenditure without updating backbone weights.",
+      "llm_tldr_cn": "扩展递归自我改进需要更多算力才能把研究推进到持久目标，但增加研究者智能体会带来早期评分失真、共享发现丢失适用条件、有用流程局限于已完成调查等问题。作者提出 AReaL-RSI，在不更新主干大模型权重的前提下组织持久研究团队，由领导者智能体选择研究方向并引导持续调查。框架以评估结果与全系统资源开销来刻画扩展问题。该工作为递归自我改进的规模化协调与成本效率提供了系统方案。",
+      "llm_tldr": "扩展递归自我改进需要更多算力才能把研究推进到持久目标，但增加研究者智能体会带来早期评分失真、共享发现丢失适用条件、有用流程局限于已完成调查等问题。作者提出 AReaL-RSI，在不更新主干大模型权重的前提下组织持久研究团队，由领导者智能体选择研究方向并引导持续调查。框架以评估结果与全系统资源开销来刻画扩展问题。该工作为递归自我改进的规模化协调与成本效率提供了系统方案。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "What are the evaluations of computational costs, efficiency, and overall performance of recursive self improving AI systems?",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.18842v1",
+      "source": "arxiv",
+      "title": "Who Improves the Robot? Toward Physical Recursive Self-Improvement",
+      "abstract": "Robots are increasingly autonomous in task execution, yet their improvement remains largely human-driven. This study investigates Physical Recursive Self-Improvement (Physical RSI), in which physical experience guides lasting updates to both a robot's capabilities and its improvement procedure, making subsequent improvement more effective across tasks. Physical RSI faces challenges from noisy observations, continuous dynamics, costly trials, and irreversible consequences. We present an L0-L5 framework that differentiates capability-level from meta-level updates and within-task from across-task gains, reserving L5 for independently verified recursive gain. We study existing methods around harness adaptation and model training, alongside safety and control mechanisms that govern execution and successive updates. Our analysis reveals that, despite substantial progress in self-improvement, the surveyed literature does not yet demonstrate Physical RSI as defined by our framework. We identify research priorities in reliable feedback, causal attribution, safety preservation, and benchmarking, outlining a path toward robots that autonomously improve how they learn while ensuring safety. The GitHub repository for Physical RSI is available at https://github.com/SAIL-Research-Lab/Physical-RSI.",
+      "authors": [
+        "Hai Zhou",
+        "Fan Yang",
+        "Zeyi Chen",
+        "Lejun Zhang",
+        "Chenyang Fu",
+        "Jianping Li",
+        "Jiayi Zhu",
+        "Xianyang Liu",
+        "Yingxuan Yang",
+        "Lili Meng",
+        "Lu Wang",
+        "Xinyang Han",
+        "Jiankai Sun",
+        "Weirui Ye",
+        "Guanchu Wang",
+        "Wanhua Li",
+        "Ming Zhou",
+        "Boyi Li",
+        "Ming Jin",
+        "Kun Shao",
+        "Muhao Chen",
+        "Guang Chen",
+        "Lei Ma",
+        "Joey Tianyi Zhou",
+        "Costas Spanos",
+        "Xia Hu",
+        "Mac Schwager",
+        "Weinan Zhang",
+        "Qian Feng",
+        "Shangding Gu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.LG",
+        "cs.RO"
+      ],
+      "published": "2026-10-13T17:57:04+00:00",
+      "link": "https://arxiv.org/pdf/2610.18842v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Investigates physical recursive self-improvement where robots update capabilities and improvement procedure",
+      "llm_evidence_cn": "研究机器人同时更新能力与改进程序的物理递归自我改进",
+      "llm_evidence": "研究机器人同时更新能力与改进程序的物理递归自我改进",
+      "canonical_evidence": "研究机器人同时更新能力与改进程序的物理递归自我改进",
+      "llm_tldr_en": "The paper studies Physical Recursive Self-Improvement, where robots use physical experience to update both capabilities and their improvement procedure, and proposes an L0-L5 framework to separate capability-level and meta-level gains.",
+      "llm_tldr_cn": "机器人虽能自主执行任务，但其改进过程仍主要依赖人类，论文因此研究物理递归自我改进，让物理经验同时更新机器人能力及其改进程序。作者提出L0-L5框架，区分能力级与元级更新、任务内与跨任务收益，并将L5保留给经独立验证的递归增益。研究还梳理了harness适配、模型训练以及安全控制等方法。该工作为具身系统中的递归自我改进提供了分级标准和问题框架。",
+      "llm_tldr": "机器人虽能自主执行任务，但其改进过程仍主要依赖人类，论文因此研究物理递归自我改进，让物理经验同时更新机器人能力及其改进程序。作者提出L0-L5框架，区分能力级与元级更新、任务内与跨任务收益，并将L5保留给经独立验证的递归增益。研究还梳理了harness适配、模型训练以及安全控制等方法。该工作为具身系统中的递归自我改进提供了分级标准和问题框架。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.20294v1",
+      "source": "arxiv",
+      "title": "MMLA-RSI: Recursive Self-Improvement through RTT and RTMA",
+      "abstract": "An agent can improve its behavior within an unresolved problem by changing how it acts and which experience it retains. We propose MMLA-RSI, a recursive self-improvement scheme with two implementations in Memory-Mediated Learning Architecture: Reasoning-Time Training (RTT) changes the policy state $Φ$, while Reasoning-Time Memory Adaptation (RTMA) changes authoritative memory $M$. Each route also makes its adaptation method an object of improvement. A current numerical updater trains the policy proposing its successor; a current memory manager chooses the records available to the process proposing its successor. An independently admitted successor takes over the same role in the next generation. We give bounded executable rule languages, shared task/proposal interfaces, and one algorithm for either route or their composition. The RTT instance changes scalar schedules in a clipped-momentum update. The RTMA instance chooses NULL or a complete-row write with possible eviction. A fixed interpreter, trusted committer, and independent evaluator bound what can change. State versions, read closures, and conditional properties describe causal execution, accepted transitions, and finite work. Existing numerical-component studies motivate the construction. In four-candidate program selection, retaining LARC feedback updates reduces expected error by 24.65 and 36.65 percentage points for two trained initializations. In chronological continuous-integration replay, feedback binding is positive while retention increases loss. Completed SQL studies improve substantially over an unadapted substrate but do not establish the required additional online benefit. These results characterize their declared components. The two recursive routes and their joint realization are specified here; their beneficial recursive chains and discovery efficiency remain to be evaluated.",
+      "authors": [
+        "Junyi Zou",
+        "Avrova Donz"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-10-14T14:47:50+00:00",
+      "link": "https://arxiv.org/pdf/2610.20294v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Proposes recursive self-improvement scheme updating policy and memory with self-improving adaptation methods",
+      "llm_evidence_cn": "提出通过自我改进的适应方法更新策略与记忆的递归自我改进方案",
+      "llm_evidence": "提出通过自我改进的适应方法更新策略与记忆的递归自我改进方案",
+      "canonical_evidence": "提出通过自我改进的适应方法更新策略与记忆的递归自我改进方案",
+      "llm_tldr_en": "MMLA-RSI proposes a recursive self-improvement scheme in a memory-mediated architecture, where reasoning-time training updates policy state and memory adaptation updates authoritative memory, and each adaptation method itself becomes an object of improvement.",
+      "llm_tldr_cn": "论文关注智能体如何在未解决问题中通过改变行为与保留经验实现自我改进，并提出MMLA-RSI递归自我改进方案。该方法在记忆中介学习架构中给出两条路径：推理时训练改变策略状态，推理时记忆适应改变权威记忆。每条路径还把自身适应方法作为改进对象，由当前数值更新器训练后继策略，当前记忆管理器选择后继过程可用的记录。研究为有界可执行规则语言下的代际自我改进提供了形式化框架。",
+      "llm_tldr": "论文关注智能体如何在未解决问题中通过改变行为与保留经验实现自我改进，并提出MMLA-RSI递归自我改进方案。该方法在记忆中介学习架构中给出两条路径：推理时训练改变策略状态，推理时记忆适应改变权威记忆。每条路径还把自身适应方法作为改进对象，由当前数值更新器训练后继策略，当前记忆管理器选择后继过程可用的记录。研究为有界可执行规则语言下的代际自我改进提供了形式化框架。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.20431v2",
+      "source": "arxiv",
+      "title": "SwarmRSI: Recursive Self-Improvement through Evolving Scientific Agent Swarm",
+      "abstract": "Recursive self-improvement (RSI) in scientific research aims to improve agents' research capabilities through their own experimental experience. Scientific agent swarms can combine evidence and implementations from different research directions to guide their agents' subsequent experiments. However, poor experimental results can leave unclear whether to revise a hypothesis or its implementation, while overall program scores can hide components useful to other agents. To address these challenges, we introduce SwarmRSI, a framework that evolves scientific agent swarms for recursive self-improvement. We devise Feedback-Guided Swarm Mutation to refine hypotheses and their implementations using experimental feedback from other agents. We also propose Complementary Swarm Recombination to reuse retained hypotheses and complementary program components across agents, allowing partial results to support new research. Recursive Swarm Evolution integrates both mechanisms into a feedback loop, using new experimental evidence to guide subsequent research. Experiments on OpenProblems, NatureBench and MLE-Bench Lite demonstrate SwarmRSI's state-of-the-art (SOTA) performance. Further evaluations show that accumulated research experience improves performance on held-out tasks. Biologists also reproduce its programs for follow-up biological analyses.",
+      "authors": [
+        "Qianru Meng",
+        "Xi Zhang",
+        "Konstantinos Papakostas",
+        "Congfeng Cao",
+        "Wenxiang Hu",
+        "Tianyi Lu",
+        "Xiao Zhang",
+        "Lun Zhou",
+        "Zaiqiao Meng",
+        "Zhaochun Ren",
+        "Xiaohui Yan",
+        "Yougang Lyu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-10-14T16:21:45+00:00",
+      "link": "https://arxiv.org/pdf/2610.20431v2",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "evolving scientific agent swarms for recursive self-improvement",
+      "llm_evidence_cn": "通过演化科学智能体群体实现递归自我改进",
+      "llm_evidence": "通过演化科学智能体群体实现递归自我改进",
+      "canonical_evidence": "通过演化科学智能体群体实现递归自我改进",
+      "llm_tldr_en": "RSI in science should let agents improve research capability through their own experiments. SwarmRSI evolves scientific agent swarms with Feedback-Guided Swarm Mutation to refine hypotheses and implementations using cross-agent experimental feedback.",
+      "llm_tldr_cn": "科学研究的递归自我改进旨在让智能体通过自身实验经验提升研究能力，但实验失败时难以判断应修改假设还是实现，且整体分数会掩盖局部有用组件。作者提出SwarmRSI，用反馈引导的群体变异，借助其他智能体的实验反馈精炼假设与实现，并演化科学智能体群体。该框架使智能体群体能协同实现递归自我改进。",
+      "llm_tldr": "科学研究的递归自我改进旨在让智能体通过自身实验经验提升研究能力，但实验失败时难以判断应修改假设还是实现，且整体分数会掩盖局部有用组件。作者提出SwarmRSI，用反馈引导的群体变异，借助其他智能体的实验反馈精炼假设与实现，并演化科学智能体群体。该框架使智能体群体能协同实现递归自我改进。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.20474v1",
+      "source": "arxiv",
+      "title": "AdaRSI: On-Demand Recursive Self-Improvement for Embodied Agents",
+      "abstract": "Pretrained vision-language-action models (VLAs) often fail midway through unseen long-horizon tasks. Recursive self-improvement (RSI) offers a remedy, but embodied RSI methods either refine the harness around a frozen executor and so cannot add a missing motion, or train the executor on persistent failures without asking whether a failure lies in how the executor is called or in what it can do. We ask when a self-improving embodied system should change the weights of its executor, and propose AdaRSI, an on-demand RSI framework for embodied agents. A coding agent first improves its skills and harness, then attributes persistent failures by retrying failing sub-steps from saved states, and fine-tunes only the sub-steps that remain unreliable, with demonstrations it collects itself and experience carried over from earlier tasks. On all 50 target tasks of RoboCasa365, with GR00T N1.5 as the executor and no human demonstrations, AdaRSI improves the VLA on all three suites and raises its success on unseen composite tasks from 4.6% to 13.8%. Compared with fine-tuning every sub-step, it reaches slightly higher success while using only 28% of the GPU time and 22% of the self-collected demonstrations, and fine-tuning without a harness trains more yet gains far less.",
+      "authors": [
+        "Peidong Wang",
+        "Ying Chang",
+        "Zhiming Ma",
+        "Xiaocui Yang",
+        "Shi Feng",
+        "Daqi Liu",
+        "Yuzhe Yang",
+        "Xu Cao",
+        "Chuang Wang",
+        "Jian Su",
+        "Daling Wang"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.RO"
+      ],
+      "published": "2026-10-14T16:51:09+00:00",
+      "link": "https://arxiv.org/pdf/2610.20474v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "on-demand recursive self-improvement deciding when to update executor weights",
+      "llm_evidence_cn": "按需递归自我改进，决定何时更新执行器权重",
+      "llm_evidence": "按需递归自我改进，决定何时更新执行器权重",
+      "canonical_evidence": "按需递归自我改进，决定何时更新执行器权重",
+      "llm_tldr_en": "Addresses when embodied RSI should change executor weights rather than only harness, proposing AdaRSI that improves skills then fine-tunes only persistently unreliable sub-steps.",
+      "llm_tldr_cn": "该文指出预训练视觉-语言-动作模型在长程任务中易中途失败，而现有具身RSI方法或只改框架、或盲目训练执行器。作者提出AdaRSI按需自我改进框架，先由编码智能体改进技能与框架，再从保存状态重试失败子步骤以归因，只微调持续不可靠的部分。实验表明该按需更新权重的策略能更有效提升长程任务表现，为具身智能体的自我改进提供了新思路。",
+      "llm_tldr": "该文指出预训练视觉-语言-动作模型在长程任务中易中途失败，而现有具身RSI方法或只改框架、或盲目训练执行器。作者提出AdaRSI按需自我改进框架，先由编码智能体改进技能与框架，再从保存状态重试失败子步骤以归因，只微调持续不可靠的部分。实验表明该按需更新权重的策略能更有效提升长程任务表现，为具身智能体的自我改进提供了新思路。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.21040v1",
+      "source": "arxiv",
+      "title": "Recursive Reward Improvement via Adversarial Meta-Prompt Evolution",
+      "abstract": "Recursive Self-Improvement (RSI) has gained wide attention for its ability to work with limited data. In a proposer-solver loop, a proposer model writes training tasks and a solver model learns to solve them through reinforcement learning. Such loops have succeeded in mathematics and coding, where every answer can be checked automatically. Open-ended expert tasks, like clinical report generations, have no answer key, which makes simple question-answer generation not viable. Here the proposer must also write a rubric that lists the content an answer should include and the errors it should avoid. However, the unique challenge behind model-written rubric is the comprehensiveness of it. For naively generated rubric, solvers tend to exploit it, naming the expected topics without the substance behind them, which corrupts the learning process. To solve this problem, we introduce RRI, Recursive Reward Improvement, which uses a reward hacking adversary to supervise the reward. Before the solver trains on a generated task, an adversary writes an answer that games its rubric while being as useless as possible, the same model writes an honest answer without seeing the rubric, and up to two repair steps revise the rubric to make the honest answer win. The exploits found also rewrite how future tasks and rubrics are generated. On HealthBench Professional, RRI improves the adjusted score over the Generation Only self-improvement baseline by 10.9 points at 9B and 12.4 at 27B, and by 10.3 points without any external model. In particular, the gains are largest on difficult and writing tasks. We show that the 27B model trained on the HealthBench Professional description improves by 6.6 points on PRBench Hard and 8.0 on ProfBench without seeing a task from either. We further analyze the exploitable points of model-generated question-rubric pairs to facilitate future research on open-ended self-play.",
+      "authors": [
+        "Wei Dai",
+        "Qianchu Liu",
+        "Guanghui Qin",
+        "Xing Han",
+        "Tristan Naumann",
+        "Paul Pu Liang",
+        "Sheng Zhang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.MA"
+      ],
+      "published": "2026-10-15T00:31:18+00:00",
+      "link": "https://arxiv.org/pdf/2610.21040v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Uses proposer-solver RSI to generate training tasks and rubrics, improving rewards for open-ended expert tasks.",
+      "llm_evidence_cn": "利用提议者-求解者递归自我改进生成训练任务与评分量表，改进开放式专家任务的奖励。",
+      "llm_evidence": "利用提议者-求解者递归自我改进生成训练任务与评分量表，改进开放式专家任务的奖励。",
+      "canonical_evidence": "利用提议者-求解者递归自我改进生成训练任务与评分量表，改进开放式专家任务的奖励。",
+      "llm_tldr_en": "Proposes adversarial meta-prompt evolution for recursive reward improvement, where a proposer writes tasks and rubrics and a solver learns via RL, targeting open-ended tasks without answer keys.",
+      "llm_tldr_cn": "递归自我改进在数学和代码等可自动验证任务中表现良好，但临床报告生成等开放式专家任务缺乏答案键，简单问答生成不可行。本文提出对抗式元提示进化，让提议者模型同时编写训练任务和评分量表，求解者通过强化学习掌握任务，并应对评分量表全面性不足和被利用的问题。该工作把递归奖励改进扩展到无答案键的开放任务。",
+      "llm_tldr": "递归自我改进在数学和代码等可自动验证任务中表现良好，但临床报告生成等开放式专家任务缺乏答案键，简单问答生成不可行。本文提出对抗式元提示进化，让提议者模型同时编写训练任务和评分量表，求解者通过强化学习掌握任务，并应对评分量表全面性不足和被利用的问题。该工作把递归奖励改进扩展到无答案键的开放任务。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "What are the contributions of self improving AI systems to autonomous novel data generation, as well as the modification and engineering of their own learning and training environments?",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.21055v1",
+      "source": "arxiv",
+      "title": "Athanor: An Agent-Native System for Autonomous Post-Training Research",
+      "abstract": "Recursive self-improvement, in which AI systems build stronger AI systems, is one promising route to superintelligence. We study a weaker form that can be measured today: frontier agents post-training a small raw base model with public data, as a test of their research potential. We build Athanor, an open agent-native system for autonomous post-training research (AutoPostTrain) on real GPUs. We give the agents full research autonomy, low-friction engineering tools, and efficient starter code. The agents carry out the research themselves: they read datasets and evaluation results, build their training data, write and modify training algorithms, tune hyperparameters, and analyze the results to decide what to try next. They work in a sandbox and cannot use external teacher models. Athanor's services supply frozen evaluation, managed jobs, decontaminated data, a persistent research record, and a held-out suite the agents are unaware of. In a 104-hour campaign, a team of four Claude Opus 5.5 agents, each on an eight-GPU node and given no research advice, improves Qwen3-4B-Base from 15.9 to 67.3 on a six-task development suite and from 9.2 to 48.2 on a held-out suite, against 66.5 and 47.9 for the official Qwen3-4B-Instruct-2507. To our knowledge, this is the first demonstration that a team of frontier agents can autonomously post-train a raw base model into a cross-domain generalist model that matches or surpasses the official instruct version on average. The campaign's full record shows that the agents reach this level by recombining known methods and each other's models: SFT on public reasoning data, RL with a rollout change one agent introduced, weight merges across agents, and rounds of self-distillation. With execution handled, today's agents already have the engineering and research ability to conquer this task. We hope Athanor provides a foundation for scaling autonomous AI research.",
+      "authors": [
+        "Yufa Zhou",
+        "Yichen Wang",
+        "Jiakun Fan",
+        "Ziqi Shu",
+        "Zhichao Liu",
+        "Anru R. Zhang",
+        "Neiwen Ling",
+        "Zijun Wei"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CL",
+        "cs.LG",
+        "cs.MA"
+      ],
+      "published": "2026-10-15T00:56:33+00:00",
+      "link": "https://arxiv.org/pdf/2610.21055v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Builds agent-native system for autonomous post-training research on real GPUs",
+      "llm_evidence_cn": "构建在真实GPU上进行自主后训练研究的智能体原生系统",
+      "llm_evidence": "构建在真实GPU上进行自主后训练研究的智能体原生系统",
+      "canonical_evidence": "构建在真实GPU上进行自主后训练研究的智能体原生系统",
+      "llm_tldr_en": "Athanor is an open agent-native system for autonomous post-training research, giving frontier agents full autonomy and tools to read data, build training sets, modify algorithms, tune hyperparameters, and decide next experiments.",
+      "llm_tldr_cn": "递归自我改进要求AI系统能够构建更强的AI，但完整闭环尚难测量，论文研究前沿智能体用公开数据后训练小型基座模型这一较弱形式。作者构建Athanor智能体原生系统，在真实GPU上为智能体提供完整研究自主权、低摩擦工程工具和高效起始代码。智能体自主阅读数据与评测结果、构建训练数据、编写和修改训练算法、调参并分析结果以决定下一步。该系统把自主后训练研究置于可执行沙箱中，为评估智能体的机器学习研究潜力提供了平台。",
+      "llm_tldr": "递归自我改进要求AI系统能够构建更强的AI，但完整闭环尚难测量，论文研究前沿智能体用公开数据后训练小型基座模型这一较弱形式。作者构建Athanor智能体原生系统，在真实GPU上为智能体提供完整研究自主权、低摩擦工程工具和高效起始代码。智能体自主阅读数据与评测结果、构建训练数据、编写和修改训练算法、调参并分析结果以决定下一步。该系统把自主后训练研究置于可执行沙箱中，为评估智能体的机器学习研究潜力提供了平台。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "automating machine learning research and engineering with AI systems",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.22344v1",
+      "source": "arxiv",
+      "title": "MLExpert: Towards a Generalist Agentic Model for Autonomous Machine Learning Engineering",
+      "abstract": "Large language models (LLMs) are expanding from assisting scientific research and engineering to autonomously developing and improving AI systems, advancing AI for AI (AI4AI) as a pathway toward recursive self-improvement (RSI). Workflow-driven machine learning engineering (MLE) systems provide a practical path toward this pursuit through complex orchestration that manages long-horizon experimentation, while recent MLE systems adopt model-directed interaction, allowing models to autonomously organize experiments and adapt optimization strategies based on execution feedback. However, feedback from each experiment reflects several preceding decisions, and a long MLE run contains many such costly experiments. Training must therefore select useful supervision from long interaction trajectories and learn from intermediate outcomes. We propose a post-training method for autonomous long-horizon MLE optimization and apply it to train MLExpert, a 35B Mixture-of-Experts agentic model. We design the Kaggle-MLE Factory to construct executable tasks and an interaction harness for model-directed experimentation. Hierarchical agentic SFT transfers general tool-use and coding capabilities to MLE through outcome-guided supervision. Windowed Interaction RL (WIRL) treats the multi-turn decisions between successive experiment results as an execution window and assigns it a shared outcome-based reward. Asynchronous collection and policy correction support policy updates before the trajectory ends. On MLE-Bench Lite, MLExpert improves the average medal rate of the base model from 37.9% to 72.7%, achieving performance comparable to larger frontier models such as Kimi-K3 and GLM-5.3. Further experiments show that MLExpert improves performance on NatureBench Lite, agent scaffold optimization, and algorithm optimization, suggesting that the learned optimization capability generalizes to other tasks.",
+      "authors": [
+        "Shangheng Du",
+        "Jinxin Shi",
+        "Shuaiyu Zhang",
+        "Yiming Wu",
+        "Junpeng Zhao",
+        "Shiyang Feng",
+        "Xin Li",
+        "Liang He",
+        "Xiangchao Yan",
+        "Bo Zhang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-10-15T17:56:32+00:00",
+      "link": "https://arxiv.org/pdf/2610.22344v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Trains generalist agentic model for autonomous machine learning engineering toward AI4AI and RSI",
+      "llm_evidence_cn": "训练面向自主机器学习工程的通用智能体模型以推进AI4AI与递归自我改进",
+      "llm_evidence": "训练面向自主机器学习工程的通用智能体模型以推进AI4AI与递归自我改进",
+      "canonical_evidence": "训练面向自主机器学习工程的通用智能体模型以推进AI4AI与递归自我改进",
+      "llm_tldr_en": "MLExpert targets autonomous machine learning engineering as a path to recursive self-improvement, training a generalist agentic model to manage long-horizon experiments and adapt optimization from execution feedback.",
+      "llm_tldr_cn": "论文关注大语言模型从辅助科研走向自主开发与改进AI系统，即AI for AI和递归自我改进路径。现有工作流驱动的机器学习工程系统虽能管理长周期实验，但每次实验反馈混合了多个前置决策，长程运行中难以高效选择训练信号。作者提出MLExpert，训练通用智能体模型以自主组织实验并根据执行反馈调整优化策略。该工作为自主机器学习工程提供了面向长程实验的智能体建模方案，推动AI系统自我改进研究。",
+      "llm_tldr": "论文关注大语言模型从辅助科研走向自主开发与改进AI系统，即AI for AI和递归自我改进路径。现有工作流驱动的机器学习工程系统虽能管理长周期实验，但每次实验反馈混合了多个前置决策，长程运行中难以高效选择训练信号。作者提出MLExpert，训练通用智能体模型以自主组织实验并根据执行反馈调整优化策略。该工作为自主机器学习工程提供了面向长程实验的智能体建模方案，推动AI系统自我改进研究。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "automating machine learning research and engineering with AI systems",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.23344v1",
+      "source": "arxiv",
+      "title": "Language Models Learn to Improve Language Models",
+      "abstract": "Large language models (LLMs) are increasingly used to automate AI research, including language-model (LM) development, offering a potential path toward recursive self-improvement. However, turning experimental feedback into a learned ability to propose effective improvements across models faces two challenges. First, training such an ability with real feedback is expensive: reinforcement learning (RL) requires evaluating tens of thousands of proposals, each potentially requiring a full model-training run. Even at ten GPU-hours per run, reward collection alone would consume hundreds of thousands of GPU-hours, motivating a cheaper surrogate. Second, surrogate feedback can become unreliable as policy optimization favors overestimated proposals when the proposal distribution shifts. To address these challenges, we propose LM2LM, which trains LLMs with RL to generate effective LM improvement proposals. To provide scalable feedback, we use a research world model (RWM), a frozen LLM that predicts proposal gains from real experimental records provided in context, as the reward model for RL. To maintain feedback reliability, we periodically execute current-policy proposals ranked highly by the RWM and add their measured outcomes to its context. Across eight autoregressive and diffusion LM development environments, real-execution evaluations on held-out tasks show that LM2LM enables Qwen3.8-27B to outperform GPT-6-sol, even when GPT-6-sol is given 300 real experimental records in context, while requiring 33% lower data-generation cost. LM2LM also generalizes to a model family unseen during training.",
+      "authors": [
+        "Minhua Lin",
+        "Zijun Wang",
+        "Zewen Liu",
+        "Zhaotian Weng",
+        "Bing He",
+        "Zhan Shi",
+        "Benoit Dumoulin",
+        "Xiang Zhang",
+        "Suhang Wang",
+        "Hanqing Lu"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-10-16T11:51:00+00:00",
+      "link": "https://arxiv.org/pdf/2610.23344v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "LLMs learning to automate LM research and improvement",
+      "llm_evidence_cn": "语言模型学习自动化语言模型研发改进",
+      "llm_evidence": "语言模型学习自动化语言模型研发改进",
+      "canonical_evidence": "语言模型学习自动化语言模型研发改进",
+      "llm_tldr_en": "The paper trains language models to propose effective improvements to language models from experimental feedback, using cheap surrogate rewards to avoid costly full training runs.",
+      "llm_tldr_cn": "用大模型自动化AI研究包括语言模型开发，被视为通向递归自我改进的路径，但把实验反馈转化为可泛化的改进能力面临两难：真实反馈需评估上万条提案、每条都需完整训练，代价极高；而代理反馈在策略优化下又会偏向高估的提案而失真。论文提出让语言模型从实验反馈中学习提出改进方案，构建廉价代理奖励并缓解其偏差。实验表明模型可跨模型提出有效改进并大幅降低真实训练开销，为自动化模型研发与递归自我改进提供可行路径。",
+      "llm_tldr": "用大模型自动化AI研究包括语言模型开发，被视为通向递归自我改进的路径，但把实验反馈转化为可泛化的改进能力面临两难：真实反馈需评估上万条提案、每条都需完整训练，代价极高；而代理反馈在策略优化下又会偏向高估的提案而失真。论文提出让语言模型从实验反馈中学习提出改进方案，构建廉价代理奖励并缓解其偏差。实验表明模型可跨模型提出有效改进并大幅降低真实训练开销，为自动化模型研发与递归自我改进提供可行路径。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "automating machine learning research and engineering with AI systems",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.26342v2",
+      "source": "arxiv",
+      "title": "VibeTraining-Bench: Data-Trainer-Harness Co-Design for Iterative System Improvement",
+      "abstract": "Recursive self-improvement (RSI) requires agents to diagnose system bottlenecks and coordinate improvements across training and inference. We refer to the agents' capability to jointly optimize training data, the trainer, and the inference harness as cross-component co-design. We introduce VibeTraining-Bench, a benchmark for evaluating this capability across tasks spanning terminal operation, software engineering, multi-turn tool use, and mathematical reasoning. Within each task, research agents start from an identical initial agent system under a fixed resource budget. Guided by validation feedback, they iteratively refine data, trainers, and inference harnesses, then select and submit a final agent system for evaluation on the test set. To prevent reward hacking, we enforce three safeguards: test data isolation, separate research and grading containers, and network restrictions for research agents. Our evaluation results show that frontier research agents substantially improve target agent systems. For example, on SWE-bench Verified, GPT-6-Astra raises the target agent system's performance from 32.9% to 53.7%, comparable to the human-developed instruct model's 55.4%. However, there is still room to improve their ability to co-design and iteratively refine data, trainer, and harness to achieve cumulative performance gains. We hope that VibeTraining-Bench will serve as a unified platform for advancing RSI, deepening our understanding of cross-component optimization for agent systems. Code and data are available at https://github.com/D2I-ai/VibeTraining-Bench.",
+      "authors": [
+        "Ruotian Peng",
+        "Yuanyi Ren",
+        "Shuaiqi Liu",
+        "Xin Guo",
+        "Fang Zhu",
+        "Yangyi Huang",
+        "Yue Wu",
+        "Zheng Wang",
+        "Yandong Wen",
+        "Zhihang Fu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-10-19T13:10:54+00:00",
+      "link": "https://arxiv.org/pdf/2610.26342v2",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "benchmark for agents doing cross-component co-design across data trainer and harness in RSI",
+      "llm_evidence_cn": "面向RSI中数据训练器与推理框架协同设计的基准",
+      "llm_evidence": "面向RSI中数据训练器与推理框架协同设计的基准",
+      "canonical_evidence": "面向RSI中数据训练器与推理框架协同设计的基准",
+      "llm_tldr_en": "Argues RSI needs agents to co-design data, trainer and inference harness, introducing VibeTraining-Bench where research agents iteratively refine all three under a fixed budget.",
+      "llm_tldr_cn": "该文指出递归自我改进要求智能体诊断系统瓶颈并协同改进训练与推理。作者提出VibeTraining-Bench，让研究智能体在固定预算下从相同初始系统出发，依据验证反馈迭代优化数据、训练器与推理框架并提交最终系统。基准覆盖终端操作、软件工程、多轮工具使用与数学推理等任务，为评估跨组件协同自我改进能力提供了统一平台。",
+      "llm_tldr": "该文指出递归自我改进要求智能体诊断系统瓶颈并协同改进训练与推理。作者提出VibeTraining-Bench，让研究智能体在固定预算下从相同初始系统出发，依据验证反馈迭代优化数据、训练器与推理框架并提交最终系统。基准覆盖终端操作、软件工程、多轮工具使用与数学推理等任务，为评估跨组件协同自我改进能力提供了统一平台。",
+      "llm_tags": [
+        "query:self-improve:composite"
+      ],
+      "matched_query_tag": "query:self-improve:composite",
+      "matched_query_text": "Papers central to 递归自我改进（RSI）：人工智能系统自主提升自身能力、加速研发进程的相关研究主题, especially work that connects or combines: recursive self-improvement of artificial intelligence systems; autonomous agents that improve their own capabilities over time; automating machine learning research and engineering with AI systems; What are the contributions of self improving AI systems to autonomous novel data generation, as well as the modification and engineering of their own learning and training environments?; How to distinguish genuine architectural self modification from merely leveraging a stronger pre trained base model when analyzing the capability gains of AI systems?; What are the evaluations of computational costs, efficiency, and overall performance of recursive self improving AI systems?.",
+      "matched_requirement_id": "req-composite-self-improve",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.28201v1",
+      "source": "arxiv",
+      "title": "MaD-RSI: Model-as-Data for Recursive Self-Improvement of Agent Harnesses",
+      "abstract": "Recursive self-improvement (RSI) of agent harnesses has emerged as an effective approach to enhancing the capabilities of large language model (LLM) agents. By searching the harness space for a specific LLM on a given dataset, RSI can discover a harness tailored to the capabilities and behavioral characteristics of that model. However, such optimization often creates a strong coupling between the learned harness and its target LLM, limiting generalization across models and requiring substantial computational resources to adapt to new LLMs. Moreover, existing RSI methods typically optimize a harness using feedback from a single model and evaluate its generalization to other models only after training. This paradigm treats model differences primarily as a criterion for evaluating generalization rather than as valuable evidence for optimization. In this paper, we introduce a new perspective that treats models as data and places the harness at the center of optimization. Building on this perspective, we propose \\textsc{MaD-RSI}, a framework that directly optimizes a shared harness across multiple heterogeneous LLMs by incorporating their diverse failure trajectories into the training process. Rather than assessing model differences only after optimization, \\textsc{MaD-RSI} leverages these differences as training evidence to guide the self-improvement of a shared harness. Furthermore, we introduce a new evaluation framework with two complementary metrics designed to assess the effectiveness of harness optimization across models. Experiments across multiple datasets and LLMs demonstrate that \\textsc{MaD-RSI} improves generalization over existing approaches while reducing training costs.",
+      "authors": [
+        "Yu Cui",
+        "Hong He",
+        "Ruiqing Yue",
+        "Sicheng Pan",
+        "Zhuoyu Sun",
+        "Yifei Liu",
+        "Ting Li",
+        "Wenzhuo Zhu",
+        "Baohan Huang",
+        "Haibin Zhang",
+        "Cong Zuo"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-20T13:41:00+00:00",
+      "link": "https://arxiv.org/pdf/2610.28201v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Optimizes agent harnesses via RSI while addressing coupling and computational cost of adapting to new LLMs.",
+      "llm_evidence_cn": "通过递归自我改进优化智能体框架，并关注适配新LLM的耦合问题与计算成本。",
+      "llm_evidence": "通过递归自我改进优化智能体框架，并关注适配新LLM的耦合问题与计算成本。",
+      "canonical_evidence": "通过递归自我改进优化智能体框架，并关注适配新LLM的耦合问题与计算成本。",
+      "llm_tldr_en": "MaD-RSI treats models as data to improve agent harnesses through recursive self-improvement, targeting the strong harness-model coupling and high computational cost of adapting to new LLMs.",
+      "llm_tldr_cn": "智能体框架的递归自我改进常导致学到的框架与目标LLM强耦合，泛化受限且适配新模型需大量计算资源。MaD-RSI提出以模型为数据的思路，在框架空间搜索中利用多模型反馈优化智能体框架，并关注跨模型泛化。该工作为降低递归自我改进的计算成本、提升框架泛化性提供了新方法。",
+      "llm_tldr": "智能体框架的递归自我改进常导致学到的框架与目标LLM强耦合，泛化受限且适配新模型需大量计算资源。MaD-RSI提出以模型为数据的思路，在框架空间搜索中利用多模型反馈优化智能体框架，并关注跨模型泛化。该工作为降低递归自我改进的计算成本、提升框架泛化性提供了新方法。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "What are the evaluations of computational costs, efficiency, and overall performance of recursive self improving AI systems?",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.32026v1",
+      "source": "arxiv",
+      "title": "RSI-Opt: Recursive Self-Improvement Optimizer Agents For Model Training",
+      "abstract": "Conventional neural-network training typically follows a predefined optimization recipe, motivating a LLM agent that monitors training dynamics and adjusts optimizer settings as training progresses, but a fixed agent policy does not accumulate experience across runs. We introduce RSI-Opt, a plug-and-play Recursive Self-Improvement Optimizer Agents which evolves the knowledge that guides this process: a prompt, a playbook of procedures, a library of tested optimizer code, and a decision cadence. A meta-agent rewrites this policy using evidence from earlier runs, and an archive retains evaluated policies for further evolution. Across 5 generations on three training tasks, the meta-agents develop reusable procedures and code and conduct their own CPU proxy experiments. RSI-Opt substantially improves optimizer-agent performance, with representative raw-space summary $z$-scores increasing from $+10.48$ to $+14.33$ on the evolution suite with Opus 5.5 and from $-0.36$ to $+3.11$ on held-out tasks with GPT-5.5 through cross-model policy transfer. On the Burgers PDE, it reduces mean relative $L_2$ error by approximately 2.7-fold with Opus 5.5 and 8.8-fold with GPT-6.1 over the fixed-prompt agent baseline, although PDE transfer varies across LLMs and tasks. Controlled comparisons show that the evolved policy combines reusable optimization knowledge with adaptation to each task: initial decisions capture most observed gains on seen tasks, while continued adaptation improves outcomes on unseen tasks. These findings demonstrate how procedures and executable tools accumulated across training runs can improve optimizer-agent performance and support transfer to scientific machine learning.",
+      "authors": [
+        "Binghang Lu",
+        "Yige Sun",
+        "Guang Lin"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-23T01:05:11+00:00",
+      "link": "https://arxiv.org/pdf/2610.32026v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "meta-agent rewrites optimizer policy across runs in a recursive self-improvement loop",
+      "llm_evidence_cn": "元智能体在递归自我改进循环中跨轮重写优化器策略",
+      "llm_evidence": "元智能体在递归自我改进循环中跨轮重写优化器策略",
+      "canonical_evidence": "元智能体在递归自我改进循环中跨轮重写优化器策略",
+      "llm_tldr_en": "Fixed optimizer agents cannot accumulate experience across training runs. RSI-Opt uses a meta-agent that rewrites a policy of prompts, playbooks and tested optimizer code, evolving reusable procedures over five generations on three tasks.",
+      "llm_tldr_cn": "传统神经网络训练依赖预设优化配方，固定策略的智能体无法跨训练轮次积累经验。作者提出RSI-Opt，由元智能体依据历史运行证据重写提示、程序手册、优化器代码库与决策节奏，并通过档案保留已评估策略以持续演化。在三个训练任务的五代演化中，元智能体自主发展出可复用程序与代码，展示了面向模型训练的递归自我改进能力。",
+      "llm_tldr": "传统神经网络训练依赖预设优化配方，固定策略的智能体无法跨训练轮次积累经验。作者提出RSI-Opt，由元智能体依据历史运行证据重写提示、程序手册、优化器代码库与决策节奏，并通过档案保留已评估策略以持续演化。在三个训练任务的五代演化中，元智能体自主发展出可复用程序与代码，展示了面向模型训练的递归自我改进能力。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.34386v1",
+      "source": "arxiv",
+      "title": "ParetoRSI-Gym: Can AI Agents Improve Language Models Across Multiple Domains?",
+      "abstract": "Recursive self-improvement (RSI) requires an agentic system to design, train, and evaluate its own successor. Data-driven post-training is a central part of that loop, yet existing evaluations measure it on a single benchmark, where an agent selects from a static pool or distills a stronger model to push one score up in one run. Real post-training is multi-domain, and a gain in one domain has to be weighed against a regression in another. We propose ParetoRSI-Gym, in which an agent searches for data, curates it, trains, reads back per-domain results, and repeats, with everything but the data held fixed: the initial LLM, the five domains (math, code, finance, medicine, science), the toolset, and the SFT pipeline. Generalization benchmarks in each domain separate capability gains from overfitting to the scores the agent optimizes against. Across three agent systems, three base models, five rounds and multiple seeds, the strongest system, Claude Code with Opus-5, raises the generalization scores of its proxy-best checkpoint by 9.2% relative to the starting model (+2.3 absolute points), averaged with equal weight over three base models and five domains, with a single-domain relative gain of up to 63% (medicine on Ministral-3-3B). Further analysis shows that the harness matters as much as the model it drives, and that each agent keeps a unique data selection strategy. We see our work as a step towards evaluation of RSI systems in real-world machine learning engineering.",
+      "authors": [
+        "Haojin Wang",
+        "Yangzhen Wu",
+        "Zeyi Chen",
+        "Jian Xie",
+        "Jiaying Ye",
+        "Lili Meng",
+        "Shuyun Tang",
+        "Shangding Gu",
+        "Dawn Song"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-10-25T15:40:21+00:00",
+      "link": "https://arxiv.org/pdf/2610.34386v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "multi-domain evaluation of agent-driven RSI post-training",
+      "llm_evidence_cn": "多领域评测智能体驱动的RSI后训练",
+      "llm_evidence": "多领域评测智能体驱动的RSI后训练",
+      "canonical_evidence": "多领域评测智能体驱动的RSI后训练",
+      "llm_tldr_en": "ParetoRSI-Gym evaluates recursive self-improvement in multi-domain post-training, where an agent searches and curates data, trains, reads per-domain results and repeats with all else fixed.",
+      "llm_tldr_cn": "现有递归自我改进评测多在单一基准上进行，智能体从静态数据池挑选或蒸馏更强模型，只把单个分数推高，难以反映真实后训练中多领域此消彼长的权衡。论文提出ParetoRSI-Gym，固定初始模型、数学代码金融医学科学五领域、工具集与SFT流程，仅让智能体搜索筛选数据、训练并读取各领域结果后重复。实验揭示单领域提升常伴随其他领域退化，需在帕累托前沿上权衡，为RSI提供了严谨的多领域评测框架。",
+      "llm_tldr": "现有递归自我改进评测多在单一基准上进行，智能体从静态数据池挑选或蒸馏更强模型，只把单个分数推高，难以反映真实后训练中多领域此消彼长的权衡。论文提出ParetoRSI-Gym，固定初始模型、数学代码金融医学科学五领域、工具集与SFT流程，仅让智能体搜索筛选数据、训练并读取各领域结果后重复。实验揭示单领域提升常伴随其他领域退化，需在帕累托前沿上权衡，为RSI提供了严谨的多领域评测框架。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "What are the evaluations of computational costs, efficiency, and overall performance of recursive self improving AI systems?",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.35193v1",
+      "source": "arxiv",
+      "title": "Trustworthy Recursive Self-Improvement in the Era of Large Models: Foundation, Risks, Evaluation and Open Challenges",
+      "abstract": "AI systems built around large models increasingly use experience and feedback to make persistent changes to models, prompts, memories, tools, and workflows. Recursive self-improvement (RSI) extends this process to inductive biases and to the mechanisms that govern future updates, which can themselves be revised and reused across improvement cycles. Yet self-modification alone does not guarantee trustworthy improvement. Reported gains may reflect flawed evaluations, previously acquired capabilities may deteriorate, and compliance with behavioral constraints may weaken. Compromised artifacts or sensitive information may also persist in successor systems. Changes to improvement mechanisms may invalidate earlier verification results and make human oversight less effective. This survey presents an operational definition and process framework for RSI and organizes the requirements for trustworthy RSI into four interconnected themes: genuine and sustained improvement; behavioral constraints, alignment, and fairness; system security and privacy; and transparency and controllability. We examine these themes from three perspectives: Improvement Validity, Constraint Preservation, and Effective Oversight. This analysis covers improvement diagnosis, proposal generation, proposal evaluation, and update implementation (S1--S4), including the recursive application of these stages to improvement mechanisms (RI). We review risks, safeguards, and evaluation evidence for individual updates, effects inherited by successor systems, and revisions to improvement mechanisms, while distinguishing direct RSI findings from evidence in related systems. Finally, we examine evaluation settings, identify requirements for independent and longitudinal assessment, and discuss applications and open research problems.",
+      "authors": [
+        "Jiayue Pu",
+        "Ang Gao",
+        "Jinyi Bai",
+        "Qipeng Wang",
+        "Tongyu Wen",
+        "Jiahao Zhao",
+        "Keyu Qu",
+        "Junhao Zhang",
+        "Chenglei Shen",
+        "Zhongxiang Sun",
+        "Jun Xu",
+        "Xiao Zhang"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CR"
+      ],
+      "published": "2026-10-26T10:46:03+00:00",
+      "link": "https://arxiv.org/pdf/2610.35193v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Analyzes how to distinguish trustworthy self-modification gains from flawed evaluation and inherited capability",
+      "llm_evidence_cn": "分析如何区分可信的自我修改增益与评测缺陷及继承能力",
+      "llm_evidence": "分析如何区分可信的自我修改增益与评测缺陷及继承能力",
+      "canonical_evidence": "分析如何区分可信的自我修改增益与评测缺陷及继承能力",
+      "llm_tldr_en": "Self-modification does not guarantee trustworthy improvement. This survey organizes foundations, risks and evaluations of recursive self-improvement in large-model systems, warning that reported gains may reflect flawed evaluation, capability decay or weakened constraints.",
+      "llm_tldr_cn": "基于大模型的系统越来越多地通过经验反馈持久修改模型、提示、记忆与工具，但自我修改并不等于可信改进。本文系统梳理递归自我改进的基础、风险与评测方法，指出报告增益可能源于评测缺陷、既有能力退化或行为约束失效，并讨论改进机制变更带来的挑战。文章提出可信RSI的研究议程与开放问题，为评估和治理自我改进系统提供了框架。",
+      "llm_tldr": "基于大模型的系统越来越多地通过经验反馈持久修改模型、提示、记忆与工具，但自我修改并不等于可信改进。本文系统梳理递归自我改进的基础、风险与评测方法，指出报告增益可能源于评测缺陷、既有能力退化或行为约束失效，并讨论改进机制变更带来的挑战。文章提出可信RSI的研究议程与开放问题，为评估和治理自我改进系统提供了框架。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "How to distinguish genuine architectural self modification from merely leveraging a stronger pre trained base model when analyzing the capability gains of AI systems?",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.35434v1",
+      "source": "arxiv",
+      "title": "Skill$^{\\infty}$: Recursive Self-Improvement for Agent Skill Optimization",
+      "abstract": "Recursive self-improvement (RSI), in which a system also improves the way it improves, is a long-standing aspiration on the path to AGI. Language agents increasingly store procedural knowledge in reusable skills. Optimizing skills offers a direct way to achieve RSI, because the optimization procedure itself can be encoded as a skill. Existing skill optimizers, however, follow a hand-designed procedure. Even methods that evolve a meta-skill confine it to a fixed pipeline and relearn it for each task. We present Skill$^{\\infty}$, which makes skill optimization recursively self-improving: a meta agent follows a meta-skill to optimize task skills and optimizes the meta-skill itself using the same procedure. The optimization is agent-led. The meta agent diagnoses execution traces, proposes candidates, requests independent reviews, and allocates the search budget. The meta-skill defines these steps, allowing self-improvement to rewrite them. This meta-skill is also decoupled from task skills, refined on multiple skill optimization tasks and then reused to optimize task skills across diverse domains. As in deployment, skills at both levels are standard packages loaded through native skill discovery. On 83 SkillsBench tasks, Skill$^{\\infty}$ reaches a pass rate of 60.7%, compared with 56.4% for human-curated skills and 54.5% for SkillEvolver.",
+      "authors": [
+        "Wangcheng Tao",
+        "Zhanglu Yan",
+        "Han Wu",
+        "Weng-Fai Wong"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-10-26T13:37:56+00:00",
+      "link": "https://arxiv.org/pdf/2610.35434v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Directly proposes recursive self-improvement of agent skills via a self-optimizing meta-skill.",
+      "llm_evidence_cn": "直接提出通过自我优化的元技能实现智能体技能的递归自我改进。",
+      "llm_evidence": "直接提出通过自我优化的元技能实现智能体技能的递归自我改进。",
+      "canonical_evidence": "直接提出通过自我优化的元技能实现智能体技能的递归自我改进。",
+      "llm_tldr_en": "Skill∞ makes skill optimization recursively self-improving: a meta-agent follows a meta-skill to optimize task skills and then uses the same procedure to optimize the meta-skill itself, enabling agent-led RSI for language agents.",
+      "llm_tldr_cn": "现有技能优化器依赖人工设计流程，且进化出的元技能受限于固定流水线并需为每个任务重新学习，难以实现真正的递归自我改进。Skill∞让元智能体遵循元技能来优化任务技能，并用同一套流程优化元技能本身，使优化过程由智能体主导。该工作将技能优化转化为可递归自我改进的程序，为语言智能体的持续能力提升提供了新路径。",
+      "llm_tldr": "现有技能优化器依赖人工设计流程，且进化出的元技能受限于固定流水线并需为每个任务重新学习，难以实现真正的递归自我改进。Skill∞让元智能体遵循元技能来优化任务技能，并用同一套流程优化元技能本身，使优化过程由智能体主导。该工作将技能优化转化为可递归自我改进的程序，为语言智能体的持续能力提升提供了新路径。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2609.39306v1",
+      "source": "arxiv",
+      "title": "ReSAIL: Mitigating Collapse in Iterative Agent Self-Distillation",
+      "abstract": "Iterative self-distillation enables LLM agents to learn from successive deployments, offering a path toward recursive self-improvement (RSI). Yet our experiments with existing methods reveal a collapse in deployment performance across cycles, while task performance with privileged information (PI) also declines. We address this collapse by prioritizing informative interaction steps for distillation and preserving PI-conditioned behavior as the student becomes the next teacher. We introduce Retentive and Selective Augmentation for Iterative Self-Distillation (ReSAIL), a plug-in augmentation for iterative PI-based self-distillation. ReSAIL selects interaction steps where PI most strongly changes the teacher's predictions and balances the resulting distillation losses across trajectories. It also regularizes the student's PI-conditioned output distributions toward those of the frozen teacher at selected and unselected steps to preserve PI-conditioned behavior for supervision in the next cycle. On ALFWorld and TextCraft, ReSAIL sustains substantial gains across model scales over three cycles, with an average absolute gain of 22.5% in final-cycle success rates when added to self-distillation baselines. Sensitivity-guided selection of offline data also improves action prediction accuracy for multimodal GUI agents on AITZ. These findings provide the first evidence that a more robust learning mechanism can effectively mitigate performance collapse in iterative agent self-distillation over deployment trajectories.",
+      "authors": [
+        "Shengjie Jin",
+        "Hengbo Xu",
+        "Zelong Sun",
+        "YuJie Guo",
+        "Zhiwu Lu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-09-30T08:49:03+00:00",
+      "link": "https://arxiv.org/pdf/2609.39306v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "iterative agent self-distillation as a path to recursive self-improvement without collapse",
+      "llm_evidence_cn": "迭代智能体自蒸馏作为通往递归自我改进的路径",
+      "llm_evidence": "迭代智能体自蒸馏作为通往递归自我改进的路径",
+      "canonical_evidence": "迭代智能体自蒸馏作为通往递归自我改进的路径",
+      "llm_tldr_en": "Addresses collapse in iterative agent self-distillation, proposing ReSAIL to select informative steps and preserve privileged-information behavior across self-improvement cycles.",
+      "llm_tldr_cn": "该文指出迭代自蒸馏虽为智能体递归自我改进提供路径，但现有方法在连续部署中会出现性能崩塌，特权信息下的任务表现也下降。作者提出ReSAIL插件式增强，选取特权信息最能改变教师预测的交互步骤进行蒸馏，并在学生接任教师时保留特权信息条件行为。方法缓解了崩塌，提升了多轮自我改进的稳定性与效果。",
+      "llm_tldr": "该文指出迭代自蒸馏虽为智能体递归自我改进提供路径，但现有方法在连续部署中会出现性能崩塌，特权信息下的任务表现也下降。作者提出ReSAIL插件式增强，选取特权信息最能改变教师预测的交互步骤进行蒸馏，并在学生接任教师时保留特权信息条件行为。方法缓解了崩塌，提升了多轮自我改进的稳定性与效果。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "autonomous agents that improve their own capabilities over time",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2610.04902v1",
+      "source": "arxiv",
+      "title": "Self-Evaluating Recursive Agents",
+      "abstract": "Recursive language-model agents decompose tasks and delegate subtasks to child instances of the same policy, forming a tree of work. Training them, however, is hard: the final outcome is verifiable, but the self-invented intermediate subtasks are numerous and carry no ground truth. Existing methods score each node with a verifier or judge, which is costly at scale and blind to decomposition quality. We argue that a recursive agent must learn three coupled capabilities within one set of weights: decomposing problems into subtasks, solving them, and evaluating the outcomes, each requiring its own training signal. SERA (Self-Evaluating Recursive Agents) turns evaluation into a learned capability of the policy itself. Before delegating, the parent writes a rubric of weighted success criteria for each child subtask; a ranking objective against verified outcomes then trains rubric generation so that the criteria track genuine subtask success. In addition, a complementary leaf-coverage signal provides direct credit for task decomposition. Our central finding is that \\emph{training} the policy to generate aligned rubrics is what drives the gains: because the same weights both evaluate and execute, learning to judge subtasks sharpens the agent's ability to solve them. Notably, external supervision is also reduced: the judge is consulted only to train the rubric generator, while solving is trained against the agent's own rubric scores, which outperform direct use of the judge. Beyond training, the learned rubric doubles as an inference-time selector for tree search. On TextCraft-Synth and TextWorld-Sync, SERA improves over strong recursive-agent baselines by 5.38 and 13.14 points on average, and rubric-guided tree search at inference adds a further 2.43 points on TextWorld-Sync.",
+      "authors": [
+        "TianYi Lyu",
+        "Xiaozhe Li",
+        "Yang Li",
+        "Yongkang Chen",
+        "Kefei Tian",
+        "Junbo Niu",
+        "Zican Hu",
+        "Hongbo Liu",
+        "Mingliang Xiong",
+        "Qingwen Liu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-04T03:28:07+00:00",
+      "link": "https://arxiv.org/pdf/2610.04902v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Trains recursive language-model agents to decompose, solve, and self-evaluate tasks, supporting autonomous capability improvement.",
+      "llm_evidence_cn": "训练递归语言模型智能体联合学习任务分解、求解与自我评估，支持自主能力提升。",
+      "llm_evidence": "训练递归语言模型智能体联合学习任务分解、求解与自我评估，支持自主能力提升。",
+      "canonical_evidence": "训练递归语言模型智能体联合学习任务分解、求解与自我评估，支持自主能力提升。",
+      "llm_tldr_en": "SERA trains recursive agents to jointly learn task decomposition, solving, and self-evaluation, replacing costly external verifiers with a learned rubric-based evaluation capability.",
+      "llm_tldr_cn": "递归语言模型智能体将任务分解并委托给子实例，但中间子任务缺乏真值，现有验证器评分成本高且难以反映分解质量。SERA让递归智能体在同一组权重中联合学习分解、求解与评估，父智能体在委托前先写出带权成功标准的评分量表。该方法把评估转化为策略自身的能力，为递归智能体的自主训练与能力提升提供了新思路。",
+      "llm_tldr": "递归语言模型智能体将任务分解并委托给子实例，但中间子任务缺乏真值，现有验证器评分成本高且难以反映分解质量。SERA让递归智能体在同一组权重中联合学习分解、求解与评估，父智能体在委托前先写出带权成功标准的评分量表。该方法把评估转化为策略自身的能力，为递归智能体的自主训练与能力提升提供了新思路。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "autonomous agents that improve their own capabilities over time",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.06361v1",
+      "source": "arxiv",
+      "title": "Capability-Driven Self-Evolution of Agent Memory",
+      "abstract": "Memory self-evolution uses task feedback to iteratively improve executable memory programs that store and retrieve information from past interactions. Existing approaches typically adopt holistic evolution, deriving revision directions from mixed feedback and judging progress by overall performance. This can obscure optimization directions and hide capability-specific gains offset by regressions elsewhere, leaving promising directions underexplored. We introduce capability-driven evolution, which extends search guidance from overall performance to individual capability dimensions, preserving promising revisions and expanding exploration beyond the boundaries of holistic evolution. We propose PrisMem, which uses dependency-aware capability selection to prioritize targets with potential cross-capability benefits and history-guided diagnosis to refine capability specialists. Trace-guided integration compares evaluated programs on paired differential cases, using their behavioral differences to consolidate complementary gains into a unified memory program. Experiments show that PrisMem outperforms the strongest baselines by 10.54 and 7.83 percentage points on BEAM-1M and LongMemEval-M, respectively, demonstrating its effectiveness on million-token histories.",
+      "authors": [
+        "Yaoqi Chen",
+        "Yuru Feng",
+        "Qianxi Zhang",
+        "Baotong Lu",
+        "Jianan Lu",
+        "Zhirui Wang",
+        "Shusen Xu",
+        "Zewen Jin",
+        "Zengzhong Li",
+        "Cheng Li",
+        "Qi Chen"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-05T14:00:21+00:00",
+      "link": "https://arxiv.org/pdf/2610.06361v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "agent memory self-evolution from task feedback",
+      "llm_evidence_cn": "基于任务反馈的智能体记忆自演化",
+      "llm_evidence": "基于任务反馈的智能体记忆自演化",
+      "canonical_evidence": "基于任务反馈的智能体记忆自演化",
+      "llm_tldr_en": "PrisMem replaces holistic memory self-evolution with capability-driven evolution, guiding revision search by individual capability dimensions to preserve gains hidden by overall performance.",
+      "llm_tldr_cn": "记忆自演化利用任务反馈迭代改进可执行的记忆程序，但现有方法采用整体式演化，从混合反馈中推导修订方向并以总体性能判断进展，容易模糊优化方向、掩盖被其他退化抵消的能力增益。论文提出能力驱动的演化方法PrisMem，按依赖关系选择能力维度作为搜索目标，在单一维度上保留有潜力的修订并扩大探索。实验表明该分解式搜索优于整体演化，为智能体通过反馈持续提升自身能力提供了更可控的路径。",
+      "llm_tldr": "记忆自演化利用任务反馈迭代改进可执行的记忆程序，但现有方法采用整体式演化，从混合反馈中推导修订方向并以总体性能判断进展，容易模糊优化方向、掩盖被其他退化抵消的能力增益。论文提出能力驱动的演化方法PrisMem，按依赖关系选择能力维度作为搜索目标，在单一维度上保留有潜力的修订并扩大探索。实验表明该分解式搜索优于整体演化，为智能体通过反馈持续提升自身能力提供了更可控的路径。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "autonomous agents that improve their own capabilities over time",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.01073v1",
+      "source": "arxiv",
+      "title": "Safety Must Survive Self-Improvement: Why Failures Persist and How Agents Recover",
+      "abstract": "Recursive self-improvement (RSI) allows agents to carry useful changes across generations. Maintaining safety across these generations involves both preventing unsafe behavior from persisting and enabling recovery when failures occur. We study these challenges through a controlled testbed of stateful authorization tasks, where fixed LLM editors optimize executable agent components and independent traces record their effects. Paired interventions separate which revisions pass validation, which program continues running, and which program the editor revises next. After a new authorization dependency invalidates previously tested optimizations, historical scores preserve the same unsafe programs in 22 of 48 framework histories despite a correct alternative in every affected archive. Refreshing scores restores correctness on the original suite, with residual failures on independently composed tests. Failures also persist under an unchanged contract when all proposals are rejected and the failed incumbent remains active. Starting from shared failures, editing the initial implementation instead of the failed one improves recovery, although the advantage varies across editors. Full validation and validated rollback end with fully correct programs in the core trajectory study while retaining over 43% deployment savings. Preserving agent safety requires checking what will run under current conditions and choosing which implementation to edit next.",
+      "authors": [
+        "Yunbei Zhang",
+        "Janet Wang",
+        "Saiyue Lyu",
+        "Yingqiang Ge",
+        "Kaiqu Liang",
+        "Zijian Jin",
+        "Chandan K Reddy",
+        "Jihun Hamm"
+      ],
+      "primary_category": "cs.SE",
+      "categories": [
+        "cs.SE",
+        "cs.CR"
+      ],
+      "published": "2026-10-01T05:13:51+00:00",
+      "link": "https://arxiv.org/pdf/2610.01073v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Examines why unsafe changes persist across recursive self-improvement generations and how agents recover",
+      "llm_evidence_cn": "研究不安全改动为何在递归自我改进代际间持续及智能体如何恢复",
+      "llm_evidence": "研究不安全改动为何在递归自我改进代际间持续及智能体如何恢复",
+      "canonical_evidence": "研究不安全改动为何在递归自我改进代际间持续及智能体如何恢复",
+      "llm_tldr_en": "Using a testbed of stateful authorization tasks with fixed LLM editors, the paper shows historical scores keep unsafe programs alive in 22 of 48 framework histories and analyzes how agents can recover safety after invalidating changes.",
+      "llm_tldr_cn": "递归自我改进使智能体能把有用改动跨代保留，但安全行为也可能随之固化或在失效后无法恢复。作者构建有状态授权任务的受控测试平台，由固定大模型编辑器优化可执行智能体组件，并用独立轨迹记录其影响。配对干预区分哪些修订通过验证、哪个程序继续运行以及编辑器下一步修改哪个程序。当新的授权依赖使既有优化失效后，历史分数仍在四十八个框架历史中的二十二个里保留了同样的不安全程序。",
+      "llm_tldr": "递归自我改进使智能体能把有用改动跨代保留，但安全行为也可能随之固化或在失效后无法恢复。作者构建有状态授权任务的受控测试平台，由固定大模型编辑器优化可执行智能体组件，并用独立轨迹记录其影响。配对干预区分哪些修订通过验证、哪个程序继续运行以及编辑器下一步修改哪个程序。当新的授权依赖使既有优化失效后，历史分数仍在四十八个框架历史中的二十二个里保留了同样的不安全程序。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2610.12190v1",
+      "source": "arxiv",
+      "title": "DataSense-Bench: The First Step Toward an AI Scientist",
+      "abstract": "As claims about recursive self-improvement (RSI) and artificial general intelligence (AGI) proliferate, we ask a simple question: do frontier AI models have a sense of data, i.e., can they reliably select the right data for training? We introduce DataSense-Bench to study this capability through the fundamental problem of data selection and performance forecasting in machine learning. We ask AI agents to select and rank candidate training subsets that can be used to fine-tune a small LLM model. Agents are allowed to inspect the data, write and execute analysis code, and run model forward passes, but can not train the model or access the actual evaluation tasks. We then fine-tune the base model on each selected subset and evaluate its post-training performance under a standardized protocol. We instantiate the benchmark in terminal problem solving and tool use, selecting trajectories from OpenThoughts-Agent and EnvScaler and evaluating on TBLite and BFCL, respectively. We then evaluate the agents along two complementary dimensions: the post-training performance of the top-ranked subset, reflecting the ability to identify high-value training data, and ranking accuracy, reflecting the ability to predict the relative performance of the selected subsets. In our experiments, selection gains over random selection are limited; agents do not reliably rank their selected groups, and ranking ability does not hold consistently across tasks: Astra identifies the best group in all three tool-use runs but in only one of three terminal runs. Analysis of execution traces on both tasks shows that agents often use similar data signals while interpreting their training value differently.",
+      "authors": [
+        "Yudi Zhang",
+        "Mingyu Cao",
+        "Lu Yin",
+        "Mykola Pechenizkiy",
+        "Shiwei Liu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-10-08T15:50:57+00:00",
+      "link": "https://arxiv.org/pdf/2610.12190v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Benchmarks AI agents selecting training data for autonomous ML research",
+      "llm_evidence_cn": "评测AI智能体自主选择训练数据以支撑机器学习研究",
+      "llm_evidence": "评测AI智能体自主选择训练数据以支撑机器学习研究",
+      "canonical_evidence": "评测AI智能体自主选择训练数据以支撑机器学习研究",
+      "llm_tldr_en": "DataSense-Bench tests whether frontier AI agents can select and rank training data for fine-tuning a small LLM, probing data sense as a step toward AI scientist and recursive self-improvement.",
+      "llm_tldr_cn": "针对递归自我改进与通用人工智能的宣称，论文追问前沿模型是否具备数据感知能力，即能否为训练可靠挑选数据。作者提出DataSense-Bench，让AI智能体检查数据、编写分析代码并预测候选训练子集的表现，但不能直接训练模型或访问评测任务。实验在多个选定子集上微调小模型并比较训练后性能，以此评估智能体的数据选择与性能预测水平。该基准为自动化机器学习研究和AI科学家能力提供了可测量的第一步。",
+      "llm_tldr": "针对递归自我改进与通用人工智能的宣称，论文追问前沿模型是否具备数据感知能力，即能否为训练可靠挑选数据。作者提出DataSense-Bench，让AI智能体检查数据、编写分析代码并预测候选训练子集的表现，但不能直接训练模型或访问评测任务。实验在多个选定子集上微调小模型并比较训练后性能，以此评估智能体的数据选择与性能预测水平。该基准为自动化机器学习研究和AI科学家能力提供了可测量的第一步。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "automating machine learning research and engineering with AI systems",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.33445v1",
+      "source": "arxiv",
+      "title": "From Intelligence to Autonomy: Foundations and Construction of Autonomous Agents for Future Intelligent Systems",
+      "abstract": "Artificial intelligence is moving from one-off perception and generation tasks toward long-term planning, tool use, and interaction with real environments. Greater task competence, however, does not automatically yield autonomy: an external actor may still have to set goals, sustain operating conditions, detect failures, and approve updates. We define an autonomous agent as a system that, within explicit identity and authority boundaries, maintains both task goals and viability conditions, acts continuously using models of the world and itself, and adjusts its control mechanisms and long-term capabilities through feedback. We trace the conceptual path from homeostasis and feedback control to autopoiesis and biological autonomy. We then distinguish six lines of operationalization: computational autopoiesis, behavior-based robotics, agent formalization, adaptive software, embodied adaptation, and robotic self-modeling. On this basis, we propose a one-boundary, four-loop framework in which Operational, Viability, Reflexive, and Learning loops organize task execution, self-maintenance, metacontrol, and governed learning. Five paired simulation experiments test permission constraints, road-closure response, health maintenance, capability re-estimation, and cross-task learning. Their results provide preliminary evidence for the feasibility of these mechanisms, while broader environments and physical systems remain to be tested.",
+      "authors": [
+        "Hongda Zhang",
+        "Ziqing Zhou",
+        "Yuning Chen",
+        "Linqiang Hu",
+        "Yi Liu",
+        "Ding Zhou",
+        "Zhao Huang",
+        "Haining Xu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-10-24T04:47:10+00:00",
+      "link": "https://arxiv.org/pdf/2610.33445v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "autonomous agents adjusting long-term capabilities through feedback",
+      "llm_evidence_cn": "自主智能体通过反馈调整长期能力",
+      "llm_evidence": "自主智能体通过反馈调整长期能力",
+      "canonical_evidence": "自主智能体通过反馈调整长期能力",
+      "llm_tldr_en": "The paper defines autonomous agents as systems that maintain goals and viability within authority boundaries, act continuously with world and self models, and adjust control and long-term capabilities through feedback.",
+      "llm_tldr_cn": "论文指出任务能力强并不等于自主：外部主体仍需设定目标、维持运行并批准更新。作者从稳态调节、反馈控制到自创生梳理概念脉络，将自治智能体定义为在明确身份与权限边界内同时维持任务目标与存续条件、借助世界模型与自我模型持续行动、并通过反馈调整控制机制与长期能力的系统。该框架为构建能随时间自我提升的智能体提供了概念基础与构造原则。",
+      "llm_tldr": "论文指出任务能力强并不等于自主：外部主体仍需设定目标、维持运行并批准更新。作者从稳态调节、反馈控制到自创生梳理概念脉络，将自治智能体定义为在明确身份与权限边界内同时维持任务目标与存续条件、借助世界模型与自我模型持续行动、并通过反馈调整控制机制与长期能力的系统。该框架为构建能随时间自我提升的智能体提供了概念基础与构造原则。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "autonomous agents that improve their own capabilities over time",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.04927v1",
+      "source": "arxiv",
+      "title": "Assembling Insights for Agentic Machine Learning Engineering Systems",
+      "abstract": "Agentic machine learning engineering (MLE) is an emerging AI4SE application for complex ML tasks and a step toward recursive self-improvement of AI systems. Recent agentic MLE systems show the value of leveraging insights from related MLE tasks: some systems condition code generation on expert domain knowledge, which is implicitly curated from peer MLE tasks; some systems have a loop of solving an MLE task, gathering memory to benefit future tasks. However, insight collection and injection remain ad hoc, and existing evaluations often do not control insight sources, making data leakage a threat to validity.   To close these gaps, we systematically study how insights from related MLE tasks affect agentic MLE systems, and how their impact depends on insight type and injection method. We introduce MLE-InsightBench, a benchmark of 160 Kaggle competitions across 12 domains. To prevent leakage, one competition per domain is held out as the target, while the remaining 148 serve as sources only when they cannot have been influenced by the target task, such as through later editions or reused solutions. We also develop MLE-InsightForge, an insight assembly agent that explores source competitions, top human solutions, and writeups to construct three insight types: 12 domain insights summarizing best practices, 148 competition insights describing winning solutions, and 16 improvement insights capturing generic debugging and optimization strategies. These insights are injected either as on-demand skills or as an upfront playbook. In our evaluation, the extracted insights improve the normalized private-test score by 123.9% over a no-insight baseline. Controlled experiments further show that the three insight types are complementary; the better injection mode (skill vs. playbook) varies by tasks, with skills more cost-effective overall; and the gains generalize across backend LLMs.",
+      "authors": [
+        "Bihui Jin",
+        "Yinxi Li",
+        "Kaiyuan Wang",
+        "Pengyu Nie"
+      ],
+      "primary_category": "cs.SE",
+      "categories": [
+        "cs.SE",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-10-04T04:10:28+00:00",
+      "link": "https://arxiv.org/pdf/2610.04927v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Systematically studies how insights from related tasks improve agentic machine learning engineering, a step toward recursive self-improvement",
+      "llm_evidence_cn": "系统研究相关任务洞见如何提升智能体化机器学习工程，是通向递归自我改进的一步",
+      "llm_evidence": "系统研究相关任务洞见如何提升智能体化机器学习工程，是通向递归自我改进的一步",
+      "canonical_evidence": "系统研究相关任务洞见如何提升智能体化机器学习工程，是通向递归自我改进的一步",
+      "llm_tldr_en": "Agentic ML engineering is a path toward recursive self-improvement, but insight collection and injection remain ad hoc and leakage threatens validity. The authors systematically study how cross-task insights affect agentic MLE systems.",
+      "llm_tldr_cn": "智能体化机器学习工程被视为通向递归自我改进的一步，但洞见的收集与注入仍较为随意，且现有评测未控制洞见来源，数据泄漏威胁结论有效性。作者系统研究来自相关MLE任务的洞见如何影响智能体MLE系统，并分析其影响随洞见来源与类型变化的规律。结果为构建更可靠的自动化机器学习研发智能体提供了实证依据，也提示评测需控制洞见来源。",
+      "llm_tldr": "智能体化机器学习工程被视为通向递归自我改进的一步，但洞见的收集与注入仍较为随意，且现有评测未控制洞见来源，数据泄漏威胁结论有效性。作者系统研究来自相关MLE任务的洞见如何影响智能体MLE系统，并分析其影响随洞见来源与类型变化的规律。结果为构建更可靠的自动化机器学习研发智能体提供了实证依据，也提示评测需控制洞见来源。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "automating machine learning research and engineering with AI systems",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2610.18097v1",
+      "source": "arxiv",
+      "title": "APT: Feedback-Driven Agentic Post-Training for Text-to-Image Generation",
+      "abstract": "Post-training is crucial for improving text-to-image models, yet existing pipelines typically rely on manually curated training data and fixed training distributions. We introduce APT (Agentic Post-Training), a fully automated framework that adaptively post-trains a base model according to its evolving capability profile. APT coordinates three agents to construct evaluation sets from user requirements, diagnose model-specific strengths and failure modes, and generate reinforcement learning data with an adaptive prompt distribution that emphasizes underperforming capabilities. By repeatedly evaluating, diagnosing, and updating the generator, APT lets the current model's behavior shape its next training tasks, forming a feedback loop inspired by recursive self-improvement. For general-purpose settings without user-specified evaluation scenarios, we further develop an evaluation harness that enables broad and diverse evaluation set generation. Experiments across multiple base models, benchmarks, and generation architectures demonstrate that APT is model-agnostic, benchmark-agnostic, architecture-agnostic, and fully automated.",
+      "authors": [
+        "Sirui Zhang",
+        "Fangyun Wei",
+        "Dong Chen",
+        "Jinjing Zhao",
+        "Yitong Wang",
+        "Yunuo Chen",
+        "Baining Guo",
+        "Zheng-Jun Zha"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-10-13T10:14:23+00:00",
+      "link": "https://arxiv.org/pdf/2610.18097v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "automated agentic post-training with self-generated evaluation and RL data",
+      "llm_evidence_cn": "自动生成评估与强化学习数据的智能体式后训练",
+      "llm_evidence": "自动生成评估与强化学习数据的智能体式后训练",
+      "canonical_evidence": "自动生成评估与强化学习数据的智能体式后训练",
+      "llm_tldr_en": "Post-training pipelines rely on manual data and fixed distributions. APT uses three agents to build evaluation sets, diagnose failure modes and generate adaptive RL data, letting the model shape its next training tasks in a recursive-inspired loop.",
+      "llm_tldr_cn": "现有文生图后训练流程依赖人工标注数据与固定训练分布，难以适配模型不断变化的能力。作者提出APT，由三个智能体协作从用户需求构建评估集、诊断模型优劣与失败模式，并生成聚焦薄弱能力的自适应强化学习数据。通过反复评估、诊断与更新，模型自身行为塑造下一轮训练任务，形成受递归自我改进启发的反馈闭环。",
+      "llm_tldr": "现有文生图后训练流程依赖人工标注数据与固定训练分布，难以适配模型不断变化的能力。作者提出APT，由三个智能体协作从用户需求构建评估集、诊断模型优劣与失败模式，并生成聚焦薄弱能力的自适应强化学习数据。通过反复评估、诊断与更新，模型自身行为塑造下一轮训练任务，形成受递归自我改进启发的反馈闭环。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "What are the contributions of self improving AI systems to autonomous novel data generation, as well as the modification and engineering of their own learning and training environments?",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.05701v1",
+      "source": "arxiv",
+      "title": "Second-Order Problem Solving for Recursive Self-Improvement in Formal Verification",
+      "abstract": "Recursive self-improvement (RSI) enables agents to iteratively optimize their workflows via execution feedback. However, standard RSI typically operates as a first-order optimizer: it repeatedly patches surface-level parameters in response to immediate failure symptoms, often leading to trial-and-error thrashing without resolving underlying mechanisms. To address this limitation, we introduce SO-RSI, a framework that elevates workflow optimization to a second-order diagnostic inquiry, investigating why failures occur before committing to structural interventions. SO-RSI passively monitors execution traces for three structural anomalies (recurrence, opposing edits, and expectation mismatch) to trigger targeted mechanism investigations. By executing lightweight diagnostic probes and maintaining persistent inquiry memory across RSI rounds, SO-RSI accumulates causal evidence to guide systematic workflow edits rather than parameter patches. Across Lean 4 proof generation and Verus-based verifiable code generation, SO-RSI improves final held-out pass rates over Naive RSI by 21.8 and 25.8 percentage points under matched 24-hour search budgets. Behavioral analyses further confirm that SO-RSI substantially suppresses failure recurrence and eliminates unproductive zero-progress optimization loops.",
+      "authors": [
+        "Yuxuan Jiang",
+        "Aditya Vempaty",
+        "Ashish Jagmohan"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-05T02:25:16+00:00",
+      "link": "https://arxiv.org/pdf/2610.05701v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "second-order diagnostic RSI for workflow optimization",
+      "llm_evidence_cn": "面向工作流优化的二阶诊断式RSI",
+      "llm_evidence": "面向工作流优化的二阶诊断式RSI",
+      "canonical_evidence": "面向工作流优化的二阶诊断式RSI",
+      "llm_tldr_en": "SO-RSI upgrades recursive self-improvement from first-order patching to second-order diagnosis, monitoring execution traces for structural anomalies before committing structural interventions.",
+      "llm_tldr_cn": "标准递归自我改进多是一阶优化器，只针对即时失败症状反复修补表面参数，常导致试错震荡而无法解决底层机制。论文提出SO-RSI框架，被动监控执行轨迹中的重复、对冲编辑与预期不符三类结构异常，触发针对机制的诊断性探究后再实施结构性干预。在形式验证任务上，二阶诊断显著减少无效修改并提升工作流优化的稳定性与效果，将RSI从参数修补提升为机制层面的诊断式自我改进。",
+      "llm_tldr": "标准递归自我改进多是一阶优化器，只针对即时失败症状反复修补表面参数，常导致试错震荡而无法解决底层机制。论文提出SO-RSI框架，被动监控执行轨迹中的重复、对冲编辑与预期不符三类结构异常，触发针对机制的诊断性探究后再实施结构性干预。在形式验证任务上，二阶诊断显著减少无效修改并提升工作流优化的稳定性与效果，将RSI从参数修补提升为机制层面的诊断式自我改进。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2610.22362v1",
+      "source": "arxiv",
+      "title": "CoDA: Co-Evolution of Data Engines and Action Policies",
+      "abstract": "Generative simulation can automate robot environment construction, but physically valid environments are not necessarily useful for training. The challenge is to identify environments that address a policy's failures and supervision that helps it overcome them. We introduce CoDA, a framework in which a simulation data engine and an action policy co-evolve through a shared heterogeneous memory of environment construction, policy failures, and learning progress. The memory compiles validated diagnoses from a vision-language critic into generation programs that recreate difficulties and training programs that help the policy overcome them. We further propose Text2potential to convert these diagnoses into staged potentials for action-chunk value learning, providing dense supervision for policy updates while preserving the task's optimal policy under standard shaping assumptions. Measured learning progress guides further generation and program refinement. Across four manipulation task families, CoDA improves out-of-distribution success from 5.3% after supervised fine-tuning to 27.6%, exceeding the strongest closed-loop baseline by 9.5 percentage points with the same generation budget. On LIBERO-Pro, 15 rounds of generation and training raise success from 25% to 84% under position perturbations and from 1% to 76% under instruction perturbations.",
+      "authors": [
+        "Tianjiao Yu",
+        "Zhilin Ou",
+        "Yifan Shen",
+        "Xinzhuo Li",
+        "Yuanzhe Liu",
+        "Onkar Kishor Susladkar",
+        "Fan Wang",
+        "Ismini Lourentzou"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-10-15T17:59:02+00:00",
+      "link": "https://arxiv.org/pdf/2610.22362v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "co-evolving data engine and policy to auto-generate useful training environments",
+      "llm_evidence_cn": "数据引擎与策略协同演化以自动生成有用训练环境",
+      "llm_evidence": "数据引擎与策略协同演化以自动生成有用训练环境",
+      "canonical_evidence": "数据引擎与策略协同演化以自动生成有用训练环境",
+      "llm_tldr_en": "Proposes CoDA where a simulation data engine and action policy co-evolve via shared memory, auto-constructing environments and supervision that target a policy's failures.",
+      "llm_tldr_cn": "该文指出生成式仿真虽能自动构建机器人环境，但物理有效并不等于对训练有用。作者提出CoDA框架，让仿真数据引擎与动作策略通过共享的异构记忆协同演化，把视觉-语言评论器给出的诊断编译为生成程序与训练程序。方法能自动构造针对策略失败的环境与监督，并提出Text2potential提供稠密价值学习，提升了策略训练效果。",
+      "llm_tldr": "该文指出生成式仿真虽能自动构建机器人环境，但物理有效并不等于对训练有用。作者提出CoDA框架，让仿真数据引擎与动作策略通过共享的异构记忆协同演化，把视觉-语言评论器给出的诊断编译为生成程序与训练程序。方法能自动构造针对策略失败的环境与监督，并提出Text2potential提供稠密价值学习，提升了策略训练效果。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "What are the contributions of self improving AI systems to autonomous novel data generation, as well as the modification and engineering of their own learning and training environments?",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.08902v1",
+      "source": "arxiv",
+      "title": "Agent Plasticity: Measuring Self-Improvement Through Experience",
+      "abstract": "AI agents increasingly operate in environments where they can diagnose failures and improve through experience, yet existing evaluations largely measure what an agent can do at a fixed point in time rather than how effectively it learns. Evaluating self-improvement requires answering three questions: does future performance improve and generalize beyond the interactions that enabled learning; how efficiently are new capabilities acquired; and where does the self-improvement process break down? To answer these questions, we study self-improvement in a controlled setting where agents amortize past experience into reusable artifacts that are inherited by future instances. At each checkpoint, we measure performance on training and held-out environment interactions while accounting for learning cost. We introduce agent plasticity, the efficiency with which an agent converts experience into gains in future held-out performance. Across multiple environments, frontier models exhibit sharply different improvement trajectories despite comparable opportunities to learn. Some achieve substantial and persistent gains, while others remain near or below their initial performance, and gains within the training regime often transfer only partially to out-of-distribution conditions. Endpoint capability and acquisition efficiency also diverge: the agent that ultimately performs best need not be the one that improves most efficiently. Tracing failures through the improvement loop further reveals different candidate bottlenecks. Agents with low plasticity often fail to reuse relevant artifacts, whereas more plastic agents may still fail despite reusing relevant artifacts, pointing to limitations in artifact quality, generalization, or application. Evaluating self-improving agents requires measuring not only what they can do, but how effectively they become better through experience.",
+      "authors": [
+        "Harman Singh",
+        "Anton Bakhtin",
+        "Rulin Shao",
+        "Gabriel Synnaeve",
+        "Ilia Kulikov",
+        "Rob Fergus",
+        "Sanjeev Arora",
+        "Kurt Keutzer",
+        "Jason Weston",
+        "Anuj Mahajan",
+        "Anirudh Goyal"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-06T17:58:57+00:00",
+      "link": "https://arxiv.org/pdf/2610.08902v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "measuring self-improvement through experience with efficiency and breakdown analysis",
+      "llm_evidence_cn": "通过经验衡量自我改进并分析效率与失效点",
+      "llm_evidence": "通过经验衡量自我改进并分析效率与失效点",
+      "canonical_evidence": "通过经验衡量自我改进并分析效率与失效点",
+      "llm_tldr_en": "Existing evaluations measure fixed-point capability, not learning. Agent Plasticity studies self-improvement in a controlled setting, checking whether gains generalize, how efficiently capabilities are acquired, and where improvement breaks down.",
+      "llm_tldr_cn": "现有评估多衡量智能体在某一时点的能力，而非其学习与自我改进的效果。作者提出智能体可塑性评估，在受控环境中让智能体把过往经验固化为可复用产物并由后续实例继承，在每个检查点比较训练与留出环境的交互表现。研究回答了能力是否泛化、获取效率如何以及自我改进在何处失效三个问题，为RSI评估提供系统框架。",
+      "llm_tldr": "现有评估多衡量智能体在某一时点的能力，而非其学习与自我改进的效果。作者提出智能体可塑性评估，在受控环境中让智能体把过往经验固化为可复用产物并由后续实例继承，在每个检查点比较训练与留出环境的交互表现。研究回答了能力是否泛化、获取效率如何以及自我改进在何处失效三个问题，为RSI评估提供系统框架。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "What are the evaluations of computational costs, efficiency, and overall performance of recursive self improving AI systems?",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    }
+  ]
+}

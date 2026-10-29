@@ -1,0 +1,760 @@
+Title: SwarmRSI: Recursive Self-Improvement through Evolving Scientific Agent Swarm
+
+URL Source: https://arxiv.org/pdf/2610.20431v2
+
+Published Time: Tue, 20 Oct 2026 02:33:05 GMT
+
+Number of Pages: 25
+
+Markdown Content:
+# SwarmRSI: Recursive Self-Improvement through Evolving Scientific Agent Swarm 
+
+Qianru Meng 1 Xi Zhang 1 Konstantinos Papakostas 1 Congfeng Cao 1
+
+Wenxiang Hu 1 Tianyi Lu 2 Xiao Zhang 3 Lun Zhou 1
+
+Zaiqiao Meng 4 Zhaochun Ren 2 Xiaohui Yan 1* Yougang Lyu 1*1Huawei Technologies Co., Ltd. 2Leiden University 3University of Groningen 
+
+> 4
+
+Huazhong University of Science and Technology 
+
+> qm17509@gmail.com, yanxiaohui2@huawei.com, youganglyu@gmail.com
+
+Abstract 
+
+Recursive self-improvement (RSI) in scientific research aims to improve agents’ research ca-pabilities through their own experimental ex-perience. Scientific agent swarms can pursue this goal when one agent’s findings and imple-mentations advance another’s research. Two obstacles stand in the way. A failed experiment does not reveal whether its hypothesis or its implementation was at fault, and a program without overall gains can hide components that other agents need. We introduce S WARM RSI, a framework in which a swarm improves its re-search by evolving the research states its agents inherit, including hypotheses, programs and ex-perimental evidence. Feedback-Guided Swarm Mutation uses other agents’ feedback to decide whether to revise a hypothesis or its program. Complementary Swarm Recombination tests retained hypotheses on other agents’ programs and combines complementary components. Re-cursive Swarm Evolution returns every out-come to a shared graph that guides which state each agent updates next. S WARM RSI achieves state-of-the-art (SOTA) results on OpenProb-lems and NatureBench. With Gemini 3.1 Pro Preview, it reaches an average score of 76.2 on OpenProblems, and it matches the published SOTA on 44.4% of NatureBench tasks, the highest Match-SOTA rate among compared methods. On MLE-Bench Lite, it wins medals on 81.8% of tasks, above hypothesis and pro-gram evolution agents with the same backbone. With DeepSeek-V4-Pro in one seed over all 90 NatureBench tasks, about 77% of final best programs descend from a rebase, a crossover or an update triggered by feedback. Biologists reproduce two of its programs and use them in follow-up analyses of intestinal and splenic immunity. 
+
+1 Introduction 
+
+Recursive self-improvement (RSI) in scientific re-search aims to improve agents’ research capa-  
+
+> *Corresponding authors. Promising hypotheses may be abandoned
+> Hypothesis Implementation Experiment
+
+h </>    
+
+> Poor result
+> What needs revision? Useful components may be overlooked
+> Agent A Agent B </> </>
+> No overall gain Future research
+
+# ?
+
+> Useful elsewhere?
+
+Figure 1: Two limitations motivating S WARM RSI. In the top example, a poor result does not show whether the hypothesis or its implementation needs revision, and a promising hypothesis is abandoned. In the bottom example, a program without overall gains holds compo-nents useful to another agent’s later research. Dashed links mark open revisions and potential reuse. 
+
+bilities through their own experimental experi-ence (Guo et al., 2026a; Srikanth et al., 2026). Sci-entific agent swarms offer a way to pursue this goal by coordinating idea generation, implementation, and evaluation across specialized agents (Yang et al., 2025; Tang et al., 2025; Yamada et al., 2025; Lee et al., 2026). Persistent memories and shared histories retain experimental experience for later re-search (Lyu et al., 2026; Zhu et al., 2026; Du et al., 2026; Weng et al., 2026), and accumulated histo-ries can also support improvements to exploration strategies (Zheng et al., 2026). Together, these ca-pabilities create an opportunity for agents exploring different directions to use one another’s findings and implementations in subsequent research. However, sharing experience does not ensure that agents use it to make better research deci-sions. Program evolution refines executable can-didates through execution feedback (Jiang et al., 2025; Nam et al., 2025; Novikov et al., 2025; Liu et al., 2025), while hypothesis evolution im-1arXiv:2610.20431v2 [cs.AI] 19 Oct 2026 proves research directions through iterative gener-ation and evaluation (Gottweis et al., 2026; Wang et al., 2026a; Liu et al., 2026; Jin et al., 2026). As Figure 1 illustrates, promising hypotheses are abandoned after inadequate implementations, and useful components are overlooked in programs that perform poorly overall. We hypothesize that these limitations arise from two interrelated dependencies in scientific research. The value of a hypothesis depends on how it is implemented and how rigorously it is tested. An unsuccessful experiment therefore leaves unclear whether the research direction or its implementa-tion needs revision (Ma et al., 2026; Koo et al., 2026), and feedback from other agents identifies which changes are worth pursuing. Intermediate re-sults also become stepping stones for other search paths (Wang et al., 2019, 2020), and their value depends on combinations with later findings or implementations. Their current performance thus underestimates their contribution to other agents’ future research. This leads to our central question of how scientific agent swarms can evolve toward recursive self-improvement. To address this, we introduce S WARM RSI, a framework that evolves scientific agent swarms for recursive self-improvement. Each agent uses its hypotheses, programs, experimental evidence, and unresolved needs to plan further research, and a shared graph records these inheritable re-search states. In Feedback-Guided Swarm Muta-tion, agents revise hypotheses and programs using other agents’ experimental feedback. Performance differences inform hypothesis revision, and unmet research needs guide implementation changes. In Complementary Swarm Recombination, agents re-visit retained hypotheses on other agents’ imple-mentations and combine program components with complementary strengths. Recursive Swarm Evolu-tion evaluates the resulting candidates, retains use-ful results, feedback and unresolved needs in the shared graph, and uses these states to decide which hypotheses agents revisit and which programs they refine. Each experiment thus updates the states that later agents start from. We evaluate SWARM RSI on OpenProb-lems (Luecken et al., 2025), NatureBench (Wang et al., 2026b) and MLE-Bench Lite (Chan et al., 2025), 118 scientific coding and machine-learning engineering tasks, with two backbones. It achieves SOTA results on OpenProblems and NatureBench and outperforms hypothesis and program evolution agents with the same backbone. With DeepSeek-V4-Pro in one seed over all 90 NatureBench tasks, about 77% of its final best programs descend from a rebase, a crossover or an update triggered by feedback. Biologists reproduce two of its programs and use them in follow-up analyses of intestinal and splenic immunity. Our main contributions are: • We formulate RSI for scientific agent swarms as evolving inheritable research states, so that each experiment updates the hypotheses, programs and evidence that later agents start from. • We introduce S WARM RSI, which updates these states through Feedback-Guided Swarm Muta-tion, Complementary Swarm Recombination and Recursive Swarm Evolution. • S WARM RSI achieves SOTA results on Open-Problems and NatureBench, most of its final Na-tureBench programs build on inherited states, and biologists reproduce its programs for immune analyses. 
+
+2 Related Work 
+
+2.1 LLM Agents for Scientific Research 
+
+LLM agents automate scientific research through hypothesis generation, experiment implementation, and result evaluation (Tang et al., 2025; Yamada et al., 2025). Agents centred on programs search over or refine code with execution feedback (Jiang et al., 2025; Nam et al., 2025), R&D-Agent coor-dinates proposal generation and implementation through specialized roles (Yang et al., 2025), and systems with memory carry execution experience into later experiments (Zhu et al., 2026; Du et al., 2026). Closest to our setting, Arbor links explicit hypotheses to programs and experimental evidence in a persistent hypothesis tree (Jin et al., 2026), and SAGE evaluates competing failure explanations to direct interventions toward hypotheses, experimen-tal design, or implementation (Ma et al., 2026). SWARM RSI likewise grounds hypotheses in exper-iments and lets agents use one another’s feedback and partial results. 
+
+2.2 Recursive Self-Improvement of Agents 
+
+Recursive self-improvement uses an agent’s own experience to improve the mechanisms that guide its subsequent activity. AIDE 2 retains accepted code modifications as the basis for further self-improvement (Srikanth et al., 2026), Dream-RSI refines exploration policies with replay simulators 2Scientific Agent Swarm 
+
+> Hypothesis Agents
+
+... 
+
+> Program Agents
+
+... 
+
+> Evidence Analysis Agents
+
+...          
+
+> Research state stHypotheses Programs Evidence Needs
+> Research task
+> Other agents' feedback or Other agents' results
+> Feedback-Guided Swarm Mutation
+> Hypothesis Program
+> Performance feedback
+
+h h′ </> </>   
+
+> Revise Implement
+> Implementation barrier
+
+h h </> </>   
+
+> Keep Repair Complementary Swarm Recombination
+> Rebase: reuse a hypothesis
+> Agent A Agent B
+
+h + </> h </>      
+
+> Hypothesis Valid base Keep h; adapt base
+> Crossover: combine programs
+> Programs
+> AB
+> Instance scores
+> 1: A > B 2: B > A
+> New program
+> </>
+> Candidate programs
+> Execute & Evaluate Shared Research Graph Select & Inherit
+> st+1
+> Recursive Swarm Evolution
+> Best valid program
+
+Figure 2: Overview of S WARM RSI. Scientific agents use research states assembled from a shared graph. Feedback-Guided Swarm Mutation revises a hypothesis and implements the revision, or retains the hypothesis and repairs its program. Highlighted lines show local modifications. Complementary Swarm Recombination preserves a hypothesis while adapting another agent’s valid program base (rebase), or compares results across instances and adapts components from complementary programs into one new program (crossover). Blue and green code lines indicate crossover sources. The comparisons and code layouts are schematic. All candidates undergo execution and evaluation, and all attempts, whether successful, failed or without gain, update the graph and the next agent’s state 
+
+st+1 .
+
+built from historical discovery trees (Zheng et al., 2026), MASS alternates workflow evolution with model fine-tuning (Lee et al., 2026), and AQuA uses recorded experiments to guide later research proposals (Guo et al., 2026a). These methods im-prove the agent’s code, policy, workflow, or pro-posals. S WARM RSI instead evolves the research states that agents inherit, revising them with other agents’ feedback and reusing retained hypotheses and program components across agents. 
+
+3 SwarmRSI 
+
+SWARM RSI evolves scientific agent swarms by up-dating the research states agents inherit. Feedback-Guided Swarm Mutation uses other agents’ feed-back to guide revisions, and Complementary Swarm Recombination reuses their hypotheses and program components. Recursive Swarm Evolution evaluates every candidate and retains its outcome, so each experiment informs subsequent research. Figure 2 shows the shared research state and the execution loop that updates it. 
+
+3.1 Preliminaries Scientific research task. Given a research goal q,a starter program p0, and budget B, we seek a valid program with high utility. A hypothesis h specifies a modeling or algorithmic mechanism, and a pro-gram p implements it under the task’s constraints. Different programs may test the same hypothesis. Let Pvalid (B) contain the valid programs found and evaluated within budget. The system returns 
+
+p⋆B ∈ arg max 
+
+> p∈P valid (B)
+
+u(p), (1) where u(p) is the utility measured under the task’s evaluation protocol. 
+
+Scientific agent swarm. A scientific agent is a research policy for hypothesis proposal, program development, or evidence analysis. At research step t, the acting agent uses a research state 
+
+st = ( Ht, Pt, Et, Ut), (2) containing the hypotheses, programs, experimen-tal evidence, and unresolved needs available for 3its current action. It assembles this state from relevant records in the shared graph Gt, includ-ing other agents’ results, and unresolved research needs. Each record ξi = ( Hi, P i, X i, E i) con-tains the tested hypothesis, parent and resulting pro-grams, outcome, and execution and implementation evidence. The graph retains failed attempts and at-tempts without gain, and its edges track hypothesis– program associations and parent or reuse relations. Mutation and recombination use st to generate sub-sequent candidates. 
+
+3.2 Feedback-Guided Swarm Mutation 
+
+To guide revisions of hypotheses and their im-plementations, Feedback-Guided Swarm Mutation uses experimental feedback from the swarm. An unsuccessful run points to an implementation bar-rier, and differences across instances point to a revised research direction. At step t, the agent uses the selected parent pair (ht, p t) and state st, which provides outcomes, implementation evidence, and unresolved needs from its own and other agents’ records. The agent proposes a hypothesis and a revision plan: 
+
+(˜ht, δ t) = Propose( q, h t, p t; st), (3) where δt describes the intended changes and their rationale. Differences across instances guide hy-pothesis revisions, and execution failures or unreal-ized interventions guide program repair. We call a revision that changes the hypothesis an H-mutation ,and one that keeps it ( ˜ht = ht) and repairs only the implementation a P-mutation . The agent then implements the plan on the parent program using relevant state information: 
+
+˜pt = Implement( pt, ˜ht, δ t; st). (4) The resulting candidate (˜ht, ˜pt) retains its par-ent relation and revision rationale in the shared research state. It then enters the shared evaluation loop, which tests validity and measures utility. 
+
+3.3 Complementary Swarm Recombination 
+
+Complementary Swarm Recombination reuses par-tial results across agents, including programs whose overall scores did not improve. 
+
+Hypothesis reuse. For a hypothesis ht with un-resolved implementation needs, an agent selects a valid base bt from another agent by matching these needs to program mechanisms (Wiegand et al., 2001). The rebase operation keeps ht and adapts its implementation to bt, giving (˜ht, ˜pt) = (ht, Rebase( ht, b t; st)) .
+
+Program recombination. Crossover combines programs with complementary strengths across instances (Holland, 1975; Goldberg, 1989). For each dataset or subtask k, let p⋆k be the valid pro-gram with the highest utility uk observed by step 
+
+t. Donors are the programs that outperform the parent on some instance, ranked by their largest advantage, 
+
+D(pt) = {p⋆k : uk(p⋆k) > u k(pt)},
+
+∆t(d) = max  
+
+> k:p⋆k=d
+
+uk(d) − uk(pt). (5) Each instance takes its components from the high-est ranked donor that outperforms the parent there and keeps the parent’s components elsewhere. Both operations record their sources and send the new candidate to the shared evaluation loop. 
+
+3.4 Recursive Swarm Evolution 
+
+Recursive Swarm Evolution decides which update to make next and returns every outcome to the shared graph. It maintains a hypothesis frontier 
+
+FH of active hypotheses and a program frontier FP
+
+of valid program representatives. For H/P selec-tion , which decides whether the next step revises a hypothesis (H) or a program (P), it scores each fea-sible frontier f ∈ { H, P } with a discounted-UCB index (Auer et al., 2002; Garivier and Moulines, 2011) 
+
+Sf = ˆ μf + β
+
+s
+
+log(1 + NH + NP )
+
+Nf
+
++ γψ f , (6) where ˆμf is recent improvement per token cost, Nf
+
+is the discounted experiment count, and ψf is the saturated pressure from unresolved needs that f can address. The weights β and γ set exploration and request pressure. Untried frontiers and frontiers that have waited long take priority over the score. Each candidate is executed and evaluated under the task protocol. Execution checks test comple-tion and task compliance, and source and output comparisons check whether the intended change was implemented. The record ξt of every attempt, including failed ones and those without gain, up-dates the graph to Gt+1 , from which the next acting agent assembles its state st+1 . An implementation failure keeps the hypothesis and requests program repair, mixed gains and losses across instances re-quest a revised hypothesis, and a new incumbent 4Method Backbone Denoise Label Batch SVG Decomp Visual Avg ↑
+
+Human Expert Task-specific 28.0 85.0 71.0 66.0 49.0 44.0 57.2 Biomni Claude 4 Sonnet 16.0 89.0 82.0 16.0 53.0 35.0 48.5 ChatGPT GPT-5 3.0 81.0 83.0 60.0 74.0 38.0 56.5 AIDE † DeepSeek-V4-Pro 27.4 70.6 78.0 72.8 46.1 39.8 55.8 TusoAI † DeepSeek-V4-Pro 31.5 58.7 79.5 79.0 84.1 69.8 67.1 DeepSeek-V4-Pro 33.6 74.2 82.5 83.9 86.0 84.8 74.2 
+
+SWARM RSI †
+
+Gemini 3.1 Pro Preview 40.2 80.7 78.8 87.8 83.4 86.4 76.2 
+
+Table 1: Main results on the six OpenProblems tasks. Scores are normalized and scaled by 100. Avg is the six-task mean, recomputed from reported task scores for published references. † denotes our means over three seeds. Bold and underlined values indicate best and second best results, including ties at the reported precision. All Protein Cellular Physical Molec. Relat. Biomed. Method Backbone S↑ M↑ S↑ M↑ S↑ M↑ S↑ M↑ S↑ M↑ S↑ M↑ S↑ M↑
+
+Claude Code DeepSeek-V4-Pro 4.4 23.3 6.3 37.5 9.7 29.0 0.0 7.7 0.0 9.1 0.0 60.0 0.0 7.1 MiniMax-M3 6.7 27.8 6.3 37.5 12.9 29.0 7.7 15.4 0.0 36.4 0.0 60.0 0.0 7.1 GLM-5.2 13.3 35.6 12.5 43.8 22.6 41.9 15.4 15.4 0.0 36.4 0.0 60.0 7.1 21.4 Kimi K3 14.4 33.3 6.3 31.3 22.6 38.7 15.4 15.4 9.1 36.4 0.0 60.0 14.3 28.6 Qwen 3.8 Max 0902 17.8 35.6 12.5 37.5 25.8 38.7 23.1 23.1 0.0 27.3 0.0 60.0 21.4 35.7 
+
+Codex GPT-5.4 6.7 24.4 6.3 37.5 9.7 22.6 15.4 23.1 0.0 18.2 0.0 60.0 0.0 7.1 GPT-5.5 4.4 25.6 6.3 31.3 9.7 25.8 0.0 7.7 0.0 18.2 0.0 60.0 0.0 28.6 Gemini CLI Gemini 3.5 Flash 10.0 25.6 6.3 31.3 16.1 32.3 23.1 23.1 0.0 18.2 0.0 60.0 0.0 0.0 Arbor † DeepSeek-V4-Pro 12.2 36.7 ∗ 6.3 31.3 16.1 48.4 23.1 23.1 0.0 27.3 0.0 60.0 14.3 28.6 AIDE † DeepSeek-V4-Pro 10.0 27.8 ∗ 6.3 25.0 16.1 35.5 15.4 15.4 0.0 27.3 0.0 60.0 7.1 14.3 DeepSeek-V4-Pro 15.6 44.4 0.0 37.5 22.6 48.4 53.8 53.8 0.0 45.5 0.0 60.0 0.0 28.6 
+
+SWARM RSI †
+
+Gemini 3.1 Pro Preview 14.4 44.4 6.3 43.8 22.6 38.7 23.1 61.5 9.1 54.5 20.0 80.0 0.0 21.4 Table 2: Main results on all 90 NatureBench tasks. S and M denote Surpass-SOTA and Match-SOTA rates (%). † denotes our means over three seeds. ∗ marks All-M differences from S WARM RSI with the same backbone significant at p < 0.05 (McNemar test). Bold and underlined values indicate best and second best rates, including ties. Method Backbone Above Median ↑ Bronze Silver Gold ↑ Any-Medal ↑
+
+MLEvolve DeepSeek-V4-Pro † 81.8 9.1 27.3 36.4 72.7 Gemini 3.1 Pro Preview – – – – 80.3 Arbor DeepSeek-V4-Pro † 86.4 4.5 31.8 40.9 77.3 GPT-5.5 95.5 0.0 9.1 77.3 86.4 
+
+ML-Master 2.0 DeepSeek-V3.2-Speciale 84.9 13.6 31.8 30.3 75.8 Famou-Agent 2.0 Gemini 3 Pro Preview 93.9 12.1 18.2 50.0 80.3 DeepSeek-V4-Pro 90.9 9.1 27.3 45.5 81.8 
+
+SWARM RSI †
+
+Gemini 3.1 Pro Preview 86.4 9.1 31.8 40.9 81.8 Table 3: Main results on 22 MLE-Bench Lite tasks (%). † denotes our means over three seeds. Any-Medal combines exclusive medal rates before rounding, and – denotes unreported values. Bold and underlined values indicate best and second best Above Median, Gold, and Any-Medal rates, including ties. 
+
+requests that retained hypotheses be realized on it. The loop repeats until budget B is exhausted and returns the best valid program. 
+
+4 Experiments 
+
+4.1 Research Questions 
+
+We address four research questions and illustrate biological applications through case studies: RQ1 :How does S WARM RSI perform across benchmarks and backbones, and at what token cost? RQ2 :How do Feedback-Guided Swarm Mutation, Com-plementary Swarm Recombination, and Recursive Swarm Evolution contribute to performance? RQ3 :How do experimental feedback and reused interme-diate results guide the swarm’s subsequent research within and across tasks? RQ4 : What are the main failure modes, and how frequent are they? 
+
+4.2 Benchmarks 
+
+We evaluate S WARM RSI on scientific coding and machine-learning engineering tasks across three benchmarks. OpenProblems (Luecken et al., 2025) contains six single-cell analysis tasks following TusoAI (Turcan et al., 2026). Na-
+
+570 75 80 85 Average score  
+
+> OpenProblems
+> 10 30 50 Rate (%)
+> NatureBench
+> Match Surpass
+> 40 60 80 Rate (%)
+> MLE-Bench Lite
+> Any-Medal Gold
+> DeepSeek-V4-Pro Gemini 3.1 Pro Preview
+
+Figure 3: S WARM RSI with two backbones. Full bars give Match-SOTA and Any-Medal rates (%), and solid portions give Surpass-SOTA and Gold rates.                       
+
+> Variant Match Surpass Mean g
+> SWARM RSI 44.4 15.6 12.8
+> Feedback-Guided Swarm Mutation
+> w/o H-mutation 34.4 8.9 7.2 w/o P-mutation 31.1 6.7 5.4
+> Complementary Swarm Recombination
+> w/o recombination 37.8 7.8 7.6
+> Recursive Swarm Evolution
+> w/o shared graph 36.7 10.0 8.1 w/o H/P selection 35.6 8.9 4.6
+
+Table 4: NatureBench ablations on all 90 tasks with DeepSeek-V4-Pro, averaged over three seeds and grouped by the mechanism each variant removes. Match and Surpass are Match-SOTA and Surpass-SOTA rates (%), and mean g is scaled by 100. 
+
+tureBench (Wang et al., 2026b) contains all 90 scientific coding tasks across six domains. MLE-Bench Lite (Chan et al., 2025) contains 22 compe-titions from its low-complexity split. 
+
+4.3 Baselines 
+
+We compare against program evolution agents 
+
+(AIDE and MLEvolve), hypothesis evolution agents (Arbor), domain-specific scientific agents 
+
+(TusoAI and Biomni (Huang et al., 2026)), and 
+
+general coding agents (Claude Code (Anthropic, 2026), Codex (OpenAI, 2026a) and Gemini CLI (Google, 2026)). 
+
+4.4 Evaluation Metrics 
+
+OpenProblems reports normalized task scores scaled by 100 and their unweighted mean. Na-tureBench reports Match-SOTA ( g ≥ 0) and Surpass-SOTA ( g > 0.1) rates, where g is the of-ficial direction-adjusted improvement over SOTA. MLE-Bench Lite reports Above Median and medal rates from official grading on the private test split. Rates retain all tasks in the denominator, including invalid or missing results. Match-SOTA compar-isons with Arbor and AIDE on NatureBench use 95% paired bootstrap confidence intervals and Mc-Nemar tests, and other comparisons are descriptive. Token cost sums uncached input and output tokens over all LLM calls in a search. 
+
+4.5 Implementation Details 
+
+SWARM RSI and rerun baselines use DeepSeek-V4-Pro (DeepSeek, 2026) under matched settings for each benchmark. Results from our runs in Tables 1– 3 are averaged over three random seeds. Published results keep the settings of their sources. We addi-tionally evaluate S WARM RSI with Gemini 3.1 Pro Preview (Google DeepMind, 2026). In each run, all agents share one backbone and advance lineages that exchange results through the shared graph. 
+
+5 Results and Analysis 
+
+To answer our research questions, we compare benchmark performance, conduct component ab-lations, examine search trajectories, analyze anno-tated failures, and report biological case studies. 
+
+5.1 Main Results (RQ1) 
+
+Tables 1 to 3 summarize benchmark performance, and we make three observations. • SWARM RSI outperforms domain-specific and general coding agents. With DeepSeek-V4-Pro, it reaches an OpenProblems average of 74.2 against 67.1 for TusoAI and exceeds Claude Code with the same backbone by 21.1 percentage points (pp) in NatureBench Match-SOTA. • SWARM RSI outperforms hypothesis and pro-gram evolution agents. With the same back-bone, its NatureBench Match-SOTA rate exceeds Arbor by 7.8 pp and AIDE by 16.7 pp, both sig-nificantly. Its 81.8% Any-Medal rate on MLE-Bench Lite also exceeds Arbor and MLEvolve, and, as shown in Section B.6, it uses fewer tokens than TusoAI and Arbor. • SWARM RSI remains strong across backbones. 
+
+As shown in Figure 3, with Gemini 3.1 Pro Pre-view it reaches the highest OpenProblems aver-age of 76.2 and the same 44.4% NatureBench Match-SOTA rate as with DeepSeek-V4-Pro, which exceeds every compared method, and it keeps the 81.8% Any-Medal rate on MLE-Bench Lite. 
+
+5.2 Ablation Studies (RQ2) 
+
+Table 4 compares S WARM RSI with five variants on all 90 NatureBench tasks using DeepSeek-V4-Pro, grouped by the mechanism they remove and other-wise unchanged. w/o H-mutation only repairs pro-6grams under existing hypotheses, w/o P-mutation 
+
+only revises hypotheses, w/o recombination dis-ables rebase and crossover, w/o shared graph re-moves agents’ access to one another’s records, and 
+
+w/o H/P selection replaces adaptive H/P selection with fixed H/P alternation. As shown in Table 6, all variants lower mean g with paired 95% CIs exclud-ing zero, and we make three observations. • Feedback-Guided Swarm Mutation needs both revision modes. Removing H- or P-mutation lowers Match-SOTA by 10.0 and 13.3 pp, respectively. The two modes are complemen-tary, and program repair contributes more. • Complementary Swarm Recombination im-proves solution quality. Disabling rebase and crossover lowers Match-SOTA by 6.7 pp and Surpass-SOTA from 15.6% to 7.8%, and its drop in mean g excludes zero. RQ3 traces this gain to reused hypotheses and program components in most final programs. • Recursive Swarm Evolution depends on the shared graph and H/P selection. Match-SOTA drops by 7.8 pp without the shared graph, through which agents use other agents’ records, and by 8.9 pp without H/P selection, which also causes the largest drop in mean g.
+
+5.3 Trajectory Analysis (RQ3) 
+
+We examine how S WARM RSI uses feedback and retained research states during search. Figure 4a,b compares diagnostics with AIDE and Arbor on all 90 NatureBench tasks, and Figure 4c,d shows one run per method on two tasks. • SWARM RSI recovers more failed implemen-tations and turns more of its hypotheses into improvements. Later refinement turns 35% of failed implementations into new best valid pro-grams, compared with 12% for AIDE and 5% for Arbor. Of its proposed hypotheses, 62% lead to an improvement, against 17% for Arbor. • SWARM RSI revises with prior feedback. In one NatureBench seed with DeepSeek-V4-Pro, updates triggered by performance feedback or un-resolved implementation requests reach a 28.4% rate of new bests, against 21.9% over all updates. On 00917, after nine candidates without improve-ment, two successive hypothesis mutations revise the program’s readout and reach Surpass-SOTA. SwarmRSI AIDE Arbor              
+
+> 010 20 30 40
+> Failure recovery (%)  35
+> 12 5
+> (a) Program mutation
+> SwarmRSI Arbor
+> 050 100
+> Hypotheses (%)  100 94 62 58 36 17
+> (b) Hypothesis mutation
+> Implemented Evaluated Improved
+> 010 20 30 40 50
+> −10
+> −100.1
+> Best-so-far g
+> P-mutation H-mutation
+> (c) 00917
+> 0510 15 20
+> Scored evaluations
+> −0.5
+> −0.1 00.1
+> Best-so-far g
+> Crossover Rebase (d) 00639
+> SwarmRSI AIDE Arbor
+
+Figure 4: Search behaviour on NatureBench with DeepSeek-V4-Pro. (a) Failure recovery, the share of failed implementations whose later refinement yields a new best, over 90 tasks. (b) Nested shares of pro-posed hypotheses that are implemented (white), evalu-ated (light) and improved (hatched). (c, d) Best-so-far g
+
+of one recorded run per method on symmetric log axes. 
+
+• SWARM RSI reuses partial results across re-search trajectories. In the same seed, about 77% of final best programs descend from at least one rebase, crossover or update triggered by feed-back, and these updates yield new bests more often than other updates at every stage of search. On 00639, crossover combines components from three programs to reach Match-SOTA, and a later rebase step activates retained message-passing and ranking-loss code that the program had not executed, further improving g. On 00795, rebase tests an unrealized hypothesis on a later program, and crossover then reuses a component from a program that had not improved overall. • Inherited research states transfer to new tasks. 
+
+As shown in Section C.2, the state inherited after three generations of source tasks raises mean g
+
+on 12 held-out NatureBench tasks from 12.01 to 21.89 and Match-SOTA from 41.7% to 86.1% over cold start. 
+
+5.4 Failure Analysis (RQ4) 
+
+We annotate 644 failed attempts from 35 SWARM RSI task trajectories that fall below Match-SOTA on NatureBench or earn no medal on MLE-Bench Lite. Two annotators judge implementa-70 1 2 3 0 2 4                 
+
+> B7 (n=71) B8 (n=57) B9 (n=332) B10 (n=373)
+> UMAP 1 UMAP 2
+> (a) Source (b) MHCII / Cd74 (c) Antimicrobial B-zone PALS Marginal zone Red pulp No annotation E1 E2 E3
+> (d) Manual anatomy (f) Bcell environments (e) SwarmRSI
+
+Figure 5: Biological case studies. (a–c) UMAP of the reproduced S WARM RSI representation for 833 target enterocytes, coloured by source and by MHC-II/Cd74 and antimicrobial RNA scores (mean normalized log RNA). Green and pink denote helminth day-10 and Salmonella sources. (d–f) BALBc-1 spleen with manual annotations, S WARM RSI program partitions, and expert neighbourhood groups E1 (B/follicular-dendritic-cell-rich), E2 (myeloid/erythroid-rich) and E3 (T-cell-rich). 
+
+tion fidelity, execution success and improvement over the preceding best valid result, with Cohen’s 
+
+κ = 0 .92 . Most failures are faithful interven-tions without gains. They account for 93.3% of these failures, and implementation or execution problems for 6.7%. A valid score can hide such a problem, as on task 00838, where downstream code overwrites a proposed amino-acid substitu-tion that the evaluation thus never tests, which is why Feedback-Guided Swarm Mutation reads im-plementation evidence alongside scores. On task 02316, by contrast, a negative-binomial mixture with a Potts spatial prior runs correctly but col-lapses all locations into one cluster, a faithful inter-vention without gain. 
+
+5.5 Biological Case Studies 
+
+We examine the scientific utility of programs evolved by S WARM RSI. Biologists reproduced two of its programs and interpreted them with measured RNA and protein. 
+
+Enterocyte: infection-associated immune ex-pression. On the contrastiveVI task (Weinberger et al., 2023), the evolved program removes from each infected cell the mean of its healthy neigh-bours before reducing the residuals. On the Haber intestinal instance (Haber et al., 2017), measured enterocyte RNA shows higher MHC-II scores in helminth day 10 than Salmonella infection, with means of 1.17 and 0.34. Figure 5a–c shows the cor-responding expression gradients on the reproduced representation. Within the two helminth day-10 sources, MHC-II scores are locally more coher-ent on this representation than on RNA PCA, with Spearman’s ρ after covariate adjustment of 0.77 and 0.69 against 0.65 and 0.40, whereas antimicro-bial scores are less locally coherent than on RNA PCA in each of the four sources. 
+
+CytoCommunity: spatial context without con-sistent marker shifts. On the CytoCommunity task (Hu et al., 2024), the evolved program com-bines anatomical priors derived from phenotypes with an anatomically constrained Markov random field, raising g from 0.045 to 0.102. Figure 5d–f compares its partitions with manual anatomy and experts’ subsequent grouping of B-cell neighbour-hoods by local cell composition. Across three spleen images, 20–21% of B cells in the manually annotated marginal zone occupy myeloid/erythroid-rich neighbourhoods. Goltsev et al. (2018) reported that B220 and CD79b levels on splenic B cells vary with the local neighbourhood across the spleen. Within the marginal zone, after matching these B cells on location and phenotype within each image, these and four other markers show no consistent shift between neighbourhoods across the three im-ages, and the B220 effect changes sign. 
+
+6 Conclusion 
+
+We began with two obstacles for scientific agent swarms. A failed experiment does not show whether its hypothesis or its implementation was at fault, and a program without overall gains can still hold a component that another agent needs. SWARM RSI addresses both. Feedback-Guided Swarm Mutation uses other agents’ feedback to de-cide whether to revise a hypothesis or repair its pro-gram, and Complementary Swarm Recombination carries retained hypotheses and useful components into other agents’ work. Recursive Swarm Evolu-tion returns every outcome to the shared graph, so each experiment changes the states that later agents start from. It achieves SOTA results on OpenProb-lems and NatureBench and outperforms baselines with the same backbone, most final NatureBench programs build on such reuse, and biologists repro-duce its programs for follow-up analyses of intesti-8nal and splenic immunity. A swarm thus improves its own research by evolving what its agents in-herit. 9References 
+
+Anthropic. 2026. Claude Code. https://claude. com/product/claude-code . Product documenta-tion; accessed 6 September 2026. Peter Auer, Nicolò Cesa-Bianchi, and Paul Fischer. 2002. Finite-time analysis of the multiarmed ban-dit problem. Machine Learning , 47(2–3):235–256. Congfeng Cao, Lipeng Zuo, Konstantinos Papakostas, Qiwei Xu, Songwei Xu, Lun Zhou, Zhaochun Ren, Yougang Lyu, and Xiaohui Yan. 2026. SearchJev: A fast and calibrated system-1 model for search agents. 
+
+arXiv preprint arXiv:2610.05107 .Jun Shern Chan, Neil Chowdhury, Oliver Jaffe, James Aung, Dane Sherburn, Evan Mays, Giulio Starace, Kevin Liu, Leon Maksin, Tejal Patwardhan, Lil-ian Weng, and Aleksander M ˛ adry. 2025. MLE-bench: Evaluating machine learning agents on ma-chine learning engineering. In International Confer-ence on Learning Representations .DeepSeek. 2026. DeepSeek V4 Preview Re-lease. https://api-docs.deepseek.com/news/ news260424/ .Shangheng Du, Xiangchao Yan, Jinxin Shi, Zong-sheng Cao, Shiyang Feng, Zichen Liang, Boyuan Sun, Tianshuo Peng, Yifan Zhou, Xin Li, Jie Zhou, Liang He, Bo Zhang, and Lei Bai. 2026. MLE-volve: A self-evolving framework for automated ma-chine learning algorithm discovery. arXiv preprint arXiv:2606.06473 .FrontisAI. 2026. NatureBench leaderboard. https:// frontisai.github.io/NatureBench/ . Accessed 7 October 2026. Aurélien Garivier and Eric Moulines. 2011. On upper-confidence bound policies for switching bandit prob-lems. In International Conference on Algorithmic Learning Theory , pages 174–188. Timnit Gebru, Jamie Morgenstern, Briana Vecchione, Jennifer Wortman Vaughan, Hanna Wallach, Hal Daumé, III, and Kate Crawford. 2021. Datasheets for datasets. Communications of the ACM , 64(12):86– 92. David E. Goldberg. 1989. Genetic Algorithms in Search, Optimization, and Machine Learning . Addison-Wesley. Yury Goltsev, Nikolay Samusik, Julia Kennedy-Darling, Salil Bhate, Matthew Hale, Gustavo Vazquez, Sarah Black, and Garry P. Nolan. 2018. Deep profiling of mouse splenic architecture with CODEX multiplexed imaging. Cell , 174(4):968–981.e15. Google. 2026. Gemini CLI. https://github.com/ google-gemini/gemini-cli . Official repository and documentation; accessed 5 October 2026. Google DeepMind. 2026. Gemini 3.1 Pro: Asmarter model for your most complex tasks. 
+
+https://blog.google/innovation-and-ai/ models-and-research/gemini-models/ gemini-3-1-pro/ .Juraj Gottweis, Wei-Hung Weng, Alexander Daryin, Tao Tu, Petar Sirkovic, Artiom Myaskovsky, Grze-gorz Glowaty, Felix Weissenberger, Alessio Orlandi, Dan Popovici, Anil Palepu, Keran Rong, Ryutaro Tanno, Khaled Saab, Fan Zhang, Jacob Blum, An-drew Carroll, Kavita Kulkarni, Nenad Tomašev, and 32 others. 2026. Accelerating scientific discovery with Co-Scientist. Nature , 655(8122):487–496. Jiacheng Guo, Suozhi Huang, Yunlong Gao, Zihao Li, Jason Ge, Shushu Liang, Xu Kuang, and Mengdi Wang. 2026a. AQuA: Recursively self-improving quantitative trading research agents. arXiv preprint arXiv:2608.12841 .Shuyu Guo, Wenxiang Hu, Yuyue Zhao, Yougang Lyu, and Xiaohui Yan. 2026b. RubricReviewer: From direct critique to objective and comprehen-sive rubric-driven peer review. arXiv preprint arXiv:2608.00005 .Adam L. Haber, Moshe Biton, Noga Rogel, Rebecca H. Herbst, Karthik Shekhar, Christopher Smillie, Grace Burgin, Toni M. Delorey, Michael R. Howitt, Yarden Katz, Itay Tirosh, Semir Beyaz, Danielle Dionne, Mei Zhang, Raktima Raychowdhury, Wendy S. Gar-rett, Orit Rozenblatt-Rosen, Hai Ning Shi, Omer Yil-maz, and 2 others. 2017. A single-cell survey of the small intestinal epithelium. Nature , 551(7680):333– 339. John H. Holland. 1975. Adaptation in Natural and Artificial Systems . University of Michigan Press. Yuxuan Hu, Jiazhen Rong, Yafei Xu, Runzhi Xie, Jacqueline Peng, Lin Gao, and Kai Tan. 2024. Unsu-pervised and supervised discovery of tissue cellular neighborhoods from cell phenotypes. Nature Meth-ods , 21(2):267–278. Kexin Huang, Serena Zhang, Hanchen Wang, Yuan-hao Qu, Yingzhou Lu, Ryan Li, Yusuf Roohani, Lin Qiu, Shiyi Cao, Gavin Li, Junze Zhang, Di Yin, Rick Wierenga, Deniz Kavi, Sherry Liu, Tianwei She, Shruti Marwaha, Jennefer N. Carter, Xin Zhou, and 9 others. 2026. Autonomous biomedical re-search with an artificial intelligence agent. Science ,393(6813):eadz4351. Zhengyao Jiang, Dominik Schmidt, Dhruv Srikanth, Dixing Xu, Ian Kaplan, Deniss Jacenko, and Yuxiang Wu. 2025. AIDE: AI-driven exploration in the space of code. arXiv preprint arXiv:2502.13138 .Jiajie Jin, Yuyang Hu, Kai Qiu, Qi Dai, Chong Luo, Guanting Dong, Xiaoxi Li, Tong Zhao, Xiaolong Ma, Gongrui Zhang, Zhirong Wu, Bei Liu, Zhengyuan Yang, Linjie Li, Lijuan Wang, Hongjin Qian, Yutao Zhu, and Zhicheng Dou. 2026. Toward generalist autonomous research via hypothesis-tree refinement. 
+
+arXiv preprint arXiv:2606.11926 .
+
+10 Evangelos Kanoulas, Panagiotis Eustratiadis, Yongkang Li, Yougang Lyu, Vaishali Pal, Gabrielle Poer-wawinata, Jingfen Qiao, and Zihan Wang. 2025. Agent-centric information access. arXiv preprint arXiv:2502.19298 .Philipp Koehn. 2004. Statistical significance tests for machine translation evaluation. In Proceedings of the 2004 Conference on Empirical Methods in Natural Language Processing , pages 388–395. Association for Computational Linguistics. Jaywon Koo, Jefferson Hernandez, Ruozhen He, Hanjie Chen, Chen Wei, and Vicente Ordonez. 2026. Agen-tic discovery with active hypothesis exploration for visual recognition. arXiv preprint arXiv:2604.12999 .Hyunin Lee, Jinglue Xu, Jeffrey Seely, Donghyun Lee, Somayeh Sojoudi, Matei Zaharia, and Yu-jin Tang. 2026. Recursive self-improvement through multi-agent self-supervision. arXiv preprint arXiv:2610.12176 .Annan Li, Chufan Wu, Zengle Ge, Yee Hin Chong, Zhi-nan Hou, Lizhe Cao, Cheng Ju, Jianmin Wu, Huaim-ing Li, Haobo Zhang, Shenghao Feng, Mo Zhao, Fengzhi Qiu, Rui Yang, Mengmeng Zhang, Wenyi Zhu, Yingying Sun, Quan Sun, Shunhao Yan, and 3 others. 2025. The FM agent. arXiv preprint arXiv:2510.26144 .Stephanie Lin, Jacob Hilton, and Owain Evans. 2022. TruthfulQA: Measuring how models mimic human falsehoods. In Proceedings of the 60th Annual Meet-ing of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 3214–3252. Associ-ation for Computational Linguistics. Jieyuan Liu, Mengzhou Hu, Jefferson Chen, JungHo Kong, Pratibha Jagannatha, Yiming Gao, Dexter Pratt, Hsin-Yuan Lee, Zhiting Hu, Trey Ideker, Wei Wang, Eric P. Xing, and Zhen Wang. 2026. HypoE-volve: Genetic algorithms enable multi-agent LLMs to discover scientific hypotheses. arXiv preprint arXiv:2609.15938 .Zexi Liu, Yuzhu Cai, Xinyu Zhu, Yujie Zheng, Runkun Chen, Ying Wen, Yanfeng Wang, Weinan E, and Siheng Chen. 2025. ML-Master: Towards AI-for-AI via integration of exploration and reasoning. arXiv preprint arXiv:2506.16499 .Chris Lu, Cong Lu, Robert Tjarko Lange, Jakob Foer-ster, Jeff Clune, and David Ha. 2024. The AI scien-tist: Towards fully automated open-ended scientific discovery. arXiv preprint arXiv:2408.06292 .Malte D. Luecken, Scott Gigante, Daniel B. Burkhardt, Robrecht Cannoodt, Daniel C. Strobl, Nikolay S. Markov, Luke Zappia, Giovanni Palla, Wesley Lewis, Daniel Dimitrov, Michael E. Vinyard, D. S. Ma-gruder, Michaela F. Mueller, Alma Andersson, Emma Dann, Qian Qin, Dominik J. Otto, Michal Klein, Olga Borisovna Botvinnik, and 36 others. 2025. Defining and benchmarking open problems in single-cell analysis. Nature Biotechnology , 43(7):1035– 1040. Yougang Lyu, Jitai Hao, Zihan Wang, Kai Zhao, Shen Gao, Pengjie Ren, Zhumin Chen, Fang Wang, and Zhaochun Ren. 2023a. Multi-defendant legal judg-ment prediction via hierarchical reasoning. In Find-ings of the Association for Computational Linguis-tics: EMNLP 2023 , pages 2198–2209. Association for Computational Linguistics. Yougang Lyu, Piji Li, Yechang Yang, Maarten de Rijke, Pengjie Ren, Yukun Zhao, Dawei Yin, and Zhaochun Ren. 2023b. Feature-level debiased natural language understanding. In Proceedings of the AAAI Con-ference on Artificial Intelligence , volume 37, pages 13353–13361. Yougang Lyu, Shijie Ren, Yue Feng, Zihan Wang, Zhumin Chen, Zhaochun Ren, and Maarten de Rijke. 2025a. Self-adaptive cognitive debiasing for large language models in decision-making. arXiv preprint arXiv:2504.04141 .Yougang Lyu, Zihan Wang, Zhaochun Ren, Pengjie Ren, Zhumin Chen, Xiaozhong Liu, Yujun Li, Hongsong Li, and Hongye Song. 2022. Improving legal judg-ment prediction through reinforced criminal element extraction. Information Processing & Management ,59(1):102780. Yougang Lyu, Lingyong Yan, Shuaiqiang Wang, Haibo Shi, Dawei Yin, Pengjie Ren, Zhumin Chen, Maarten de Rijke, and Zhaochun Ren. 2024a. KnowTun-ing: Knowledge-aware fine-tuning for large language models. In Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing ,pages 14535–14556. Association for Computational Linguistics. Yougang Lyu, Lingyong Yan, Zihan Wang, Dawei Yin, Pengjie Ren, Maarten de Rijke, and Zhaochun Ren. 2025b. MACPO: Weak-to-strong alignment via multi-agent contrastive preference optimization. In 
+
+The Thirteenth International Conference on Learning Representations .Yougang Lyu, Xi Zhang, Yuyue Zhao, Konstantinos Papakostas, Xinhao Yi, Shuyu Guo, Wenxiang Hu, Jan Piotrowski, Jakub Kaliski, Jacopo Urbani, Za-iqiao Meng, Lun Zhou, Zhaochun Ren, and Xiaohui Yan. 2026. EvoScientist: Towards multi-agent evolv-ing AI scientists for end-to-end scientific discovery. 
+
+arXiv preprint arXiv:2603.08127 .Yougang Lyu, Xiaoyu Zhang, Zhaochun Ren, and Maarten de Rijke. 2024b. Cognitive biases in large language models for news recommendation. In 1st Workshop on Risks, Opportunities, and Evaluation of Generative Models in Recommender Systems . ROE-GEN@RecSys 2024. Yougang Lyu, Xiaoyu Zhang, Lingyong Yan, Maarten de Rijke, Zhaochun Ren, and Xiuying Chen. 2025c. DeepShop: A benchmark for deep research shopping agents. arXiv preprint arXiv:2506.02839 .Jie Ma, Binfei Chu, Jie Gao, Jinlu Zhang, Yiwei Ma, Yi Tan, Jiayi Ji, Xiaoshuai Sun, and Rongrong Ji. 
+
+11 2026. One reflection is not enough: Self-correcting autonomous research via multi-hypothesis failure at-tribution. arXiv preprint arXiv:2606.31478 .Jaehyun Nam, Jinsung Yoon, Jiefeng Chen, Jinwoo Shin, Sercan Ö. Arık, and Tomas Pfister. 2025. MLE-STAR: Machine learning engineering agent via search and targeted refinement. arXiv preprint arXiv:2506.15692 .Alexander Novikov, Ngân V˜ u, Marvin Eisenberger, Em-ilien Dupont, Po-Sen Huang, Adam Zsolt Wagner, Sergey Shirobokov, Borislav Kozlovskii, Francisco J. R. Ruiz, Abbas Mehrabian, M. Pawan Kumar, Abi-gail See, Swarat Chaudhuri, George Holland, Alex Davies, Sebastian Nowozin, Pushmeet Kohli, and Matej Balog. 2025. AlphaEvolve: A coding agent for scientific and algorithmic discovery. arXiv preprint arXiv:2506.13131 .OpenAI. 2026a. Codex CLI. https://developers. openai.com/codex/cli . Official documentation; accessed 5 October 2026. OpenAI. 2026b. MLE-Bench leaderboard. https: //github.com/openai/mle-bench#leaderboard .Accessed 7 October 2026. Alicia Parrish, Angelica Chen, Nikita Nangia, Vishakh Padmakumar, Jason Phang, Jana Thompson, Phu Mon Htut, and Samuel R. Bowman. 2022. BBQ: A hand-built bias benchmark for question answering. In Findings of the Association for Computational Lin-guistics: ACL 2022 , pages 2086–2105. Association for Computational Linguistics. Mitchell A. Potter and Kenneth A. De Jong. 2000. Co-operative coevolution: An architecture for evolving coadapted subcomponents. Evolutionary Computa-tion , 8(1):1–29. Rafael Rafailov, Archit Sharma, Eric Mitchell, Christo-pher D. Manning, Stefano Ermon, and Chelsea Finn. 2023. Direct preference optimization: Your language model is secretly a reward model. In Advances in Neural Information Processing Systems , volume 36. Andreas Sauter, Yuyue Zhao, Jacopo Urbani, Wenxi-ang Hu, Zaiqiao Meng, Lun Zhou, Xiaohui Yan, and Yougang Lyu. 2026. EvoIdeator: Evolving scien-tific ideas through checklist-grounded reinforcement learning. arXiv preprint arXiv:2603.21728 .Samuel Schmidgall, Yusheng Su, Ze Wang, Ximeng Sun, Jialian Wu, Xiaodong Yu, Jiang Liu, Michael Moor, Zicheng Liu, and Emad Barsoum. 2025. Agent laboratory: Using LLM agents as research assistants. arXiv preprint arXiv:2501.04227 .Roy Schwartz, Jesse Dodge, Noah A. Smith, and Oren Etzioni. 2020. Green AI. Communications of the ACM , 63(12):54–63. Zhengliang Shi, Yiqun Chen, Haitao Li, Weiwei Sun, Shiyu Ni, Yougang Lyu, Run-Ze Fan, Bowen Jin, Yixuan Weng, Minjun Zhu, Qiujie Xie, Xinyu Guo, Qu Yang, Jiayi Wu, Jujia Zhao, Xiaqiang Tang, Xin-bei Ma, Cunxiang Wang, Jiaxin Mao, and 7 others. 2025. Deep research: A systematic survey. arXiv preprint arXiv:2512.02038 .Dhruv Srikanth, Bingchen Zhao, Dixing Xu, Yuxiang Wu, and Zhengyao Jiang. 2026. Recursive self-improvement of AI research agents. arXiv preprint arXiv:2609.26457 .Jiabin Tang, Lianghao Xia, Zhonghang Li, and Chao Huang. 2025. AI-Researcher: Autonomous scien-tific innovation. In Advances in Neural Information Processing Systems .Alistair Turcan, Kexin Huang, Lei Li, and Martin Jinye Zhang. 2026. TusoAI: Agentic optimization for sci-entific methods. In International Conference on Learning Representations .Haorui Wang, Parshin Shojaee, Kazem Meidani, Kun-yang Sun, José Miguel Hernández-Lobato, Teresa Head-Gordon, Jiajun He, Chandan K. Reddy, Chao Zhang, and Yuanqi Du. 2026a. Towards diverse sci-entific hypothesis search with large language models. In Proceedings of the 43rd International Conference on Machine Learning , volume 306 of Proceedings of Machine Learning Research , pages 129851–129891. PMLR. Rui Wang, Joel Lehman, Jeff Clune, and Kenneth O. Stanley. 2019. Paired open-ended trailblazer (POET): Endlessly generating increasingly complex and di-verse learning environments and their solutions. 
+
+arXiv preprint arXiv:1901.01753 .Rui Wang, Joel Lehman, Aditya Rawal, Jiale Zhi, Yulun Li, Jeff Clune, and Kenneth O. Stanley. 2020. En-hanced POET: Open-ended reinforcement learning through unbounded invention of learning challenges and their solutions. In International Conference on Machine Learning .Yuru Wang, Lejun Cheng, Yuxin Zuo, Sihang Zeng, Bingxiang He, Che Jiang, Junlin Yang, Yuchong Wang, Kaikai Zhao, Weifeng Huang, Kai Tian, Zhen-zhao Yuan, Jincheng Zhong, Weizhi Wang, Ning Ding, Bowen Zhou, and Kaiyan Zhang. 2026b. Na-tureBench: Can coding agents match the published SOTA of nature-family papers? arXiv preprint arXiv:2606.24530 .Zihan Wang, Ziqi Zhao, Yougang Lyu, Zhumin Chen, Maarten de Rijke, and Zhaochun Ren. 2025. A coop-erative multi-agent framework for zero-shot named entity recognition. In Proceedings of the ACM on Web Conference 2025 , pages 4183–4195. Association for Computing Machinery. Ethan Weinberger, Chris Lin, and Su-In Lee. 2023. Iso-lating salient variations of interest in single-cell data with contrastiveVI. Nature Methods , 20(9):1336– 1345. Yixuan Weng, Minjun Zhu, Qiujie Xie, Qiyao Sun, Zhen Lin, Sifan Liu, and Yue Zhang. 2026. DeepScientist: 
+
+12 Advancing frontier-pushing scientific findings pro-gressively. In International Conference on Learning Representations .R. Paul Wiegand, William C. Liles, and Kenneth A. De Jong. 2001. An empirical analysis of collabo-ration methods in cooperative coevolutionary algo-rithms. In Proceedings of the Genetic and Evolu-tionary Computation Conference (GECCO) . Morgan Kaufmann. Shiguang Wu, Zhongkun Liu, Zhen Zhang, Zheng Chen, Wentao Deng, Wenhao Zhang, Jiyuan Yang, Zhitao Yao, Yougang Lyu, Xin Xin, Shen Gao, Pengjie Ren, Zhaochun Ren, and Zhumin Chen. 2023. fuzi.mingcha. GitHub repository. Yutaro Yamada, Robert Tjarko Lange, Cong Lu, Shen-gran Hu, Chris Lu, Jakob Foerster, Jeff Clune, and David Ha. 2025. The AI Scientist-v2: Workshop-level automated scientific discovery via agentic tree search. arXiv preprint arXiv:2504.08066 .Xu Yang, Xiao Yang, Shikai Fang, Yifei Zhang, Jian Wang, Bowen Xian, Qizheng Li, Jingyuan Li, Minrui Xu, Yuante Li, Haoran Pan, Yuge Zhang, Weiqing Liu, Yelong Shen, Weizhu Chen, and Jiang Bian. 2025. R&D-Agent: An LLM-agent framework to-wards autonomous data science. arXiv preprint arXiv:2505.14738 .Kaike Zhang, Yunfan Wu, Yougang Lyu, Du Su, Yingqiang Ge, Shuchang Liu, Qi Cao, Zhaochun Ren, and Fei Sun. 2025. The 1st workshop on human-centered recommender systems. In Companion Pro-ceedings of the ACM on Web Conference 2025 , pages 2088–2091. ACM. Xiaoyu Zhang, Ruobing Xie, Yougang Lyu, Xin Xin, Pengjie Ren, Mingfei Liang, Bo Zhang, Zhanhui Kang, Maarten de Rijke, and Zhaochun Ren. 2024. Towards empathetic conversational recommender sys-tems. In Proceedings of the 18th ACM Conference on Recommender Systems , pages 84–93. Association for Computing Machinery. Tong Zheng, Xidong Wu, Zheng Zhang, Zhankui He, Chaoyi Zhang, Benjamin Coleman, Ruoqiao Wei, Di Bai, Haolin Liu, Rui Liu, Xue Wang, Yue Zhuan, Wang-Cheng Kang, Renkai Xiang, Heng Huang, Xinwu Cheng, and Yunsong Guo. 2026. Dream-RSI: Recursive self-improvement through evolving worlds. 
+
+arXiv preprint arXiv:2609.14858 .Xinyu Zhu, Yuzhu Cai, Zexi Liu, Bingyang Zheng, Cheng Wang, Rui Ye, Yuzhi Zhang, Linfeng Zhang, Weinan E, Siheng Chen, and Yanfeng Wang. 2026. Toward ultra-long-horizon agentic science: Cogni-tive accumulation for machine learning engineering. 
+
+arXiv preprint arXiv:2601.10402 .
+
+13 A Method Details 
+
+This section supplements Section 3 with details of Recursive Swarm Evolution, execution feedback, and Complementary Swarm Recombination. 
+
+Algorithm 1 SWARM RSI search loop                                                                         
+
+> Require: goal q, starter program p0, utility u, budget B
+> 1: Initialize G0with root drafts from p0, and set FH,FP←
+> initial frontiers 2: while budget Bremains do
+> 3: Choose frontier fby priority rules and Equation (6) 4: Choose H-/P-mutation, rebase or crossover in f
+> 5: if rebase then
+> 6: keep hand select base p′∈ F Pby need–label overlap, or the new incumbent 7: else if crossover then
+> 8: select donors D(p)from per-instance utilities uk
+> 9: end if
+> 10: Planner forms experiment (h, p ), coder implements, evaluate u
+> 11: Code and scientific audits →E,append ξ=(H, P, X, E )to G
+> 12: Emit requests: failure →deepen, mixed per-instance
+> →broaden, new incumbent →deepen retained h
+> 13: Update FH,FP,(Nf, G f, C f)and Uf
+> 14: end while
+> 15: return best valid program in G
+
+A.1 Recursive Swarm Evolution 
+
+The hypothesis frontier FH retains active hypothe-ses balanced across mechanism families. The pro-gram frontier FP retains the incumbent p⋆ and the best program of each realized family. H-mutation 
+
+revises the hypothesis toward an alternative model-ing or algorithmic mechanism, whereas P-mutation 
+
+keeps the hypothesis and refines an existing pro-gram lineage. Table 5 lists the shared selection settings for DeepSeek-V4-Pro and Gemini 3.1 Pro Preview across all three benchmarks.                      
+
+> Parameter Value Discount factor ρ0.9 Exploration weight β0.5 Request-pressure weight γ0.25 Request-pressure saturation K4Eligible-wait threshold W8Tokens per cost unit T1,000 Improvement scale s1.0 Active hypotheses / program representatives 4 / 8 Candidate pairs per hypothesis 2Sources per hypothesis adaptation 1Scored local continuations / local attempts 2 / 4 Local stagnation patience 1Initial root drafts 3
+
+Table 5: Shared H/P-selection parameters and search limits across both backbones and all three benchmarks. 
+
+Improvement and computational cost. For an experiment initiated by frontier at ∈ { H, P }, let 
+
+ut be its utility and u− 
+
+> t
+
+the preceding incumbent utility. Reward and normalized token cost are 
+
+rt = min 
+
+
+
+1, max 
+
+
+
+0, ut − u−
+
+> t
+
+s
+
+ 
+
+,ct = max 
+
+
+
+1, τt
+
+T
+
+
+
+,
+
+(7) where τt includes the experiment’s planner and coder tokens. Without a prior incumbent, reward is zero. Failed or unscored outcomes receive zero re-ward and keep their cost, and infrastructure failures leave the statistics unchanged. 
+
+Selection score updates. Initialize Nf = Gf =
+
+Cf = 0 for both frontiers. After each experiment other than an infrastructure failure, update both frontiers: 
+
+Nf ← ρN f + 1[f = at],Gf ← ρG f + 1[f = at]rt,Cf ← ρC f + 1[f = at]ct.
+
+(8) The controller scores each sampled, feasible fron-tier using Equation (6), with ˆμf = Gf /C f as re-cent improvement per cost. For Uf unresolved requests addressable by frontier f , request pressure is ψf = min( Uf , K )/K . These requests are gen-erated by experiments in both frontiers, coupling their allocation. Setting γ = 0 removes request pressure from the index. Discounting emphasizes recent outcomes, while request pressure saturates at K = 4 .
+
+Frontier scheduling. A sole feasible frontier is selected directly. When both are feasible, frontiers without an updated sample take priority, with H preceding P. Subsequently, a frontier waiting for 
+
+W eligible choices takes priority. Otherwise, the highest index wins. Ties favor lower discounted selection count, then H. Waiting counters advance only when both frontiers compete. Local program refinement may precede the next frontier choice, subject to the continuation, attempt, and stagnation limits in Table 5. The index adapts discounted UCB to allocation between the hypothesis and program frontiers. 
+
+Ablation without H/P selection. The w/o H/P se-lection variant in Table 4 replaces this allocation rule with H/P alternation, starting with H and se-lecting the other frontier if the scheduled one is infeasible. Both frontiers, H- and P-mutation, the shared graph, audits, local refinement, recombina-tion, and total search budget remain unchanged. 14 A.2 Execution and Feedback 
+
+The execution harness and search controller per-form the online audits automatically. The code audit uses execution status, artifact validity and evaluator feedback to check execution and the task contract. The scientific audit screens imple-mentation evidence by comparing parent and off-spring source code and recorded submitted outputs. It flags unchanged source or syntax trees, newly added functions without static name references, or identical submitted outputs when comparable output records are available. The controller uses these source/output flags to gate hypothesis credit. A valid scored candidate without such a flag re-ceives hypothesis credit (Potter and De Jong, 2000). Flagged or unscored attempts retain program-level evidence and unresolved implementation requests. Hypothesis credit records a valid scored candidate passing the source/output checks. Improvement per cost drives H/P selection. Failed states and states without gain remain available in the graph together with their resulting programs, outcomes, and audit evidence. An implementation failure retains the hypothe-sis and emits a deepen request for program refine-ment. Mixed per-instance gains and losses emit a broaden request for hypothesis exploration. An improved incumbent also creates deepen requests for hypotheses previously realized on older pro-grams. These requests retain unresolved needs for later mutation or recombination. 
+
+A.3 Complementary Swarm Recombination Rebase selection. Rebase preserves hypothesis content and selects a different program from FP as its implementation base. Candidates are ranked by the overlap between the recorded need and mecha-nism labels associated with scored, unflagged pro-grams. A request triggered by a new incumbent directly targets that program. The coder then real-izes the hypothesis on the selected base, so that for a selected base bt
+
+(˜ht, ˜pt) =  ht, Rebase( ht, b t; st). (9) 
+
+Crossover selection. Equation (5) defines candi-date donors and their priorities from observed per-instance utilities. At most two donors are selected by their largest per-instance advantage. Let bDt
+
+contain the selected donors. Sources are assigned before implementation as 
+
+σt(k) = 
+
+(
+
+p⋆k, p⋆k ∈ bDt and uk(p⋆k) > u k(pt),pt, otherwise ,
+
+(10) so the offspring uses donor components on the instances they win and retains the parent’s com-ponents elsewhere. This assignment is fixed from measured feedback before implementation. Crossover is inactive for aggregate-only feedback. Both operators produce new candidates evaluated through the shared execution and audit loop. 
+
+State update. After each evaluation, the record ξt
+
+updates the shared graph, the next acting agent as-sembles its state, and a mutation or recombination operation generates the next candidate, 
+
+Gt+1 = Update( Gt, ξ t),st+1 = Assemble( q, Gt+1 ),
+
+(˜ht+1 , ˜pt+1 ) = Generate( q; st+1 ).
+
+(11) 
+
+Update retains the record and refreshes the associ-ated research needs, Assemble collects the records relevant to the next agent, and Generate applies an eligible operation to the selected sources. 
+
+B Experimental Setup 
+
+B.1 Benchmarks OpenProblems. OpenProblems follows the six-task single-cell panel used by TusoAI (Turcan et al., 2026): denoising, label prediction, batch integra-tion, spatially variable gene identification, decom-position and visualization. 
+
+NatureBench. NatureBench (Wang et al., 2026b) includes 90 tasks in protein biology, cellular omics, physical modeling, molecular design, relational reasoning and biomedical modeling. 
+
+MLE-Bench Lite. MLE-Bench Lite (Chan et al., 2025) comprises 22 low-complexity competitions involving model construction and competition sub-mission. 
+
+B.2 Baselines Benchmark-specific comparisons. On Open-Problems, we compare with expert-designed meth-ods and ChatGPT reported by TusoAI (Tur-can et al., 2026), Biomni (Huang et al., 2026), AIDE (Jiang et al., 2025), and TusoAI. On Na-tureBench, we compare with Claude Code (An-thropic, 2026), Codex and Gemini CLI (Wang et al., 15 2026b), Arbor (Jin et al., 2026), and AIDE. Na-tureBench results without † in Table 2 are taken from the official NatureBench leaderboard (Fron-tisAI, 2026) (accessed 7 October 2026). These entries follow NatureBench’s standard protocol. Comparisons with published results are descrip-tive. On MLE-Bench Lite, we compare with MLEvolve (Du et al., 2026), ML-Master 2.0 (Zhu et al., 2026), Arbor (Jin et al., 2026), and Famou-Agent 2.0 (Li et al., 2025). Reported competi-tion results are taken from the official MLE-Bench leaderboard (OpenAI, 2026b) or the original pa-pers (Jin et al., 2026; Du et al., 2026). 
+
+Matched-backbone reruns. We rerun AIDE and TusoAI on OpenProblems, AIDE and Arbor on NatureBench, and MLEvolve and Arbor on MLE-Bench Lite using DeepSeek-V4-Pro. We do not rerun MLEvolve on NatureBench because its har-ness uses MLE-Bench’s competition submission and grading format (Du et al., 2026). AIDE serves as the program-evolution representative on Na-tureBench. 
+
+B.3 Evaluation Details Grading procedures. OpenProblems uses each task’s official evaluator. NatureBench results are assessed by the benchmark’s validity judge before computing Match-SOTA and Surpass-SOTA rates. MLE-Bench Lite submissions are graded by the official grader on the private test split. 
+
+Metric definitions. OpenProblems uses the nor-malized task scores reported by TusoAI (Turcan et al., 2026), with higher values indicating better performance. Scores are scaled by 100. Avg is the unweighted mean over the six tasks, using each task’s benchmark-defined normalization. For Na-tureBench, the instance-level direction-adjusted im-provement is 
+
+gi = di
+
+mi − mSOTA 
+
+> i
+
+|mSOTA  
+
+> i
+
+| , (12) where mi is the score, mSOTA  
+
+> i
+
+is its reference and 
+
+di ∈ {− 1, +1 } specifies the metric direction. A task’s g averages its instance-level improvements. Match-SOTA counts judge-valid tasks with g ≥ 0.Surpass-SOTA counts those with g > 0.1. Both rates use all 90 tasks, retaining invalid and miss-ing results in the denominator. S and M denote Surpass-SOTA and Match-SOTA. For the ablations, Mean g (%) is 100 × 190 
+
+P90  
+
+> j=1
+
+gj , where gj is task 
+
+j’s relative improvement. All ablation tasks have valid results. MLE-Bench Lite reports Above Me-dian, exclusive Bronze, Silver and Gold rates, and Any-Medal, the fraction of all 22 tasks earning any medal. Invalid or missing submissions receive no medal. All rates use the full task set. 
+
+Aggregation across runs. For S WARM RSI and matched-backbone reruns in Tables 1–3, we com-pute each benchmark metric separately for each of three seeds, then average the three values equally. Each seed covers the same six OpenProblems tasks, 90 NatureBench tasks, or 22 MLE-Bench Lite com-petitions. Task scores and domain-specific rates are averaged in the same way. Results in Tables 1–3 are reported to one decimal place after aggregation. Published reference results retain their original re-porting protocols. Medal rates are rounded inde-pendently, so their displayed sum may differ from Any-Medal by 0.1 pp. 
+
+Token consumption. For Figure 6, we sum un-cached input and output tokens from all LLM calls throughout each task’s search. We report the mean over all tasks in each benchmark and the three seeds, in millions of tokens per task. Arbor’s token consumption is on the same scale as the 20.19M tokens per task reported in its original paper (Jin et al., 2026). 
+
+Significance testing. We compare NatureBench Match-SOTA outcomes for S WARM RSI, Arbor and AIDE with DeepSeek-V4-Pro, using the 90 tasks as paired units. Each task contributes its mean binary Match-SOTA outcome across the three runs. As Section B.7 explains, each method’s task-level Match-SOTA outcomes are identical across its three seeds. We resample the 90 paired task means with replacement 10,000 times and recom-pute the rate difference in each replicate (Koehn, 2004). The 2.5th and 97.5th percentiles give the 95% paired bootstrap confidence interval. The Match-SOTA improvement over Arbor is 7.8 pp (95% CI [2.2, 13.3]). The improvement over AIDE is 16.7 pp (95% CI [8.9, 24.4]). Exact McNemar tests use the discordant task pairs: S WARM RSI-only/baseline-only successes are 7/0 against Ar-bor and 15/0 against AIDE. The resulting p-values are 0.015625 and 0.0000610 , respectively. Differ-ences are computed before rounding the displayed rates. Other benchmark and leaderboard compar-isons are reported descriptively. 16 B.4 Implementation Details Backbones. SWARM RSI and the rerun baselines use DeepSeek-V4-Pro (DeepSeek, 2026). Addi-tional S WARM RSI runs use Gemini 3.1 Pro Pre-view (Google DeepMind, 2026). 
+
+Time budgets. We set per-task time limits to 8 hours on OpenProblems (Turcan et al., 2026), 4 hours on NatureBench (Wang et al., 2026b), and 12 hours on MLE-Bench Lite (Du et al., 2026). Within each benchmark, S WARM RSI and rerun baselines share the evaluation protocol and time limit. 
+
+Hardware configurations. SWARM RSI and re-run baselines use the same hardware within each benchmark. OpenProblems runs use 4 CPU threads and 50 GB of memory, each of the 87 NatureBench tasks that require a GPU uses one GPU, and MLE-Bench Lite runs use 21 vCPUs, 234 GB of RAM and one GPU. These follow the published proto-cols for OpenProblems (Turcan et al., 2026), Na-tureBench (Wang et al., 2026b), and MLE-Bench Lite (Du et al., 2026). 
+
+B.5 Ablation Settings and Aggregation 
+
+The variants in Table 4 use the same planner, coder, evaluator and total search budget. The w/o shared graph variant preserves hypotheses, executable pro-grams, and experimental feedback while disabling their graph-based organization and reuse. The w/o H-mutation variant only repairs programs un-der existing hypotheses ( ˜ht = ht), while w/o P-mutation only revises hypotheses. The w/o recom-bination variant disables both rebase and crossover in Complementary Swarm Recombination, retain-ing within-trajectory evolution. The w/o H/P selec-tion variant, described in Section A.1, retains both frontiers and replaces adaptive H/P selection with fixed H/P alternation. For seed s, let nMs and nSs count judge-valid tasks with g ≥ 0 and g > 0.1, respec-tively. The reported rates are 100 3
+
+P3 
+
+> s=1
+
+nMs /90 and 
+
+> 100 3
+
+P3 
+
+> s=1
+
+nSs /90 . Mean g is 100 270 
+
+P3
+
+> s=1
+
+P90  
+
+> t=1
+
+gs,t .All ablation tasks have valid results. Thus, each seed contributes equally, and values are rounded to one decimal place only after averaging. 
+
+B.6 Performance and Token Cost 
+
+Figure 6 plots benchmark performance against mean tokens per task for S WARM RSI and the rerun baselines with DeepSeek-V4-Pro. 0 5 10 55 65 75      
+
+> TusoAI AIDE
+> OpenProblems
+> 012 24 25 35 45
+> Match rate (%)
+> Arbor AIDE
+> NatureBench
+> 015 30 70 75 80
+> Any-Medal rate (%)
+> Arbor MLEvolve
+> MLE-Bench Lite
+> Tokens per task (M)
+> Average score  SwarmRSI SwarmRSI SwarmRSI
+
+Figure 6: Performance against mean tokens per task for S WARM RSI and rerun baselines with DeepSeek-V4-Pro. OpenProblems reports normalized average scores scaled by 100, and NatureBench and MLE-Bench Lite report Match-SOTA and Any-Medal rates (%). 
+
+B.7 Statistical Reliability 
+
+Table 6 reports, for each ablation in Table 4, the drop ∆g in mean g from S WARM RSI with a task-paired bootstrap 95% confidence interval over the 90 NatureBench tasks. All intervals exclude zero.             
+
+> Variant ∆g95% CI w/o H-mutation 5.6 [1.2, 10.2] w/o P-mutation 7.4 [3.0, 11.9] w/o recombination 5.2 [2.5, 7.9] w/o shared graph 4.7 [0.3, 9.3] w/o H/P selection 8.2 [4.2, 12.4]
+
+Table 6: Drop in mean g (scaled by 100) from SWARM RSI for each ablation, with task-paired boot-strap 95% CIs. 
+
+We evaluate all methods marked with † in Table 1 using three independent random seeds. We report the mean performance and compute 95% confi-dence intervals using the Student’s t-distribution: 
+
+CI 95% = ¯ x ± t0.975 ,2
+
+s
+
+√3 ,
+
+where ¯x and s denote the sample mean and sam-ple standard deviation across the three seeds, re-spectively. Table 7 reports the per-seed OpenProb-lems scores, and Table 8 reports their 95% CI half-widths. The Avg CI is computed from the three per-seed averages before rounding. 
+
+Thresholded outcomes. In the main experiments of Tables 1–3 and Table 4, task-level g scores varied across three independent seeds, with per-task ranges of 0.0123 –0.0781 . However, no task crossed the Match-SOTA ( g = 0 ) or Surpass-SOTA (g = 0 .1) threshold, and no MLE-Bench Lite com-petition crossed an Above-Median or medal bound-ary. Consequently, the thresholded success rates remained identical across seeds, despite variation in the underlying continuous scores. 17 Method Seed Denoise Label Batch SVG Decomp Visual Avg SWARM RSI (DeepSeek) 1 34.1 74.6 83.1 84.7 85.6 85.2 74.55 2 33.5 73.5 82.8 83.8 86.6 84.6 74.13 3 33.3 74.4 81.6 83.1 85.8 84.7 73.82 SWARM RSI (Gemini) 1 40.2 81.5 79.0 86.6 82.7 85.5 75.92 2 40.2 80.7 78.1 88.8 84.0 86.1 76.32 3 40.3 80.0 79.4 88.1 83.6 87.5 76.48 AIDE (DeepSeek) 1 27.3 70.5 78.6 72.2 46.6 40.4 55.93 2 28.5 70.2 77.5 74.5 45.4 39.6 55.95 3 26.4 71.2 77.9 71.6 46.4 39.5 55.50 TusoAI (DeepSeek) 1 29.3 57.5 79.5 79.0 84.6 69.9 66.63 2 32.9 59.1 78.8 80.1 83.9 69.7 67.42 3 32.2 59.5 80.1 77.9 83.9 69.9 67.25 Table 7: Per-seed OpenProblems scores for all † entries in Table 1. Scores are normalized and scaled by 100. Avg is the six-task mean, shown to two decimal places. DeepSeek and Gemini denote DeepSeek-V4-Pro and Gemini 3.1 Pro Preview, respectively. Method Denoise Label Batch SVG Decomp Visual Avg SWARM RSI (DeepSeek) 1.03 1.46 1.97 1.99 1.31 0.80 0.91 SWARM RSI (Gemini) 0.14 1.86 1.65 2.79 1.65 2.55 0.72 AIDE (DeepSeek) 2.62 1.27 1.38 3.80 1.60 1.23 0.63 TusoAI (DeepSeek) 4.74 2.63 1.62 2.73 1.00 0.29 1.03 Table 8: 95% CI half-widths for the OpenProblems means over three seeds in Table 1, computed using the Student’s t-distribution from Table 7. Intervals are the unrounded means ± these half-widths, on the score scale of Table 1. 
+
+C Additional Trajectory Analyses 
+
+Section C.1 gives trajectory construction and operator-level evidence for Section 5.3, and Sec-tion C.3 gives aggregate search statistics. 
+
+C.1 Comparative Trajectories 
+
+We analyze one recorded run per method and task. The two examples in Figure 4c,d illustrate succes-sive hypothesis mutations on 00917, and crossover followed by rebase on 00639. The plotted runs use DeepSeek-V4-Pro. Candidate scores and operator sequences accompany the plotting code. 
+
+Trajectory construction. For each method, a scored evaluation is a recorded finite score accepted by its evaluator interface. AIDE nodes marked buggy or worst are excluded from this axis. We plot Bk = max i≤k gi over these records, with step-wise interpolation and no extrapolation beyond the last observation. Unscored records are retained in the source data and counted separately below. Ar-bor records evaluator calls, whereas AIDE records candidate nodes. The plot uses scored evaluations for both methods. 
+
+Analysis of search operators. Operator markers use the frontier episodes associated with each candi-date’s action ID. In 00917, candidate 3 is a program mutation of candidate 1. Its g = −0.9903 does not improve the incumbent ( g = −0.0501 ). In 00917,                   
+
+> Task Method Scored/records Best g
+> 00917 SWARM RSI 18/18 0.1807 Arbor 3/4 -0.2007 AIDE 49/50 -0.4742 00639 SWARM RSI 19/21 0.0644 Arbor 2/3 0.0434 AIDE 8/28 0.0552
+
+Table 9: Selected runs with their scored evaluations, recorded events and best observed g.
+
+candidate 6 retains the recurrent shell-sequence program at g = −0.0162 . Candidates 7–15 do not improve this incumbent. Hypothesis-mutation can-didates 16 and 17 descend from candidates 6 and 16, respectively, replacing the readout with normal-ized allocation and then a saturating absorption– yield readout. Both modify the executed readout and are reevaluated, reaching g = 0 .0928 (Match-SOTA) and 0.1807 (Surpass-SOTA). In 00639, can-didate 8 (zero-based index, scored evaluation 7) uses candidate 4 for esol, freesolv, and lipophilic-ity, candidate 1 for fluorescence and stability, and candidate 0 for the two reaction instances. Its code reuses separate descriptor, neural-sequence, and hashed-reaction branches from the source pro-grams. Candidate 19 includes message-passing and ranking-loss functions, but its entry-point routing does not execute them. Candidate 20, recorded as 18 rebase, activates those paths for lipophilicity and fluorescence, respectively. Their instance improve-ments change from 0.1002581 to 0.1337743 and from −0.0201618 to −0.0056382 . The other five instance scores remain unchanged. The mean con-sequently rises from 0.0575466 to 0.0644094 . The activated functions were already present in candi-date 19 and absent from retrieved source 16. The step repairs their entry-point routing. 
+
+A retained hypothesis on a new program base. 
+
+As shown in Table 10, task 00795 provides a com-plete sequence linking an implementation request, a changed program base, executable transfer and per-instance evaluation. Candidate 4 proposes us-ing a source program’s molecular-function predic-tor on one instance while retaining the parent’s other four predictors. Its submitted outputs are identical to candidate 3’s, so the controller retains the hypothesis with an unresolved implementa-tion request. Candidate 8 subsequently improves the program through hypothesis mutation. Rebase candidate 9 returns to the retained hypothesis on this newer base, with source program 1 supply-ing the implementation context. The code disables the ranking-loss term for the target predictor and adopts the source’s 30-threshold public-validation checkpoint rule. The target branch executes these settings and writes its predictions. The target Fmax rises from 0.5032 to 0.5087 , while the other four instance scores remain unchanged. This raises g
+
+from −0.06388 to −0.06186 .          
+
+> Candidate Recorded change g
+> 4Retained hypothesis. Outputs un-changed from 3
+> −0.08323
+> 8Hypothesis mutation produces a new program base
+> −0.06388
+> 9Rebase: target predictor uses source training and checkpoint rules
+> −0.06186
+> 11 Crossover: source 5 supplies a second instance predictor
+> −0.05573
+> 15 Rebase: target predictor implemented without fallback
+> −0.05408
+> Table 10: Recorded process on 00795. Candidate in-dices are zero-based. Each gcomes from a valid evalua-tion of the resulting program.
+
+Crossover candidate 11 then adds source 5’s pre-dictor on a second instance, reproducing its Fmax of 0.3773 and preserving candidate 9’s other four scores. Its execution log records another fit and prediction pass for the first transferred predictor, retaining its Fmax of 0.5087 . Source 5 had a lower aggregate score than its incumbent, yet its compo-nent remains useful in this new program. Candi-dates 13 and 14 attempt another transfer but retain candidate 11’s submitted outputs. Their implemen-tation requests remain open. Candidate 15 realizes the retained target predictor without falling back to the incumbent’s outputs, increasing its Fmax to 
+
+0.5133 while preserving the other four scores. The sequence shows how an untested hypothesis sur-vives its first implementation, is tested on a later program base, and contributes to subsequent com-ponent reuse and refinement. 
+
+Feedback-linked updates and component reuse. 
+
+We analyze one complete seed (90 runs) with DeepSeek-V4-Pro and recorded request identifiers. These runs cover all 90 NatureBench tasks and comprise 1,948 search attempts and 426 new-best candidates. Program feedback prompted hypoth-esis mutations, while unresolved implementation requests for retained hypotheses prompted rebase updates on the program frontier. We matched these updates to their originating requests using recorded request and episode identifiers. These updates comprised 296 attempts (15.2%) and produced 84 new-best candidates (19.7%), a 28.4% new-best rate versus the overall 21.9%. Including crossover, the union of these events comprised 731 attempts (37.5%) and produced 173 new-best candidates (40.6%). 
+
+Cumulative progress across search stages. To examine whether progress builds on inherited re-search states, we trace each run’s final best program through its recorded code-parent and intervention-source edges. In about 77% of runs, this lineage contains at least one rebase, crossover, or update triggered by feedback. Table 11 further divides each run’s attempts into early, middle and late thirds by step order. Reuse and update triggered by feedbacks achieve higher new-best rates than other updates in every stage, and their share of new-best candidates increases slightly over the course of search. The overall new-best rate declines as search proceeds, consistent with diminishing returns as the incumbent improves. 
+
+C.2 Cross-Task Transfer Cross-task research state inheritance. After each generation, the accumulated research state is preserved for subsequent tasks. This state includes hypotheses, program components, experimental ev-idence, and unresolved implementation needs. On a new task, prior records are retrieved by matching their mechanism labels to the task description and 19 Stage Reuse hit Other hit Reuse share Early 32.0 25.8 40.5 Middle 18.2 16.8 41.1 Late 18.1 15.0 42.6 
+
+Table 11: New-best rates (%) of reuse and update trig-gered by feedbacks (rebase, crossover and mutations triggered by feedback) and of other updates across search stages on NatureBench. Reuse share is the per-centage of new-best candidates from these updates. 
+
+initialize the agent’s research state, while candidate programs are adapted and evaluated under the new task’s constraints. 
+
+Experimental setup and results. We run SWARM RSI with DeepSeek-V4-Pro on six Na-tureBench source tasks in three generations of two tasks each, and each generation starts from the cross-task state exported by the previous one. We then search 12 held-out NatureBench tasks, fixed in advance and disjoint from the source tasks, from an empty state and from the state after each generation, with three seeds and the same budget per task. As shown in Table 12, mean g rises from 12.01 under cold start to 16.15, 20.16 and 21.89 after one, two and three generations, and Gen 3 improves on cold start by 9.88 points. Match-SOTA rises from 41.7% to 86.1% and Surpass-SOTA from 33.3% to 58.3%, while tokens per task fall from 12.17M to 10.94M. Gains are largest over the first two generations, and Gen 3 matches Gen 2 on Match-SOTA and im-proves mainly through Surpass-SOTA. Unlike the main experiments described in Section B.7, some held-out tasks cross the Match-SOTA or Surpass-SOTA threshold in only some seeds, so the rates in Table 12 count the 36 task and seed pairs, for example 31 of 36 for Match-SOTA after Gen 3.                            
+
+> Variant Match Surpass Mean g∆g[95% CI] Tokens Cold start 41.7 33.3 12.01 –12.17 Gen 1 58.3 41.7 16.15 4.14 [1.82, 6.49] 11.86 Gen 2 86.1 44.4 20.16 8.15 [5.67, 10.59] 11.52 Gen 3 86.1 58.3 21.89 9.88 [6.88, 13.06] 10.94
+
+Table 12: Search on 12 held-out NatureBench tasks with DeepSeek-V4-Pro, starting from an empty state (cold start) or from the state inherited after each gen-eration, averaged over three seeds. Match and Surpass are Match-SOTA and Surpass-SOTA rates (%), mean 
+
+g is scaled by 100, and ∆g is the gain over cold start with a paired task-cluster bootstrap 95% CI from 10,000 resamples. Tokens are means per task in millions. 
+
+C.3 Aggregate Search Behavior Program mutation. Figure 4a compares SWARM RSI with AIDE and Arbor across all 90 NatureBench tasks. Stagnation, the share of scored candidates that do not improve the preceding best valid result, is 43% for S WARM RSI, compared with 63% for AIDE and 70% for Arbor. Failure re-covery is the share of failed implementations whose subsequent refinement yields a new best valid pro-gram, with failed implementations as the denomi-nator. 
+
+Hypothesis mutation. Figure 4b reports the pro-portions of proposed hypotheses that are imple-mented, evaluated with a valid numeric score, and associated with an improvement over the preceding best valid result. For each method, all three propor-tions use the total number of proposed hypotheses in its search records as the denominator. 
+
+D Human Failure Analysis 
+
+Sample and unit of analysis. We reviewed 35 failed S WARM RSI task trajectories across Na-tureBench and MLE-Bench Lite. The annotation unit was an individual attempt, assessed against the best preceding valid result using each benchmark’s metric direction. The final failure set comprised 644 attempts across these trajectories, after apply-ing the exclusions below. OpenProblems reports continuous normalized scores without a binary suc-cess criterion, so no OpenProblems trajectories en-ter the failure set. The 35 trajectories comprise 32 NatureBench tasks below Match-SOTA and 3 MLE-Bench Lite competitions without a medal. 
+
+Evaluation criteria. Annotators examined the proposed intervention, implementation and exe-cution records, evaluator outputs, and preceding scores. Implementation or execution failure de-notes an intervention that could not be reliably tested because of code or interface errors, execu-tion interruptions, or proposal–implementation mis-matches. No performance gain denotes a faithfully implemented and executed intervention with a valid evaluation that did not improve the preceding best valid result. Equal scores were treated as no gain. Recovered intermediate errors were judged by the final evaluated outcome. Successful verification or restoration of an existing result, and repetition of an attained metric ceiling, were excluded from the failure counts. Attempts with insufficient ev-idence to distinguish the two failure classes were also excluded. 20 Human review and agreement. Two annotators with PhDs in bioinformatics engineering reviewed the evidence using these criteria, with inter-rater agreement of Cohen’s κ = 0 .92 .
+
+Representative cases. On task 00838, a pro-posed amino-acid substitution was overwritten by downstream rules, leaving the evaluated output un-changed This was an implementation failure de-spite a valid score. In contrast, on task 02316, a negative-binomial mixture with a Potts spatial prior ran successfully but collapsed all locations into one cluster, yielding ARI zero. This was a no-gain outcome. 
+
+E Biological Case Studies 
+
+Sections E.1 and E.2 detail the Enterocyte and Cy-toCommunity case studies from Section 5.5 with their data, programs and expert analyses. 
+
+E.1 Enterocyte: Infection-Associated Expression Variation Task, data and selected program. NatureBench task s41592-023-01955-3 is associated with con-trastiveVI (Weinberger et al., 2023) and returns a low-dimensional target-cell representation. The program selected by S WARM RSI comes from step 4 of five recorded steps. Its recorded task-level 
+
+g = 1 .838461 averages the Haber, McFarland and Norman instances. The analysis here concerns only the Haber intestinal instance (Haber et al., 2017), GEO GSE92332. The public matrix contains 9,842 cells and 15,215 genes: 3,240 healthy background cells, 2,711 helminth day-10 and 1,770 Salmonella target cells, and 2,121 helminth day-3 cells outside the target submission. The published Enterocyte annotation selects 1,458 cells, including 833 targets (128 helminth day-10 and 705 Salmonella). 
+
+Evolved program and expert reproduction. 
+
+For Haber, the program normalizes total counts to 10,000 and applies log1p, selects 2,000 genes by variance across target and background cells, and standardizes using background means and standard deviations, clipping at ±10 . It identifies 20 healthy neighbours per target in a 50-dimensional back-ground PCA space and subtracts their mean ex-pression. A singular-value decomposition yields a 20-dimensional residual space. A 15-neighbour graph then smooths the first ten residual coordi-nates for two iterations, including a self weight. Experts reproduced the program. Local-coherence analysis uses its ten-dimensional outputs. The em-bedding is constructed from RNA, and infection labels parsed from public cell identifiers are used for diagnostic silhouette reporting. 
+
+Measured programs and source units. Each program score is the arithmetic mean of its genes’ 
+
+log(1 + 10 4x/ P x) expression. The MHC-II-associated set is Cd74, H2-Aa, H2-Ab1 and H2-Eb1 (the input matrix uses dots in the H2 gene names). The interferon set is Stat1, Isg15, Ifit1, Ifit3, Oas1a and Irf7. All six genes are present in the matrix. The antimicrobial set contains Reg3g, Reg3b, Lcn2 and Saa1. Its signal is dominated by Reg3g/Reg3b, with Lcn2 undetected and Saa1 low in these enterocytes. B1–B4 are control sources, B5/B6 helminth day 3, B7/B8 helminth day 10, and B9/B10 Salmonella. Source labels denote sequenc-ing batches. Figure 8 shows that the four MHC-II genes each have higher source means in B7/B8 than in B9/B10. The antimicrobial program means are 2.120 and 3.158 in B7/B8 versus 3.114 and 3.130 in B9/B10, showing a source-dependent contrast. Table 13 reports MHC-II and interferon means for all ten sources. Pooling enterocytes within each condition gives MHC-II means of 1.168 in helminth day 10, 0.335 in Salmonella and 0.202 in controls. The corresponding interferon means are 0.356, 0.438 and 0.150. These condition means weight each source by its enterocyte count.                                  
+
+> Source Cells MHC-II Interferon B1 59 0.354 0.115 B2 46 0.126 0.166 B3 98 0.375 0.136 B4 221 0.100 0.162 B5 75 0.377 0.391 B6 126 1.495 0.636 B7 71 1.509 0.395 B8 57 0.744 0.306 B9 332 0.299 0.444 B10 373 0.367 0.432
+> Table 13: Measured enterocyte RNA program means by sequencing source. Scores average normalized log RNA across the four MHC-II or six interferon genes. B1–B4 are controls, B5/B6 helminth day 3, B7/B8 helminth day 10 and B9/B10 Salmonella.
+
+Representation follow-up and sensitivity checks. 
+
+Measured RNA and the reproduced representation are matched by cell identifier. Within each of B7– B10, the analysis selects ten neighbours among cells of the same Enterocyte type and source, ex-cludes the focal cell, and correlates its program 21 score with the neighbours’ mean score using Spear-man’s ρ. Figure 7 reports these unadjusted cor-relations. Sensitivity checks use five and fifteen neighbours and the representation saved from the original S WARM RSI run. For covariate sensitiv-ity, each program score is regressed within source on an intercept, log1p total UMI, log1p detected genes and the mean absorptive-marker score (Alpi, Apoa1, Fabp1, Fabp2, Sis). Table 14 reports the same correlation using the residual score and the mean residual of the fixed ten neighbours. Local coherence quantifies measured RNA structure re-tained in each RNA-derived representation. 
+
+Additional visualizations. The following fig-ures report within-source coherence and gene-level source means. Figure 5a–c shows RNA scores on the reproduced representation. 22 Source Program Cells RNA PCA Reproduced output Recorded output B7 MHC-II 71 0.650 0.768 0.766 B8 MHC-II 57 0.396 0.685 0.686 B9 MHC-II 332 0.331 0.326 0.313 B10 MHC-II 373 0.356 0.351 0.347 B7 Antimicrobial 71 0.311 −0.045 −0.056 
+
+B8 Antimicrobial 57 0.689 0.593 0.612 B9 Antimicrobial 332 0.370 0.324 0.331 B10 Antimicrobial 373 0.509 0.296 0.286 
+
+Table 14: Within-source local coherence after covariate adjustment. Entries are Spearman correlations between a cell’s residual RNA score and its ten neighbours’ mean residual score. Reproduced/recorded outputs are the expert reproduction and the representation saved from the original S WARM RSI run. Counts are cells per source. B7 n=71 B8 n=57 B9 n=332 B10 n=373 
+
+> −1.00
+> −0.75
+> −0.50
+> −0.25 0.00 0.25 0.50 0.75 1.00 Spearman rho: cell RNA vs neighbor mean RNA
+
+MHC-II / Cd74 
+
+> B7 n=71 B8 n=57 B9 n=332 B10 n=373 Spearman rho: cell RNA vs neighbor mean RNA
+
+Same Enterocyte type AND same source | 10 neighbors, excluding self 
+
+Within-source local coherence of measured RNA programs 
+
+> RNA PCA SwarmRSI
+
+Antimicrobial 
+
+> RNA PCA SwarmRSI
+
+Figure 7: Within-source expression coherence in enterocytes. Within each source, Spearman correlation compares cells’ measured RNA program scores with their ten nearest neighbours’ mean scores, excluding each focal cell. Neighbours are defined in RNA PCA (blue) or the reproduced S WARM RSI representation (pink), and the correlations are not adjusted for covariates. B1 n=59 B2 n=46 B3 n=98 B4 n=221 B5 n=75 B6 n=126 B7 n=71 B8 n=57 B9 n=332 B10 n=373 Cd74 H2.Aa H2.Ab1 H2.Eb1 Reg3g Reg3b Lcn2 Saa1                                                                         
+
+> 0.45 0.12 0.50 0.09 0.60 2.16 1.96 0.95 0.36 0.44 0.19 0.00 0.25 0.03 0.09 1.00 1.01 0.55 0.14 0.18 0.55 0.26 0.51 0.20 0.62 1.83 1.85 0.99 0.52 0.59 0.23 0.12 0.25 0.07 0.19 0.98 1.22 0.48 0.18 0.26 2.26 1.63 1.73 2.07 2.91 2.87 3.83 5.69 5.34 5.36 3.22 1.84 2.18 2.68 3.83 3.48 4.61 6.67 6.96 7.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.04 0.00 0.00 0.00 0.00 0.01 0.04 0.27 0.16 0.16
+
+Enterocyte: individual measured genes by sequencing batch 
+
+> 0123456
+
+B1-B4: Control | B5-B6: Hpoly.Day3 | B7-B8: Hpoly.Day10 | B9-B10: Salmonella 
+
+> Mean log-normalized RNA
+
+Figure 8: Source means of individual measured genes in enterocytes. Hpoly.Day3/Day10 denote helminth day 3/day 10 sources. The antimicrobial set is primarily Reg3g/Reg3b. Zero Lcn2 denotes non-detection in this matrix. Values are mean normalized log RNA. 
+
+23 E.2 CytoCommunity: Spatial Context and Protein Follow-up E2: 20.3% E2: 20.2% E2: 21.0%       
+
+> 050 100
+> BALBc-1 BALBc-2 BALBc-3
+> Marginal-zone  B cells  (%)
+> E1 E2 E3
+> Within marginal zone
+
+a                         
+
+> CD44 MHCII IgM IgD CD79b B220 -0.30 -0.15 0.00 0.15
+> Standardized protein difference (95% spatial-block interval)
+> BALBc-1 BALBc-2 BALBc-3 E2 −E1 within marginal zone; 815 /995 /1,025 pairs
+> Protein differences after spatial matching
+
+b
+
+Figure 9: Expert follow-up of B-cell neighbourhoods across three spleen images. E1–E3 are post-hoc groups defined by local cell composition. (a) Their proportions among B cells in the manually annotated marginal zone. (b) All six primary protein contrasts after within-image spatial/phenotype matching, E2 minus E1 in that zone (815, 995 and 1,025 pairs). Points are standardized transformed-protein differences. Intervals are 95% within-image spatial-block bootstrap intervals. 
+
+Dataset and evolved program. NatureBench task s41592-023-02124-2 uses three healthy mouse spleen CODEX images associated with CytoCom-munity (Hu et al., 2024): 82,382, 81,925 and 80,973 cells, respectively, with 27 supplied cell phenotypes. S WARM RSI receives coordinates and phenotype labels. The expert follow-up separately examines measured protein intensities. The pro-gram selected by S WARM RSI comes from step 12 of a 15-step search and raises g from 0.04507 to 0.10215. It uses phenotype-derived anatomical priors, 50-neighbour composition and interface fea-tures, Gaussian EM, an anatomically constrained spatial MRF and cleanup of components smaller than 150 cells. Recorded macro-F1 and AMI are 0.639247 and 0.583341. Macro-F1 includes the unannotated reference category, whose F1 is zero. Marginal-zone F1 is 0.600, 0.593 and 0.635. 
+
+Post-hoc neighbourhood descriptions. The analysis includes 35,168, 33,544 and 32,451 conventionally annotated B cells (101,163 to-tal). Experts fit three exploratory neighbourhood-composition prototypes in the first image and then hold them fixed for the other two, giving B/FDC-rich (E1), myeloid/erythroid-rich (E2) and T-cell-rich (E3) groups. E1–E3 describe local cell compo-sition around B cells in this post-hoc analysis. They are distinct from the program’s anatomical parti-tions. The primary comparison uses E2 versus E1 within the manual marginal zone, independently of whether the S WARM RSI program assigned that cell to the marginal zone. Coordinates are analyzed in dataset units. 
+
+Expert protein and geometry checks. The anal-ysis uses processed protein measurements for all 245,280 cells. Within each image and manual marginal zone, matching is exact on original phe-notype cluster and imaging tile, then uses five ge-ometry variables with a 0.5-SD per-variable caliper, joint distance at most 1 and no replacement. There are 815, 995 and 1,025 matched E2–E1 pairs, re-taining 42.5%, 46.2% and 41.1% of E2 cells, re-spectively. Maximum absolute geometry standard-ized mean differences are 0.080, 0.063 and 0.083. Protein contrasts use this matched overlap subset. All six preselected proteins (CD79b, B220, IgD, IgM, MHCII, CD44) are shown in Figure 9b. Mea-surements are transformed as arcsinh( x/ 150) , re-taining negative values. Effects are differences of transformed means divided by the within-image contrast-population standard deviation. Intervals use 1,000 bootstrap resamples of 1,000-coordinate-unit spatial blocks within each image. B220 effects are +0 .082 , −0.130 and −0.190 . Stricter 0.25-SD matching also yields inconsistent directions. In spatially blocked validation, adding neighbourhood labels to a geometry/phenotype protein predictor produces ∆R2 from −0.00098 to +0 .00967 across 18 image–protein combinations. Neighbourhood labels add little predictive information for these six protein markers in spatially blocked validation. 24 F Limitations 
+
+SWARM RSI requires an evaluator that can execute candidate programs, so research without executable feedback is outside its scope. Execution feedback does not always reveal whether the intended in-tervention was faithfully implemented, and per-formance gains alone do not establish its scien-tific mechanism. Rebase selects program bases by matching recorded implementation needs to pro-gram mechanism labels, a heuristic that does not measure what a program can do. Crossover applies only when a benchmark reports scores per instance. H/P selection adapts discounted UCB without in-heriting its guarantees, and its benefit is established only empirically. Evaluation covers comparisons under matched budgets on three benchmark families. The human failure analysis characterizes 644 annotated failed attempts from 35 task trajectories. Cross-task ev-idence comes from six source tasks, 12 held-out tasks and one backbone, and generations are con-founded with the number of source tasks seen. The evaluation does not separately assess lit-erature synthesis (Shi et al., 2025), idea qual-ity (Sauter et al., 2026), or peer-review quality (Guo et al., 2026b). Generalization to complete re-search workflows (Lu et al., 2024; Schmidgall et al., 2025; Lyu et al., 2026) and information-access agents (Kanoulas et al., 2025; Cao et al., 2026) requires additional evaluation. Other untested settings include legal reason-ing (Lyu et al., 2022, 2023a; Wu et al., 2023), zero-shot entity extraction (Wang et al., 2025), conver-sational recommendation (Zhang et al., 2024), and shopping research (Lyu et al., 2025c). These set-tings require task-specific objectives and evaluation protocols. 
+
+G Ethics Statement 
+
+Benchmark gains do not establish factual reliabil-ity or alignment with human preferences, which require separate evaluation and optimization (Lin et al., 2022; Lyu et al., 2024a; Rafailov et al., 2023; Lyu et al., 2025b). We do not assess ro-bustness to dataset shortcuts (Lyu et al., 2023b), social stereotypes (Parrish et al., 2022), or cogni-tive biases (Lyu et al., 2024b, 2025a), nor do we test harmful-content generation. Applications that affect people should preserve user agency and pro-vide domain-appropriate human oversight (Zhang et al., 2025). Generated programs and scientific interpreta-tions require independent validation before use be-yond the benchmark setting. The execution and scientific audits check task validity and implemen-tation evidence; they do not certify security or scientific correctness. The biological case studies analyse existing datasets, and their associations do not establish causal mechanisms or clinical valid-ity. Any deployment should restrict code execution, external-tool access and credentials to the approved scope, and review proposed uses for potential harm. Data reuse should respect source licences, access restrictions and privacy requirements, with prove-nance and intended uses documented (Gebru et al., 2021). We report time budgets, hardware configu-rations and token consumption to support resource-aware comparisons (Schwartz et al., 2020). Token consumption is not a direct measurement of energy use or carbon emissions. 25

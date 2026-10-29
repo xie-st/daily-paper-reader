@@ -1,0 +1,665 @@
+{
+  "date": "20260930-20261029",
+  "date_label": "2026-09-30 ~ 2026-10-29",
+  "generated_at": "2026-10-29 03:47:28 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2610.13912v1",
+      "route": "20260930-20261029/2610.13912v1-rsi-anything-unlocking-recursive-self-improvement-with-world-models",
+      "title": "RSI-Anything: Unlocking Recursive Self-Improvement with World Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 10.0,
+      "evidence": "由预测式世界模型引导的领域通用递归自我改进框架",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.29784v1",
+      "route": "20260930-20261029/2610.29784v1-evolving-with-open-worlds-towards-recursive-self-improvement-for-future-forecasting",
+      "title": "Evolving with Open Worlds: Towards Recursive Self-Improvement for Future Forecasting",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 10.0,
+      "evidence": "定义递归自我改进并构建在动态环境中从自身经验持续进化的智能体系统",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.33624v1",
+      "route": "20260930-20261029/2610.33624v1-rsi-arena-towards-recursive-self-improvement-with-human-feedback",
+      "title": "RSI Arena: Towards Recursive Self-Improvement with Human Feedback",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 10.0,
+      "evidence": "研究AI智能体自主后训练并改进语言模型以迈向递归自我改进",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.36077v1",
+      "route": "20260930-20261029/2610.36077v1-the-trinitycapability-driven-recursive-self-improvement-for-multimodal-agents",
+      "title": "The Trinity:Capability-Driven Recursive Self-Improvement for Multimodal Agents",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 10.0,
+      "evidence": "耦合世界生成与框架演化的递归自我改进框架",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2609.38905v3",
+      "route": "20260930-20261029/2609.38905v3-embodirsi-recursive-self-improvement-for-data-efficient-robot-adaptation",
+      "title": "EmbodiRSI: Recursive Self-Improvement for Data-Efficient Robot Adaptation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向数据高效机器人策略适配的智能体式递归自我改进系统",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.04184v1",
+      "route": "20260930-20261029/2610.04184v1-evalresearchbench-can-ai-agents-design-their-own-evaluations",
+      "title": "EvalResearchBench: Can AI Agents Design Their Own Evaluations?",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向 AI 智能体自动化评测设计的基准，支撑递归自我改进",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.09426v1",
+      "route": "20260930-20261029/2610.09426v1-rsi-forge-from-research-papers-to-environments-for-recursive-self-improvement",
+      "title": "RSI-Forge: From Research Papers to Environments for Recursive Self-Improvement",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "自动构建带评测器的可执行研究环境以支撑递归自我改进",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.10310v1",
+      "route": "20260930-20261029/2610.10310v1-rsigym-a-flexible-environment-for-recursive-self-improvement",
+      "title": "RSIGym: A Flexible Environment for Recursive Self-Improvement",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向递归自我改进的智能体原生环境",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.10611v1",
+      "route": "20260930-20261029/2610.10611v1-verification-and-self-improvement-in-agentic-ai-foundations-and-limits",
+      "title": "Verification and Self-Improvement in Agentic AI: Foundations and Limits",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "通过有界验证与隐藏随机性区分不同自我改进机制",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.11458v1",
+      "route": "20260930-20261029/2610.11458v1-generative-adversarial-loops",
+      "title": "Generative Adversarial Loops",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "生成器-判别器循环自主生成对抗数据并发现算法，支撑自推进系统",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.12176v1",
+      "route": "20260930-20261029/2610.12176v1-recursive-self-improvement-through-multi-agent-self-supervision",
+      "title": "Recursive Self-Improvement through Multi-Agent Self-Supervision",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "提出MASS，一种利用多智能体自我监督和自生成轨迹的递归自我改进方法。",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.14224v1",
+      "route": "20260930-20261029/2610.14224v1-harness2-recursive-agent-harnessing-for-an-open-world",
+      "title": "Harness^2: Recursive Agent Harnessing for an Open World",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "自动演化智能体执行框架的递归自我改进框架",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.14625v1",
+      "route": "20260930-20261029/2610.14625v1-from-existing-methods-to-new-research-ideas-two-perspectives-on-recursive-self-improvement",
+      "title": "From Existing Methods to New Research Ideas: Two Perspectives on Recursive Self-Improvement",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "递归自我改进设计维度的统一分类体系",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.14730v2",
+      "route": "20260930-20261029/2610.14730v2-self-improving-data-synthesis-enables-scalable-adaptation-of-embedding-models",
+      "title": "Self-improving data synthesis enables scalable adaptation of embedding models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "自改进智能体框架为嵌入模型自主合成训练数据",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.16491v1",
+      "route": "20260930-20261029/2610.16491v1-drafting-agents-not-just-tokens-speculative-recursive-self-improvement-for-agentic-systems",
+      "title": "Drafting Agents, Not Just Tokens: Speculative Recursive Self-Improvement for Agentic Systems",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "推测式递归自我改进在预算约束下草拟并验证改进后的后继智能体",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.18083v1",
+      "route": "20260930-20261029/2610.18083v1-areal-rsi-adaptive-scaling-and-coordination-of-recursive-self-improvement",
+      "title": "AReaL-RSI: Adaptive Scaling and Coordination of Recursive Self-Improvement",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "组织持久研究团队智能体并以结果与资源开销刻画扩展",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.18842v1",
+      "route": "20260930-20261029/2610.18842v1-who-improves-the-robot-toward-physical-recursive-self-improvement",
+      "title": "Who Improves the Robot? Toward Physical Recursive Self-Improvement",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "研究机器人同时更新能力与改进程序的物理递归自我改进",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.20294v1",
+      "route": "20260930-20261029/2610.20294v1-mmla-rsi-recursive-self-improvement-through-rtt-and-rtma",
+      "title": "MMLA-RSI: Recursive Self-Improvement through RTT and RTMA",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "提出通过自我改进的适应方法更新策略与记忆的递归自我改进方案",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.20431v2",
+      "route": "20260930-20261029/2610.20431v2-swarmrsi-recursive-self-improvement-through-evolving-scientific-agent-swarm",
+      "title": "SwarmRSI: Recursive Self-Improvement through Evolving Scientific Agent Swarm",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "通过演化科学智能体群体实现递归自我改进",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.20474v1",
+      "route": "20260930-20261029/2610.20474v1-adarsi-on-demand-recursive-self-improvement-for-embodied-agents",
+      "title": "AdaRSI: On-Demand Recursive Self-Improvement for Embodied Agents",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "按需递归自我改进，决定何时更新执行器权重",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.21040v1",
+      "route": "20260930-20261029/2610.21040v1-recursive-reward-improvement-via-adversarial-meta-prompt-evolution",
+      "title": "Recursive Reward Improvement via Adversarial Meta-Prompt Evolution",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "利用提议者-求解者递归自我改进生成训练任务与评分量表，改进开放式专家任务的奖励。",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.21055v1",
+      "route": "20260930-20261029/2610.21055v1-athanor-an-agent-native-system-for-autonomous-post-training-research",
+      "title": "Athanor: An Agent-Native System for Autonomous Post-Training Research",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "构建在真实GPU上进行自主后训练研究的智能体原生系统",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.22344v1",
+      "route": "20260930-20261029/2610.22344v1-mlexpert-towards-a-generalist-agentic-model-for-autonomous-machine-learning-engineering",
+      "title": "MLExpert: Towards a Generalist Agentic Model for Autonomous Machine Learning Engineering",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "训练面向自主机器学习工程的通用智能体模型以推进AI4AI与递归自我改进",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.23344v1",
+      "route": "20260930-20261029/2610.23344v1-language-models-learn-to-improve-language-models",
+      "title": "Language Models Learn to Improve Language Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "语言模型学习自动化语言模型研发改进",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.26342v2",
+      "route": "20260930-20261029/2610.26342v2-vibetraining-bench-data-trainer-harness-co-design-for-iterative-system-improvement",
+      "title": "VibeTraining-Bench: Data-Trainer-Harness Co-Design for Iterative System Improvement",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向RSI中数据训练器与推理框架协同设计的基准",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.28201v1",
+      "route": "20260930-20261029/2610.28201v1-mad-rsi-model-as-data-for-recursive-self-improvement-of-agent-harnesses",
+      "title": "MaD-RSI: Model-as-Data for Recursive Self-Improvement of Agent Harnesses",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "通过递归自我改进优化智能体框架，并关注适配新LLM的耦合问题与计算成本。",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.32026v1",
+      "route": "20260930-20261029/2610.32026v1-rsi-opt-recursive-self-improvement-optimizer-agents-for-model-training",
+      "title": "RSI-Opt: Recursive Self-Improvement Optimizer Agents For Model Training",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "元智能体在递归自我改进循环中跨轮重写优化器策略",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.34386v1",
+      "route": "20260930-20261029/2610.34386v1-paretorsi-gym-can-ai-agents-improve-language-models-across-multiple-domains",
+      "title": "ParetoRSI-Gym: Can AI Agents Improve Language Models Across Multiple Domains?",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "多领域评测智能体驱动的RSI后训练",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.35193v1",
+      "route": "20260930-20261029/2610.35193v1-trustworthy-recursive-self-improvement-in-the-era-of-large-models-foundation-risks-evaluation-and-open-challenges",
+      "title": "Trustworthy Recursive Self-Improvement in the Era of Large Models: Foundation, Risks, Evaluation and Open Challenges",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "分析如何区分可信的自我修改增益与评测缺陷及继承能力",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.35434v1",
+      "route": "20260930-20261029/2610.35434v1-skillinfty-recursive-self-improvement-for-agent-skill-optimization",
+      "title": "Skill$^{\\infty}$: Recursive Self-Improvement for Agent Skill Optimization",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "直接提出通过自我优化的元技能实现智能体技能的递归自我改进。",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2609.39306v1",
+      "route": "20260930-20261029/2609.39306v1-resail-mitigating-collapse-in-iterative-agent-self-distillation",
+      "title": "ReSAIL: Mitigating Collapse in Iterative Agent Self-Distillation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "迭代智能体自蒸馏作为通往递归自我改进的路径",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.01073v1",
+      "route": "20260930-20261029/2610.01073v1-safety-must-survive-self-improvement-why-failures-persist-and-how-agents-recover",
+      "title": "Safety Must Survive Self-Improvement: Why Failures Persist and How Agents Recover",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "研究不安全改动为何在递归自我改进代际间持续及智能体如何恢复",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.04927v1",
+      "route": "20260930-20261029/2610.04927v1-assembling-insights-for-agentic-machine-learning-engineering-systems",
+      "title": "Assembling Insights for Agentic Machine Learning Engineering Systems",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "系统研究相关任务洞见如何提升智能体化机器学习工程，是通向递归自我改进的一步",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.05701v1",
+      "route": "20260930-20261029/2610.05701v1-second-order-problem-solving-for-recursive-self-improvement-in-formal-verification",
+      "title": "Second-Order Problem Solving for Recursive Self-Improvement in Formal Verification",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向工作流优化的二阶诊断式RSI",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.08902v1",
+      "route": "20260930-20261029/2610.08902v1-agent-plasticity-measuring-self-improvement-through-experience",
+      "title": "Agent Plasticity: Measuring Self-Improvement Through Experience",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "通过经验衡量自我改进并分析效率与失效点",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.04902v1",
+      "route": "20260930-20261029/2610.04902v1-self-evaluating-recursive-agents",
+      "title": "Self-Evaluating Recursive Agents",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "训练递归语言模型智能体联合学习任务分解、求解与自我评估，支持自主能力提升。",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.12190v1",
+      "route": "20260930-20261029/2610.12190v1-datasense-bench-the-first-step-toward-an-ai-scientist",
+      "title": "DataSense-Bench: The First Step Toward an AI Scientist",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "评测AI智能体自主选择训练数据以支撑机器学习研究",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.18097v1",
+      "route": "20260930-20261029/2610.18097v1-apt-feedback-driven-agentic-post-training-for-text-to-image-generation",
+      "title": "APT: Feedback-Driven Agentic Post-Training for Text-to-Image Generation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "自动生成评估与强化学习数据的智能体式后训练",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.22362v1",
+      "route": "20260930-20261029/2610.22362v1-coda-co-evolution-of-data-engines-and-action-policies",
+      "title": "CoDA: Co-Evolution of Data Engines and Action Policies",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "数据引擎与策略协同演化以自动生成有用训练环境",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.06361v1",
+      "route": "20260930-20261029/2610.06361v1-capability-driven-self-evolution-of-agent-memory",
+      "title": "Capability-Driven Self-Evolution of Agent Memory",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "基于任务反馈的智能体记忆自演化",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    },
+    {
+      "paper_id": "2610.33445v1",
+      "route": "20260930-20261029/2610.33445v1-from-intelligence-to-autonomy-foundations-and-construction-of-autonomous-agents-for-future-intelligent-systems",
+      "title": "From Intelligence to Autonomy: Foundations and Construction of Autonomous Agents for Future Intelligent Systems",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "自主智能体通过反馈调整长期能力",
+      "first_seen_at": "2026-10-29 03:47:28 UTC",
+      "updated_at": "2026-10-29 03:47:28 UTC"
+    }
+  ]
+}

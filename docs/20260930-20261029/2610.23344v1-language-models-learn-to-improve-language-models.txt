@@ -1,0 +1,1058 @@
+Title: Language Models Learn to Improve Language Models
+
+URL Source: https://arxiv.org/pdf/2610.23344v1
+
+Published Time: Mon, 19 Oct 2026 01:20:37 GMT
+
+Number of Pages: 25
+
+Markdown Content:
+# Language Models Learn to Improve Language Models 
+
+Minhua Lin 1, Zijun Wang 2, Zewen Liu 3, Zhaotian Weng 4, Bing He 5, Zhan Shi 5
+
+Benoit Dumoulin 5, Xiang Zhang 1, Suhang Wang 1, Hanqing Lu 51The Pennsylvania State University 2UC Santa Cruz 
+
+> 3
+
+Emory University 4UC Santa Barbara 5Amazon 
+
+{mfl5681,szw494}@psu.edu ; {luhanqin}@amazon.com 
+
+Abstract 
+
+Large language models (LLMs) are increas-ingly used to automate AI research, includ-ing language-model (LM) development, of-fering a potential path toward recursive self-improvement. However, turning experimental feedback into a learned ability to propose ef-fective improvements across models faces two challenges. First, training such an ability with real feedback is expensive: reinforcement learn-ing (RL) requires evaluating tens of thousands of proposals, each potentially requiring a full model-training run. Even at ten GPU-hours per run, reward collection alone would con-sume hundreds of thousands of GPU-hours, motivating a cheaper surrogate. Second, sur-rogate feedback can become unreliable as pol-icy optimization favors overestimated propos-als when the proposal distribution shifts. To address these challenges, we propose LM2LM, which trains LLMs with RL to generate effec-tive LM improvement proposals. To provide scalable feedback, we use a research world model (RWM), a frozen LLM that predicts pro-posal gains from real experimental records pro-vided in context, as the reward model for RL. To maintain feedback reliability, we periodi-cally execute current-policy proposals ranked highly by the RWM and add their measured outcomes to its context. Across eight autore-gressive and diffusion LM development envi-ronments, real-execution evaluations on held-out tasks show that LM2LM enables Qwen3.8-27B to outperform GPT-6-sol, even when GPT-6-sol is given 300 real experimental records in context, while requiring 33% lower data-generation cost. LM2LM also generalizes to a model family unseen during training. 
+
+1 Introduction 
+
+Large language models (LLMs) (Radford et al., 2018, 2019; Touvron et al., 2023) are increasingly being adopted as agents for automated AI research (AutoResearch) (Karpathy, 2026), where they pro-
+
+Figure 1: Overview of automated LM development. 
+
+pose ideas, implement changes, and execute exper-iments (Si et al., 2026; Novikov et al., 2025). A promising application is language-model develop-ment (LM development), where agents explore ar-chitectural, optimization, and training choices and measure their effects on model performance (Chi et al., 2026; Yang et al., 2026a). These experiments generate feedback that could help LLMs learn how to improve language models. Developing this capa-bility could accelerate model development and sup-port progress toward recursive self-improvement (RSI) (Chi et al., 2026) (Fig. 1(a)). Despite these advances, deciding what to try, i.e., research judgment , remains a bottleneck for LLM-based research agents. Agents can imple-ment and execute complex experiments, yet still struggle to identify changes that yield meaning-ful improvements (Li et al., 2026; Si et al., 2026; Chi et al., 2026). In LM development, effective choices depend on the target model and its training configuration: a change that benefits one setting may not benefit another. With expensive training experiments, selecting promising changes is essen-tial to making effective use of limited experimental resources. We therefore ask: how can language models learn to make better model-improvement decisions and transfer this capability to new mod-
+
+1arXiv:2610.23344v1 [cs.CL] 16 Oct 2026 els and training configurations? 
+
+A natural way to improve research judgment is to learn from past experiments. Experimental records can inform an LLM’s decisions through in-context learning (ICL) (Brown et al., 2020; Novikov et al., 2025; Si et al., 2026), and can also improve predic-tions of experimental outcomes and the selection of promising proposals (Wang et al., 2026b). This suggests using experimental knowledge as feed-back for parameter learning to improve an LLM’s proposal-generation capability beyond in-context learning. However, learning from this feedback raises two key challenges (Fig. 1(b)-(c)). First, how can we obtain cheap and scalable training feedback? Training LLMs with reinforce-ment learning (RL) to generate better proposals requires feedback on numerous sampled proposals. The most direct feedback comes from executing each proposal and measuring its outcome (Si et al., 2026), but this requires costly model-training runs. For example, training a 486M-parameter model on 8B tokens takes approximately 45 B200 GPU-hours. A GRPO-style RL (Shao et al., 2024) setup with 100 updates, 32 training states per update, and 8 proposals per state would require 25,600 pro-posal evaluations. Executing these proposals at the same per-run cost would consume approximately 1,152,000 GPU-hours, costing over $16 million. This motivates low-cost surrogate feedback with-out executing every proposal. Second, how can we keep surrogate feedback reliable as learning pro-gresses? Accurate predictions on past experiments do not ensure reliable feedback throughout train-ing. As learning changes which proposals the LLM generates, the surrogate must evaluate proposals that its experimental records may not cover. RL may then favor overestimated proposals, increas-ing surrogate rewards without corresponding real gains (Gao et al., 2023; Zhang et al., 2026). Ascalable learning approach must therefore keep its feedback grounded in real outcomes on the propos-als the current LLM generates. To address these challenges, we propose LM2LM, a framework that trains LLMs with RL to generate effective proposals for LM develop-ment. To obtain cheap and scalable training signals, we use a frozen LLM as a research world model (RWM) (Wang et al., 2026b) to predict experimen-tal gains relative to a reference configuration with-out executing proposals. Grounded in an initial set of real experimental records provided as in-context knowledge, the RWM supplies predicted gains for constructing RL rewards (Yu et al., 2026). To keep this feedback reliable as training progresses, we introduce on-policy calibration : we periodically execute a subset of the current policy’s proposals that the RWM ranks highly and incorporate their measured outcomes into its in-context knowledge. This targets real execution at proposals favored by RL, where overestimation can misdirect learning, and helps maintain prediction reliability as LLMs’ proposals change. Our contributions are: (i) Method. We propose LM2LM, which trains LLMs with RL using RWM-based rewards grounded in real records and cali-brated through targeted real execution; (ii) Exper-iments. Extensive real-execution experiments on held-out environments show that LM2LM enables Qwen3.8-27B to outperform frontier models such as GPT-6-sol and surpass baselines leveraging past experimental records at lower data-generation cost; (iii) Analysis. We show that RWM-based feedback provides informative rankings of proposal gains, while on-policy calibration mitigates overestima-tion and largely preserves ranking quality as train-ing progresses, unlike a fixed-record RWM that eventually performs worse than random. 
+
+2 Related Work 
+
+AutoResearch with LLM Agents. AutoResearch aims to automate empirical AI research through iterative idea generation, experimental implemen-tation, execution, and analysis. Early work shows LLM agents’ ability to generate research ideas and conduct end-to-end experiments (Baek et al., 2025; Si et al., 2025; Lu et al., 2024; Weng et al., 2026), with benchmarks evaluating these capabilities in machine-learning engineering and AI R&D (Huang et al., 2024; Chan et al., 2025; Wijk et al., 2025; Chi et al., 2026). To improve research outcomes, some methods iterate on candidate solutions with execution feedback while keeping the underlying agent fixed (Jiang et al., 2025; Novikov et al., 2025; Karpathy, 2026). Others instead train the agent on execution feedback, for machine-learning engineer-ing (Yang et al., 2026a) and LLM model develop-ment (Si et al., 2026). However, these methods rely on costly real execution to obtain training sig-nals, limiting learning at scale. In contrast, we train LLMs with feedback from a world model that predicts experimental outcomes, enabling scalable learning with fewer real executions. Full details of related works are in Appendix A. 2Figure 2: Overview of LM2LM. 
+
+3 Methodology 
+
+In this section, we present LM2LM. We first for-malize AutoResearch for LM development and mo-tivate RL-based proposer training (Sec. 3.1). To provide scalable feedback, we use a frozen LLM as a research world model (RWM) to predict ex-perimental gains without executing proposals, and use its predictions as RL rewards (Sec. 3.2). To maintain reliable feedback as the proposer evolves, we periodically execute high-rated proposals from the current policy and incorporate their measured outcomes into the RWM’s context (Sec. 3.3). An overview of LM2LM is shown in Fig. 2. 
+
+3.1 Preliminaries AutoResearch for LM Development. We consider a set of AutoResearch tasks E, where each task 
+
+e ∈ E seeks to improve a target language model by modifying its architecture, training objective, or optimization. Each task specifies a model family, model size, pretraining budget, and a reference configuration with validation loss be.A research campaign on task e involves two LLM-based roles: a proposer πθ, which gener-ates proposals, and a builder B, which translates them into executable modifications to the reference configuration. A campaign proceeds through re-peated proposal-and-execution steps. At step t, the proposer observes the research state st = ( e, h t),where ht records the proposals executed in previous steps and their measured outcomes, and generates a proposal at ∼ πθ(· | st). The builder implements 
+
+at, and the resulting training run yields validation loss ℓt. The experimental gain is defined as 
+
+g(st, a t) = be − ℓt, (1) where g(st, a t) > 0 indicates an improvement over the reference configuration. The proposal and its measured outcome are appended to the his-tory, producing ht+1 and the next research state 
+
+st+1 = ( e, h t+1 ).
+
+Problem Statement. An AutoResearch campaign consists of a sequence of research steps, where each step requires the proposer to decide what proposal to explore next based on the current task and previ-ous experimental outcomes. In this paper, our goal is then to improve this decision-making capabil-ity by training a proposer πθ to generate proposals with high experimental gain at each step. Formally, let Etrain and Etest denote disjoint sets of training and held-out tasks, respectively, and let μtrain and μtest denote the corresponding dis-tributions over research states s = ( e, h ). For 
+
+ν ∈ { train , test }, we define the expected experi-mental gain as 
+
+Jν (θ) = Es∼μν , a ∼πθ (·| s) [g(s, a )] , (2) where Jν (θ) measures the expected experimen-tal gain of proposals generated by πθ across re-search states sampled from μν . We seek to maxi-mize Jtrain (θ) using training tasks, with the aim of achieving high Jtest (θ) on held-out tasks. 
+
+RL with Experimental Feedback. Since the ex-perimental gain g(s, a ) directly measures the qual-ity of a proposal, it can serve as a verifiable reward, making reinforcement learning with verifiable re-wards (RLVR) a natural approach to optimizing 
+
+Jtrain (θ) (Lambert et al., 2025). A representative algorithm is DAPO (Yu et al., 2026): for a state 
+
+s ∼ μtrain , it samples a group of G proposals 
+
+{ai}Gi=1 from the current policy πθold (· | s), scores them with rewards {Ri}Gi=1 , and maximizes 
+
+JDAPO (θ) = E
+
+h 1P 
+
+> i|ai|
+
+PGi=1 
+
+P|ai|
+
+> k=1
+
+min  ρi,k ˆAi, ¯ρi,k ˆAi
+
+i
+
+,
+
+(3) where |ai| is the number of tokens in ai, ρi,k =
+
+πθ(ai,k | s, a i,<k )/π θold (ai,k | s, a i,<k ) is the token-level probability ratio, ¯ρi,k = clip( ρi,k , 1 −
+
+ϵlow , 1 + ϵhigh ), and the advantage ˆAi =  Ri −
+
+mean( {Rj }Gj=1 )/std( {Rj }Gj=1 ). Groups with no reward variation are discarded. 
+
+3.2 Scalable Feedback: Research World Model as the Verifier 
+
+RLVR typically relies on inexpensive verification, e.g., checking the correctness of a mathematical an-swer (Cobbe et al., 2021). However, directly apply-ing RLVR to AutoResearch for LM development is 3computationally expensive, as evaluating each pro-posal requires training the target model to measure its experimental gain. Since RL samples numerous proposals across research states and training up-dates, obtaining execution-based rewards at scale becomes prohibitively costly. To address this chal-lenge, we use a research world model (RWM) to predict experimental gains without executing every proposal, and train the proposer with DAPO on rewards built from these predictions. 
+
+Research World Model. An RWM predicts the outcomes of AI research experiments without ex-ecuting them (Wang et al., 2026b). We instantiate it as a frozen LLM W . To improve prediction reli-ability, we ground it in real experimental records. Specifically, we collect N0 experimental records from training tasks to form the initial record set M0.Each record (e, a, g ) contains a task, an executed proposal, and its measured gain. Formally, given a task e, proposal a, and experimental records M , the RWM predicts the experimental gain ˆg(e, a ; M ) as 
+
+ˆg(e, a ; M ) = W (e, a ; M ), (4) where M is provided as in-context evidence. Thus, evaluating a proposal requires only an LLM call rather than a model-training run. 
+
+Reward Design. A straightforward approach is to use RWM-predicted gains directly as RL rewards. This poses two challenges. First, predicted gains vary in scale across tasks and may contain extreme values, allowing tasks with larger gain scales or a few extreme predictions to dominate policy op-timization. Second, high predicted gains do not necessarily imply useful proposals, as proposals may be invalid, repetitive, or insufficiently diverse. To address the first challenge, we normalize pre-dicted gains by a task-specific scale τe and clip them at a threshold c:
+
+r(s, a ; M ) = clip  ˆg(e, a ; M )/τ e, −c, c , (5) where e is the task associated with research state 
+
+s, and τe is determined by reference seed noise and the dispersion of RWM-predicted gains. Nor-malization makes rewards comparable across tasks, while clipping limits the influence of extreme pre-dictions on policy updates. To address the second challenge, we incorporate proposal validity, novelty, and diversity into the final rewards. For a group of G proposals sampled from state s, a proposal is invalid if it cannot be implemented by the builder, repeated if it repro-duces the reference configuration or a proposal in the history h, and valid otherwise. Let V denote the set of valid proposals within the group. We assign 
+
+Ri =
+
+
+
+r(s, a i; M ) + bi, ai ∈ V,
+
+min j∈V Rj − δ, ai repeated ,
+
+−c, ai invalid ,
+
+(6) where δ > 0 is a repetition margin and bi = λσ G ˜di
+
+is a diversity bonus. Here, di = 1 /n i, where ni
+
+is the number of valid proposals sharing the same mechanism direction as ai within the group; ˜di is the within-group standardized value of di, σG is the standard deviation of normalized predicted re-wards within the group, and λ controls the bonus strength. The diversity bonus favors less common mechanism directions to encourage broader explo-ration during RL. Repeated proposals provide no new experimental information but may receive high predicted gains, so δ ranks them below all valid pro-posals. More reward details are in Appendix B.1. 
+
+Policy Optimization. With the rewards in Eq. (6), we train the proposer using DAPO (Eq. (3)). Since rewards are already normalized by τe to be com-parable across tasks, we use group-mean-centered advantages ˆAi = Ri −mean( {Rj }Gj=1 ) without di-viding by the group’s standard deviation (Liu et al., 2025), preserving reward dispersion across groups. Beyond providing RL rewards, the RWM also enables low-cost expansion of RL training states. Each RL training state s = ( e, h ) pairs a training task e with a history h sampled from {(e′, a, g ) ∈
+
+P : e′ = e}, where the record pool P is initial-ized as M0. Since M0 contains only a few records per task and scaling up P with real outcomes re-quires costly execution, we periodically add the state–proposal pairs D sampled during RL to P,with their RWM-predicted gains as synthetic out-comes (Appendix B.2): 
+
+P ← P ∪   e, a, ˆg(e, a ; M ) :  (e, h ), a  ∈ D .
+
+(7) Thus, both RWM-based rewards and synthetic train-ing states enable scalable RL without executing every sampled proposal. 
+
+3.3 Reliable Feedback: On-Policy Calibration of the RWM Prediction Bias under Policy Shift. While the RWM provides scalable feedback, RL increasingly 4favors highly rated proposals that may not be ade-quately covered by the initial records M0, making it susceptible to reward overoptimization (Gao et al., 2023; Zhang et al., 2026). To characterize this risk, we decompose the normalized real objective as 
+
+¯J(θ) = Er(s, a ; M )| {z } 
+
+> ˆJM(θ)
+
++ E¯g(s, a ) − r(s, a ; M )| {z } 
+
+> ∆M(θ)
+
+,
+
+(8) where ¯J(θ) = E[¯ g(s, a )] , ¯g(s, a ) =clip( g(s, a )/τ e, −c, c ), and the expectations are over s ∼ μtrain and a ∼ πθ(· | s). Here, 
+
+ˆJM (θ) is the expected normalized predicted gain, and ∆M (θ) is its prediction bias under the current proposer. As RL optimizes RWM-based rewards without observing this bias, ˆJM may increase without a corresponding increase in ¯J.
+
+Targeted Calibration with Real Execution. To mitigate this risk, we introduce on-policy calibra-tion: rather than keeping the RWM’s records fixed, LM2LM periodically executes high-rated propos-als from the current proposer and incorporates their real outcomes into the records to improve RWM predictions as the proposer evolves. Specifically, at each update point u, let Cu de-note the current proposer’s samples on training states, excluding proposals whose outcomes are already in Mu. We select Bu high-rated proposals: 
+
+Qu = arg max  
+
+> Q⊆Cu,|Q|=Bu
+
+X
+
+> (s,a )∈Q
+
+r(s, a ; Mu). (9) The builder implements and executes these propos-als, and their measured outcomes are added to the records: 
+
+Mu+1 = Mu ∪ (e, a, g (s, a )) : ( s, a ) ∈ Qu ,
+
+(10) where e is the task of s. Subsequent RL steps compute rewards with W (· ; Mu+1 ). Calibration occurs between RL training segments, keeping the RWM feedback fixed within each segment. Since calibration updates the RWM through in-context records without retraining, it requires only PU −1 
+
+> u=0
+
+Bu additional real executions, independent of the number of proposals sampled during RL. The training algorithm is summarized in Alg. 1. 
+
+4 Experiments 
+
+In this section, we first compare LM2LM with base-lines on proposal quality and data-generation cost (Sec. 4.2) and evaluate its generalization to an un-seen model family (Sec. 4.3). We then conduct ablation studies to understand the contribution of on-policy calibration (Sec. 4.4) and analyze why RWM feedback can guide RL and how calibration sustains it (Sec. 4.5). 
+
+4.1 Experimental Setup Environments. We construct language-model training environments spanning four autoregres-sive (AR) families: OLMo-3 (Olmo et al., 2025), Qwen3 (Yang et al., 2025), NanoChat (Karpathy, 2025), and Marin (Hall et al., 2025); and four dif-fusion families: E2D2-SW, E2D2 (Arriola et al., 2026), MDM (Nie et al., 2025), and BD3LM (Ar-riola et al., 2025). Each task specifies a model fam-ily, model size, training budget, and reference train-ing recipe. Each experiment trains the target model from scratch. Further details are in Appendix C.1. 
+
+Data Construction. We split the tasks into 40 training and 10 held-out tasks. We curate and exe-cute 300 proposals from a library of training-recipe mechanisms on the training tasks, yielding 300 ex-perimental records. Of these, 100 serve as the ini-tial records M0 of LM2LM, grounding the RWM. We construct initial RL training states s = ( e, h )
+
+with histories h containing 0–8 records of task e
+
+from M0, expanded during RL (Eq. (7)). For eval-uation, we construct 60 AR and 18 diffusion held-out research states using only real experimental histories. More details are in Appendix C.2. 
+
+Baselines. We compare LM2LM with training-free and fine-tuning-based methods. (i) Training-free proposers : We evaluate LM2LM’s base model and a frontier LLM (GPT-6-sol) in both zero-shot and in-context learning (ICL) settings. For ICL, we use the above 300 experimental records as in-context examples. (ii) Fine-tuned proposers : SFT fine-tunes the base model on 300 (state, proposal) pairs constructed from the same records, and RFT-Real applies rejection-sampling fine-tuning (Yuan et al., 2023), keeping only the pairs whose proposals have positive measured gains. Both use the same base model and builder as LM2LM. 
+
+Evaluation Protocol. We evaluate proposers on held-out research states through real execution, with each proposer generating four proposals per state. We measure experimental gains using val-idation bits per byte (BPB) for AR models and negative log-likelihood (NLL) for diffusion mod-els. We report Avg@4, Best@4, negative-gain rate (Neg.), and pairwise win rates based on Avg@4. To assess efficiency, we measure data-generation cost and time, including real execution and RWM 5Table 1: Comparison with baselines on held-out research states. Experimental gains are reported in 10 −3 BPB (AR) and 10 −2 nats per token (diffusion). Best results in Avg@4, Best@4, Neg., and Row vs. Base are in bold .
+
+Model Experimental Gain Pairwise Win Rate (%) ↑
+
+Avg@4 ↑ Best@4 ↑ Neg. (%) ↓ Row vs. Base LM2LM vs. Row 
+
+AR families 
+
+Base −7.94 11 .39 70 .4 – 93 .3
+
+Base-ICL 4.04 16 .54 40 .8 81 .7 66 .7
+
+GPT-6-sol 6.51 8.79 52 .5 83 .3 56 .7
+
+GPT-6-sol-ICL 6.15 11 .27 29 .6 78 .3 51 .7
+
+SFT −12 .19 5.51 71 .5 55 .0 93 .3
+
+RFT-Real −22 .95 9.69 66 .5 45 .0 95 .0
+
+LM2LM 17 .06 23 .40 39 .2 93 .3 –
+
+Diffusion families 
+
+Base −4.18 5.89 59 .7 – 100 .0
+
+Base-ICL 4.03 8.50 13 .9 83 .3 72 .2
+
+GPT-6-sol 1.98 4.43 38 .9 83 .3 83 .3
+
+GPT-6-sol-ICL 4.94 5.93 0.0 94 .4 72 .2
+
+SFT −3.09 3.73 54 .2 61 .1 100 .0
+
+RFT-Real −3.72 3.37 52 .8 50 .0 88 .9
+
+LM2LM 7.10 9.93 7.6 100 .0 –0 20 40 60    
+
+> Data Generation Cost ($k)
+> −20 −10 010 20
+> Avg@4 ( 10 −3  BPB)
+> M0
+> M4
+> K=0 100 150 200 K=300
+> Base-ICL GPT-6-sol-ICL Base SFT RFT-Real LM2LM
+
+(a) AR: Avg@4 vs. cost. 0 200 400     
+
+> Data Generation Time (h)
+> −20 −10 010 20
+> Avg@4 ( 10 −3  BPB)
+> M0
+> M4
+> K=0 100 150 200 K=300
+> Base-ICL GPT-6-sol-ICL Base SFT RFT-Real LM2LM
+
+(b) AR: Avg@4 vs. time. 0 20 40 60  
+
+> Data Generation Cost ($k)
+> −4 048
+> Avg@4 ( 10 −2  nats)
+> M0
+> M4
+> K=0
+> K=300
+> Base-ICL GPT-6-sol-ICL Base SFT RFT-Real LM2LM
+
+(c) Diff.: Avg@4 vs. cost. 0 200 400  
+
+> Data Generation Time (h)
+> −4 048
+> Avg@4 ( 10 −2  nats)
+> M0
+> M4
+> K=0
+> K=300
+> Base-ICL GPT-6-sol-ICL Base SFT RFT-Real LM2LM
+
+(d) Diff.: Avg@4 vs. time. 
+
+Figure 3: Real experimental gains (Avg@4) versus data-generation cost and time on held-out research states. (a, b) show AR tasks in 10 −3 BPB, while (c, d) show diffusion tasks in 10 −2 nats per token. 
+
+prediction costs. GPU time is priced at $14.208 per B200 GPU-hour and RWM calls at GPT-6-sol token rates. More details are in Appendix D. 
+
+Implementation Details. We use Qwen3.8-27B (Qwen Team, 2026) as the proposer backbone, GPT-6-sol (OpenAI, 2026b) as the RWM, and GPT-6-astra (OpenAI, 2026a) as the builder, both at high reasoning effort. We run DAPO for 96 steps, re-freshing rollouts every 8 steps with 256 training states and G = 8 proposals per state, and clipping rewards at c = 6 . Starting with N0 = 100 initial experimental records, we calibrate the RWM three times ( U = 3 ), after steps 16, 40, and 64, by ex-ecuting proposals selected using Eq. (9), so that LM2LM uses 200 real runs by default and each of the four training segments has a fixed RWM reward function. Unless otherwise specified, we report re-sults at step 96. More details are in Appendix E. 
+
+4.2 Main Comparison with Baselines Main Results. We compare LM2LM with base-lines on proposal quality across held-out research states, following the evaluation protocol in Sec. 4.1. Table 1 reports the results. We observe: (i) Past ex-perimental experience helps, but how it is used matters. With 300 experimental records, Base-ICL improves Avg@4 over Base from −7.94 to 
+
+4.04 on AR tasks and from −4.18 to 4.03 on dif-fusion tasks, demonstrating the value of past ex-perimental experience. In contrast, SFT and RFT-Real fail to consistently improve proposal quality, suggesting that directly fine-tuning on a few hun-dred past proposals is insufficient to learn effec-tive proposal generation. (ii) LM2LM outperforms all baselines. It achieves the highest Avg@4 and Best@4 on both AR (17.06/23.40) and diffusion (7.10/9.93) tasks, outperforming Base on 93.3% and 100% of states, respectively. This validates LM2LM’s effectiveness. (iii) RL reduces harmful proposals while enabling larger gains. Compared with Base, LM2LM reduces negative-gain propos-als from 70.4% to 39.2% on AR tasks and from 59.7% to 7.6% on diffusion tasks. Despite a higher negative-gain rate than GPT-6-sol-ICL on AR tasks (39.2% vs. 29.6%), LM2LM achieves substantially higher Avg@4 (17.06 vs. 6.15), suggesting that it 6Table 2: Generalization to the held-out Qwen3 family. 
+
+Gains are reported in 10 −3 BPB. Best results in Avg@4, Best@4, and Row vs. Base are in bold .                         
+
+> Model Gain ↑Win Rate (%) ↑
+> Avg@4 Best@4 Row vs. Base LM2LM vs. Row
+> Base 3.53 31 .39 –87 .5
+> Base-ICL 2.97 25 .22 58 .3100 .0
+> GPT-6-sol 20 .19 22 .75 66 .762 .5
+> GPT-6-sol-ICL 21 .63 25 .27 75 .062 .5
+> LM2LM 53 .72 86 .69 87 .5–
+
+explores higher-gain proposals rather than simply avoiding negative outcomes. 
+
+Cost Efficiency. We compare all methods in terms of Avg@4 and Best@4 versus data-generation cost and time. For ICL baselines, we vary the number of in-context records K ∈ { 0, 100 , 150 , 200 , 300 }.For LM2LM, we evaluate checkpoints at steps 16, 40, 64, 96, and 128, corresponding to RWM records 
+
+M0 through M4. Figure 3 reports Avg@4 results, with Best@4 results in Appendix G.1. We ob-serve that (i) LM2LM achieves larger gains with fewer real executions. At step 96 ( M3), LM2LM achieves Avg@4 of 17.06 and 7.10 on AR and diffusion tasks, respectively, outperforming ICL with K = 200 at comparable data-generation cost ($40.1k vs. $39.5k). Compared with ICL at 
+
+K = 300 , it achieves higher gains with only 200 real runs, reducing data-generation cost and time by approximately 33% ($40.1k vs. $60.0k; 343 vs. 510 hours). Even including RL training, its total cost remains lower than ICL with K = 300 ($56.1k vs. $60.0k), as detailed in Appendix G.2. (ii) LM2LM improves further at limited additional cost as train-ing progresses. Between steps 40 and 96, LM2LM improves Avg@4 from 10.85 to 17.06 on AR tasks and from 2.28 to 7.10 on diffusion tasks. This re-quires only $11.8k in additional data-generation cost, providing RWM rewards for over 14k sam-pled proposals with just 69 additional calibration records. These results show how LM2LM scales training feedback with limited real execution. 
+
+4.3 Generalization to Unseen Model Families 
+
+We further evaluate whether LM2LM generalizes to an unseen model family. Specifically, we hold out the entire Qwen3 family and train the pro-poser on the remaining families, excluding all Qwen3 records from training and RWM grounding. (i) LM2LM generalizes to unseen model families. 
+
+Without Qwen3 records, LM2LM achieves Avg@4 and Best@4 of 53.72 and 86.69, substantially out-Avg@4 Best@4 10 15 20 25     
+
+> AR Gain ( 10 −3  BPB)  LM2LM Static, M0
+> Static, M0′
+> (a) vs. static records. Avg@4 Best@4 10 15 20 25
+> AR Gain ( 10 −3  BPB)  LM2LM (top-rated) Random calib. (b) vs. random calibration.
+
+Figure 4: Ablation of on-policy calibration on held-out AR research states at step 96. 
+
+performing the strongest baseline (21.63 and 25.27 for GPT-6-sol-ICL), demonstrating its ability to generate effective proposals for an unseen model family. (ii) Out-of-family in-context records pro-vide limited benefits. Base-ICL performs similarly to Base (2.97 vs. 3.53 Avg@4), while GPT-6-sol-ICL only slightly improves over GPT-6-sol (21.63 vs. 20.19). This suggests that directly using out-of-family records offers limited benefits, highlighting the advantage of LM2LM’s RWM-based RL. 
+
+4.4 Ablation Studies 
+
+To understand the contributions of on-policy cal-ibration and the impact of its proposal selection strategy, we conduct ablation studies by compar-ing LM2LM with variants that differ only in how the RWM records are constructed, with all other settings following Sec. 4.1. 
+
+Impact of On-Policy Calibration. We compare LM2LM with two static variants whose records stay fixed: M0 (100 initial records) and M ′ 
+
+> 0
+
+(M0
+
+plus 100 random records, matching LM2LM’s 200 real runs). As shown in Fig. 4(a), LM2LM achieves higher AR Avg@4 and Best@4 than both variants, and outperforms M0 and M ′ 
+
+> 0
+
+in Avg@4 on 74.2% and 70.0% of the held-out AR states, respectively. With the same budget of 200 real runs, calibra-tion outperforms adding random records (17.06 vs. 14.76 Avg@4), highlighting the importance of proposal selection for RWM grounding. 
+
+Impact of Calibration Strategy. We further as-sess the impact of top-rated proposal selection in Eq. (9) by comparing LM2LM with a variant that uniformly samples valid proposals whose outcomes are not yet in the records, while keeping the same initial records and three calibration rounds (200 real runs). As shown in Fig. 4(b), random calibration lowers AR Avg@4 and Best@4 from 17.06 and 23.40 to 10.84 and 18.60. We attribute this to top-rated selection correcting overestimated changes that RL is about to reinforce, whereas random se-70 32 64 96 128                
+
+> Training Step
+> −0.5 0.0 0.5 1.0 1.5
+> Advantage Cosine
+> random C1 C2 C3 C4
+> Static LM2LM (a) Advantage alignment. 032 64 96 128
+> Training Step
+> 0.2 0.4 0.6 0.8 1.0
+> Pairwise Accuracy
+> random C1 C2 C3 C4
+> Static LM2LM (b) Pairwise accuracy. 032 64 96 128
+
+Training Step      
+
+> 01234
+> Pred.  − Real Reward
+> unbiased C1 C2 C3 C4
+> Static LM2LM (c) Predicted-real reward gap.
+> Figure 5: RWM feedback reliability on held-out AR research states .
+
+lection can miss them or add misleading records. Case studies are in Appendix H. 
+
+4.5 In-depth Dissection of LM2LM 
+
+We further analyze why RWM feedback can guide RL and how calibration keeps it reliable. For this analysis, we extend training from 96 to 128 steps with a fourth calibration of LM2LM (236 real runs) and compare it with the static variant whose RWM keeps M0 throughout; each variant is scored by the RWM it is trained with. 
+
+Why Can RWM Feedback Guide RL? We ex-amine the alignment between RWM-predicted and real-execution feedback by measuring the cosine similarity of group-relative advantages and the within-state pairwise ranking accuracy over four executed proposals per held-out AR research state. As shown in Figs. 5(a) and (b), LM2LM maintains advantage cosine of 0.50–0.71 and pairwise accu-racy of 0.61–0.69, above chance levels of 0 and 0.5. Since DAPO optimizes group-relative advantages, this indicates that the RWM provides informative relative feedback for policy optimization. 
+
+How Does On-Policy Calibration Help? To un-derstand the gains from calibration in Sec. 4.4, we examine how the feedback of the static vari-ant evolves as RL changes the proposer’s outputs (Fig. 5). We observe that (i) Calibration maintains reliable relative feedback. As shown in Fig. 5(a), the static RWM’s advantage cosine declines from 0.69 at step 16 to −0.42 at step 128, so its pre-dicted advantages become negatively aligned with real ones, whereas LM2LM keeps it positive. Like-wise, its pairwise accuracy drops from 0.72 to 0.37, below chance (0.5), while LM2LM maintains 0.61 (Fig. 5(b)). We further observe that scoring the same LM2LM proposals with M0 instead of cali-brated records lowers pairwise accuracy from 0.61 to 0.46 at step 96 (Appendix I.2). These results in-dicate that on-policy calibration keeps the predicted advantages that DAPO optimizes aligned with real ones. (ii) Calibration limits reward overestimation. 
+
+As shown in Fig. 5(c), the predicted–real reward gap of the static RWM rises sharply after step 64, reaching about 2.0 at step 96, whereas LM2LM’s gap stays below 1 and decreases from 0.85 at step 96 to 0.17 at step 128 after the fourth calibra-tion. Thus, calibration also keeps predicted rewards close to real ones, mitigating reward overoptimiza-tion (Gao et al., 2023). For example, our case studies in Appendix I.3 show that the initial RWM overestimates a NanoChat optimizer change (pre-dicted +0 .7 to +1 .25 vs. real −1.46 ), so the static variant raises its share of NanoChat training propos-als from 30% to 79% by step 64. In contrast, the first calibration of LM2LM adds its real outcomes to the records, and the share falls to 8%. More metrics and case studies are in Appendix I. 
+
+5 Conclusion 
+
+We presented LM2LM, which trains LLMs with RL to generate effective proposals for LM develop-ment, using a frozen LLM grounded in real experi-mental records as an RWM and keeping it reliable through on-policy calibration. Extensive experi-ments across autoregressive and diffusion LM envi-ronments show that LM2LM enables Qwen3.8-27B to outperform frontier models such as GPT-6-sol and achieve higher gains than baselines leveraging past experimental records at lower data-generation cost. Our analysis shows that RWM-based feed-back provides informative rankings of proposal gains, while on-policy calibration mitigates re-ward overestimation and preserves ranking qual-ity as training progresses. These findings high-light RWM-guided RL as a promising paradigm for learning research judgment from experimental feedback, offering a potential path toward RSI. 86 Limitations 
+
+Our study focuses on proposal-level improvements in LM development rather than end-to-end research campaigns. Although the RWM provides informa-tive rankings and substantially reduces the need for real execution during RL, its predictions remain imperfect, and on-policy calibration still requires a limited number of additional model-training runs. Future work could extend our framework to broader research environments, including LM post-training, and evaluate its effectiveness in longer, end-to-end research campaigns. 
+
+7 Ethics Statement 
+
+This work studies the use of LLMs to automate research on language-model development. Such systems may help reduce the cost of experimenta-tion and accelerate scientific progress, but they also introduce risks, including unreliable experimental conclusions, increased computational resource con-sumption, and the potential misuse of automated model-improvement capabilities. Our framework evaluates proposals in controlled training environ-ments and uses real experimental outcomes to cali-brate surrogate feedback. Nevertheless, predicted rewards and experimental gains do not guarantee the safety or broader usefulness of proposed model changes. We therefore emphasize the importance of human oversight, independent evaluation, and appropriate safeguards when applying automated research systems to more capable models or higher-stakes settings. 
+
+References 
+
+Marianne Arriola, Aaron Gokaslan, Justin Chiu, Zhihan Yang, Zhixuan Qi, Jiaqi Han, Subham Sahoo, and Volodymyr Kuleshov. 2025. Block diffusion: Interpo-lating between autoregressive and diffusion language models. In International Conference on Learning Representations , volume 2025, pages 50726–50753. Marianne Arriola, Yair Schiff, Hao Phung, Aaron Gokaslan, and Volodymyr Kuleshov. 2026. Encoder-decoder diffusion language models for efficient train-ing and inference. Advances in Neural Information Processing Systems , 38:15612–15644. Jinheon Baek, Sujay Kumar Jauhar, Silviu Cucerzan, and Sung Ju Hwang. 2025. Researchagent: Iterative research idea generation over scientific literature with large language models. In Proceedings of the 2025 conference of the nations of the Americas chapter of the association for computational linguistics: hu-man language technologies (volume 1: long papers) ,pages 6709–6738. Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, et al. 2020. Language models are few-shot learners. Advances in neural information processing systems , 33:1877–1901. Hyungjoo Chae, Namyoung Kim, Kai Ong, Minju Gwak, Gwanwoo Song, Jihoon Kim, Sunghwan Kim, Dongha Lee, and Jinyoung Yeo. 2025. Web agents with world models: Learning and leveraging environ-ment dynamics in web navigation. In International Conference on Learning Representations , volume 2025, pages 63707–63738. Jun Shern Chan, Neil Chowdhury, Oliver Jaffe, James Aung, Dane Sherburn, Evan Mays, Giulio Starace, Kevin Liu, Leon Maksin, Tejal Patwardhan, et al. 2025. Mle-bench: Evaluating machine learning agents on machine learning engineering. In Inter-national Conference on Learning Representations ,volume 2025, pages 50466–50494. Zhaorun Chen, Zhuokai Zhao, Kai Zhang, Bo Liu, Qi Qi, Yifan Wu, Tarun Kalluri, Xuefei Cao, Yuan-hao Xiong, Haibo Tong, et al. 2026. Scaling agent learning via experience synthesis. In International Conference on Learning Representations , volume 2026, pages 121394–121420. Yizhe Chi, Wenyi Li, Deyao Hong, Xiaoqiu Wang, Mingju Gao, Kaisen Yang, Bingxiang He, Youjie Zheng, Calvin Xiao, and Qinhuai Na. 2026. Ai4ai-bench: Benchmarking llm agents in algorithmic de-sign for recursive self-improvement. arXiv preprint arXiv:2608.20318 .Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heewoo Jun, Lukasz Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano, et al. 2021. Training verifiers to solve math word problems. arXiv preprint arXiv:2110.14168 .Leo Gao, Stella Biderman, Sid Black, Laurence Gold-ing, Travis Hoppe, Charles Foster, Jason Phang, Ho-race He, Anish Thite, Noa Nabeshima, et al. 2020. The pile: An 800gb dataset of diverse text for lan-guage modeling. arXiv preprint arXiv:2101.00027 .Leo Gao, John Schulman, and Jacob Hilton. 2023. Scal-ing laws for reward model overoptimization. In In-ternational conference on machine learning , pages 10835–10866. PMLR. Yu Gu, Kai Zhang, Yuting Ning, Boyuan Zheng, Boyu Gou, Tianci Xue, Cheng Chang, Sanjari Srivastava, Yanan Xie, Peng Qi, et al. 2024. Is your llm secretly a world model of the internet? model-based planning for web agents. arXiv preprint arXiv:2411.06559 .Caglar Gulcehre, Tom Le Paine, Srivatsan Srini-vasan, Ksenia Konyushkova, Lotte Weerts, Abhishek Sharma, Aditya Siddhant, Alex Ahern, Miaosen 
+
+9Wang, Chenjie Gu, et al. 2023. Reinforced self-training (rest) for language modeling. arXiv preprint arXiv:2308.08998 .David Ha and Jürgen Schmidhuber. 2018. World mod-els. arXiv preprint arXiv:1803.10122 , 2(3):440. Danijar Hafner, Jurgis Pasukonis, Jimmy Ba, and Timothy Lillicrap. 2023. Mastering diverse do-mains through world models. arXiv preprint arXiv:2301.04104 .David Hall, Ahmed Ahmed, Christopher Chou, Abhi-nav Garg, Rohith Kuditipudi, Will Held, Nikil Ravi, Herumb Shandilya, Jason Wang, Jason Bolton, Sid-dharth Karamcheti, Suhas Kotha, Tony Lee, Nel-son Liu, Joel Niklaus, Ashwin Ramaswami, Kam-yar Salahi, Kaiyue Wen, Chi Heem Wong, Sherry Yang, Ivan Zhou, and Percy Liang. 2025. Introducing Marin: An open lab for building foundation models. Marin Community Blog. Blog post. Shibo Hao, Yi Gu, Haodi Ma, Joshua Hong, Zhen Wang, Daisy Wang, and Zhiting Hu. 2023. Reasoning with language model is planning with world model. In 
+
+Proceedings of the 2023 conference on empirical methods in natural language processing , pages 8154– 8173. Jordan Hoffmann, Sebastian Borgeaud, Arthur Men-sch, Elena Buchatskaya, Trevor Cai, Eliza Ruther-ford, Diego de Las Casas, Lisa Anne Hendricks, Johannes Welbl, Aidan Clark, et al. 2022. Train-ing compute-optimal large language models. arXiv preprint arXiv:2203.15556 .Qian Huang, Jian Vora, Percy Liang, and Jure Leskovec. 2024. MLAgentbench: Evaluating language agents on machine learning experimentation. In Forty-first International Conference on Machine Learning .Zhengyao Jiang, Dominik Schmidt, Dhruv Srikanth, Dixing Xu, Ian Kaplan, Deniss Jacenko, and Yuxiang Wu. 2025. Aide: Ai-driven exploration in the space of code. arXiv preprint arXiv:2502.13138 .Andrej Karpathy. 2025. nanochat: The best chatgpt that $100 can buy. Andrej Karpathy. 2026. Autoresearch. https:// github.com/karpathy/autoresearch . GitHub repository. Nathan Lambert, Jacob Morrison, Valentina Pyatkin, Shengyi Huang, Hamish Ivison, Faeze Brahman, Lester James Validad Miranda, Alisa Liu, Nouha Dziri, Xinxi Lyu, Yuling Gu, Saumya Malik, Victoria Graf, Jena D. Hwang, Jiangjiang Yang, Ronan Le Bras, Oyvind Tafjord, Christopher Wilhelm, Luca Soldaini, Noah A. Smith, Yizhong Wang, Pradeep Dasigi, and Hannaneh Hajishirzi. 2025. Tulu 3: Push-ing frontiers in open language model post-training. In Second Conference on Language Modeling .Jeremy Li, Suyash Shringarpure, Edmund Wong, and Andrew Ho. 2026. Genebench-pro: Evaluating mul-tistage statistical reasoning in genomics, quantita-tive biology, and translational biomedicine. bioRxiv ,pages 2026–06. Minhua Lin, Enyan Dai, Hui Liu, Xianfeng Tang, Yu-liang Yan, Zhenwei Dai, Jingying Zeng, Zhiwei Zhang, Fali Wang, Hongcheng Gao, et al. 2026a. How far are llms from professional poker players? revisiting game-theoretic reasoning with agentic tool use. arXiv preprint arXiv:2602.00528 .Minhua Lin, Hanqing Lu, Zhan Shi, Bing He, Rui Mao, Zhiwei Zhang, Zongyu Wu, Xianfeng Tang, Hui Liu, Zhenwei Dai, Rui Zhang, Xiang Zhang, Suhang Wang, Benoit Dumoulin, and Jian Pei. 2026b. Posi-tion: Agentic evolution is the path to evolving LLMs. In First Workshop on Agent Skills .Minhua Lin, Juncheng Wu, Zijun Wang, Zhan Shi, Yisi Sang, Bing He, Zewen Liu, Tianxin Wei, Zongyu Wu, Zhiwei Zhang, et al. 2026c. Harness updating is not harness benefit: Disentangling evolution capa-bilities in self-evolving llm agents. arXiv preprint arXiv:2605.30621 .Minhua Lin, Zongyu Wu, Zhichao Xu, Hui Liu, Xian-feng Tang, Qi He, Charu Aggarwal, Xiang Zhang, and Suhang Wang. 2025. A comprehensive survey on reinforcement learning-based agentic search: Foun-dations, roles, optimizations, evaluations, and appli-cations. arXiv preprint arXiv:2510.16724 .Minhua Lin, Zhiwei Zhang, Hanqing Lu, Hui Liu, Xianfeng Tang, Qi He, Xiang Zhang, and Suhang Wang. 2026d. Memma: Coordinating the memory cycle through multi-agent reasoning and in-situ self-evolution. arXiv preprint arXiv:2603.18718 .Zichen Liu, Changyu Chen, Wenjun Li, Penghui Qi, Tianyu Pang, Chao Du, Wee Sun Lee, and Min Lin. 2025. Understanding r1-zero-like training: A critical perspective. In Second Conference on Language Modeling .Chris Lu, Cong Lu, Robert Tjarko Lange, Jakob Foer-ster, Jeff Clune, and David Ha. 2024. The ai scientist: Towards fully automated open-ended scientific dis-covery. arXiv preprint arXiv:2408.06292 .Shen Nie, Fengqi Zhu, Chao Du, Tianyu Pang, Qian Liu, Guangtao Zeng, Min Lin, and Chongxuan Li. 2025. Scaling up masked diffusion models on text. In In-ternational Conference on Learning Representations ,volume 2025, pages 82974–82997. Alexander Novikov, Ngân V˜ u, Marvin Eisenberger, Emilien Dupont, Po-Sen Huang, Adam Zsolt Wag-ner, Sergey Shirobokov, Borislav Kozlovskii, Fran-cisco JR Ruiz, Abbas Mehrabian, et al. 2025. Alphae-volve: A coding agent for scientific and algorithmic discovery. arXiv preprint arXiv:2506.13131 .
+
+10 Team Olmo, Allyson Ettinger, Amanda Bertsch, Bailey Kuehl, David Graham, David Heineman, Dirk Groen-eveld, Faeze Brahman, Finbarr Timbers, Hamish Ivison, et al. 2025. Olmo 3. arXiv preprint arXiv:2512.13961 .OpenAI. 2025. Codex CLI: A lightweight coding agent that runs in your terminal. https://github.com/ openai/codex . Accessed: 2026-10-15. OpenAI. 2026a. GPT-6 Astra: A new genera-tion of intelligence. https://openai.com/index/ gpt-6-astra/ . Accessed: 2026-10-13. OpenAI. 2026b. Introducing GPT-6 Sol and Luna. https://openai.com/index/ introducing-gpt-6-sol-and-luna/ . Accessed: 2026-10-13. Qwen Team. 2026. Qwen3.8-Max: A new bar for cod-ing and cowork. Alec Radford, Karthik Narasimhan, Tim Salimans, Ilya Sutskever, et al. 2018. Improving language under-standing by generative pre-training. Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, Ilya Sutskever, et al. 2019. Language models are unsupervised multitask learners. Maxime Robeyns, Martin Szummer, and Laurence Aitchison. 2025. A self-improving coding agent. 
+
+arXiv preprint arXiv:2504.15228 .Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei Zhang, Mingchuan Zhang, YK Li, Yang Wu, et al. 2024. Deepseekmath: Pushing the limits of mathematical reasoning in open language models. arXiv preprint arXiv:2402.03300 .Chenglei Si, Diyi Yang, and Tatsunori Hashimoto. 2025. Can llms generate novel research ideas? a large-scale human study with 100+ nlp researchers. In Inter-national Conference on Learning Representations ,volume 2025, pages 94003–94092. Chenglei Si, Zitong Yang, Yejin Choi, Emmanuel Can-des, Diyi Yang, and Tatsunori Hashimoto. 2026. To-wards execution-grounded automated AI research. In Forty-third International Conference on Machine Learning .Richard S Sutton. 1991. Dyna, an integrated architec-ture for learning, planning, and reacting. ACM Sigart Bulletin , 2(4):160–163. Hugo Touvron, Louis Martin, Kevin Stone, Peter Al-bert, Amjad Almahairi, Yasmine Babaei, Nikolay Bashlykov, Soumya Batra, Prajjwal Bhargava, Shruti Bhosale, et al. 2023. Llama 2: Open founda-tion and fine-tuned chat models. arXiv preprint arXiv:2307.09288 .Guanghan Wang, Bing He, Zhan Shi, Benoit Dumoulin, Hanqing Lu, and Volodymyr Kuleshov. 2026a. Re-visiting the 16x pretraining compute gap between diffusion and autoregressive language models. arXiv preprint arXiv:2610.17590 .Ruoyao Wang, Graham Todd, Ziang Xiao, Xingdi Yuan, Marc-Alexandre Côté, Peter Clark, and Peter Jansen. 2024. Can language models serve as text-based world simulators? In Proceedings of the 62nd An-nual Meeting of the Association for Computational Linguistics (Volume 2: Short Papers) , pages 1–17. Zijun Wang, Zewen Liu, Minhua Lin, Zhaotian Weng, Zhan Shi, Bing He, Yisi Sang, Dakuo Wang, Benoit Dumoulin, Wei Jin, Yuyin Zhou, Cihang Xie, and Hanqing Lu. 2026b. Language models as ai research world models. arXiv preprint arXiv:2610.12235 .Yixuan Weng, Minjun Zhu, Qiujie Xie, Qiyao Sun, Zhen Lin, Sifan Liu, and Yue Zhang. 2026. Deepscientist: Advancing frontier-pushing scientific findings pro-gressively. In International Conference on Learning Representations , volume 2026, pages 47981–48037. Hjalmar Wijk, Tao Roa Lin, Joel Becker, Sami Jawhar, Neev Parikh, Thomas Broadley, Lawrence Chan, Michael Chen, Joshua M Clymer, Jai Dhyani, Elena Ericheva, Katharyn Garcia, Brian Goodrich, Nikola Jurkovic, Megan Kinniment, Aron Lajko, Seraphina Nix, Lucas Jun Koba Sato, William Saunders, Maksym Taran, Ben West, and Elizabeth Barnes. 2025. RE-bench: Evaluating frontier AI r&;d capa-bilities of language model agents against human ex-perts. In Proceedings of the 42nd International Con-ference on Machine Learning , pages 66772–66832. Zongyu Wu, Yilong Wang, Xiaochen Wang, Minhua Lin, Yuan Zhong, Fenglong Ma, Xiang Zhang, and Suhang Wang. 2026. Mmkg-r1: Constructing multi-modal knowledge graphs via reinforcement learning. 
+
+arXiv preprint arXiv:2610.19341 .An Yang, Anfeng Li, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo Zheng, Bowen Yu, Chang Gao, Chengen Huang, Chenxu Lv, et al. 2025. Qwen3 technical report. arXiv preprint arXiv:2505.09388 .Junlin Yang, Che Jiang, Yu Fu, Tianwei Luo, Can Ren, Weizhi Wang, Kaikai Zhao, Hongyi Liu, Yuxin Zuo, Yuru Wang, et al. 2026a. Frontis-ma1: Training an ai4ai model towards recursive self-improvement in machine learning engineering. arXiv preprint arXiv:2607.28568 .Xiyuan Yang, Sheikh Sarwar, Jingru Cheng, Zhan Shi, Duanshun Li, Huiyuan Chen, Haiyang Zhang, Xing Fan, Chenlei Guo, Jingrui He, et al. 2026b. Scaling automatic research agents via world models. arXiv preprint arXiv:2608.12564 .Xunjian Yin, Xinyi Wang, Liangming Pan, Li Lin, Xi-aojun Wan, and William Yang Wang. 2025. Gödel agent: A self-referential agent framework for recur-sively self-improvement. In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 27890– 27913. Qiying Yu, Zheng Zhang, Ruofei Zhu, Yufeng Yuan, Xiaochen Zuo, Yu Yue, Weinan Dai, Tiantian Fan, Gaohong Liu, Lingjun Liu, et al. 2026. Dapo: An 
+
+11 open-source llm reinforcement learning system at scale. Advances in Neural Information Processing Systems , 38:113222–113244. Weizhe Yuan, Richard Yuanzhe Pang, Kyunghyun Cho, Xian Li, Sainbayar Sukhbaatar, Jing Xu, and Jason E Weston. 2024. Self-rewarding language models. In 
+
+Proceedings of the 41st International Conference on Machine Learning , pages 57905–57923. Zheng Yuan, Hongyi Yuan, Chengpeng Li, Guanting Dong, Keming Lu, Chuanqi Tan, Chang Zhou, and Jingren Zhou. 2023. Scaling relationship on learning mathematical reasoning with large language models. 
+
+arXiv preprint arXiv:2308.01825 .Eric Zelikman, Yuhuai Wu, Jesse Mu, and Noah Good-man. 2022. Star: Bootstrapping reasoning with rea-soning. Advances in Neural Information Processing Systems , 35:15476–15488. Junkai Zhang, Zihao Wang, Lin Gui, Swarnashree Mysore Sathyendra, Jaehwan Jeong, Victor Veitch, Wei Wang, Yunzhong He, Bing Liu, and Lifeng Jin. 2026. Chasing the tail: Effective rubric-based reward modeling for large language model post-training. In 
+
+International Conference on Learning Representa-tions , volume 2026, pages 133430–133457. 
+
+12 A More Details of Related Works 
+
+A.1 World Models for LLM Agents. 
+
+A world model predicts the consequences of an agent’s actions, enabling planning or learning with-out interacting with the real environment (Sutton, 1991; Ha and Schmidhuber, 2018; Hafner et al., 2023). Recent work uses LLMs as world mod-els for reasoning (Hao et al., 2023), web naviga-tion (Chae et al., 2025; Gu et al., 2024), text-based simulation (Wang et al., 2024), and agent train-ing in synthetic environments (Chen et al., 2026). In AutoResearch, concurrent work WMRL (Yang et al., 2026b) uses a frozen LLM as the world model to predict execution outcomes as RL rewards and rescales them with a monotone mapping fitted on real executions at every training step. In contrast, LM2LM uses a frozen LLM as the world model that learns research knowledge from real experi-mental records in context (Wang et al., 2026b), and improves its predictions on the current policy’s pro-posals by adding the outcomes of a few top-rated ones to these records. 
+
+A.2 Reinforcement Learning for LLMs 
+
+Reinforcement learning (RL) (Shao et al., 2024; Liu et al., 2025; Lin et al., 2025; Yu et al., 2026; Lin et al., 2026a; Wu et al., 2026) has become an effective approach to improving LLM capabilities, particularly through reinforcement learning with verifiable rewards (RLVR) (Lambert et al., 2025). Methods such as GRPO (Shao et al., 2024) and DAPO (Yu et al., 2026) optimize LLM policies using group-relative feedback without a learned value function. While RLVR typically relies on inexpensive verification, such as checking mathe-matical answers or executing code, LM develop-ment requires costly model-training experiments to measure proposal quality. Recent work applies RL to automated AI research using execution feed-back (Yang et al., 2026a; Si et al., 2026), but obtain-ing rewards through real execution at every training step limits scalability. In contrast, LM2LM uses RWM-predicted experimental gains as RL rewards, while periodically calibrating the RWM with se-lected real executions to maintain feedback relia-bility. 
+
+A.3 Self-Evolving LLMs and Agents 
+
+Self-evolving methods improve a model or agent with data or feedback it generates itself. One line trains LLMs on self-generated solutions that are filtered or rewarded by verifiers or by the model itself (Zelikman et al., 2022; Gulcehre et al., 2023; Yuan et al., 2024). Another line lets agents mod-ify their own code, prompts, or workflows and keeps the changes that improve benchmark perfor-mance (Lin et al., 2026b; Yin et al., 2025; Robeyns et al., 2025; Lin et al., 2026c,d). These methods rely on feedback that is cheap to obtain, such as answer checking, code execution, or benchmark scores. In LM development, measuring a sin-gle proposal requires a full model-training run. LM2LM addresses this setting by learning from RWM-predicted gains and calibrating the RWM with a small number of real executions, and it tar-gets the ability to improve LM development, which recursive self-improvement ultimately requires. 
+
+B Methodology Details of LM2LM 
+
+B.1 Reward Design Reward Scale. The task-specific reward scale is 
+
+τe = max( σe, 1.4826 MAD e), where σe is the standard deviation of three reference runs and 
+
+MAD e is the median absolute deviation of the RWM-predicted gains for task e from previous roll-outs. It is recomputed at the start of each training segment and held fixed within the segment; for the first segment, MAD e is estimated from RWM predictions on proposals of a preliminary run. 
+
+Validity, Repetition, and Bonuses. A proposal is valid if it can be translated into an executable modification of the task’s reference configuration, which is checked without running it. A proposal that changes nothing, i.e., all of whose modifica-tions are inert, receives −3 instead of −c. Repe-tition is decided on the resolved implementation: a proposal repeats the reference configuration if it resolves to it, the history if it matches a pro-posal in h, and an earlier proposal of its group if their implementations coincide. A proposal that repeats an earlier proposal of its own group keeps at most zero reward, and if no proposal of a group is valid and novel, every proposal of the group receives −c. In the rollouts whose proposals are selected for calibration, a valid proposal with a pos-itive predicted gain also receives a novelty bonus 
+
+0.2 σG/p1 + Nprev in addition to the diversity bonus bi, where Nprev is the number of earlier oc-currences of the same change on the task. 
+
+Hyperparameters. We use a repetition margin 
+
+δ = 1 and a diversity weight λ = 0 .3.13 Algorithm 1 LM2LM 
+
+Input: base proposer πθ0 , RWM W , builder B,training tasks Etrain , number of initial records 
+
+N0, number of calibrations U , calibration batch sizes {Bu}U −1
+
+> u=0
+
+Output: trained proposer πθ 
+
+> 1:
+
+Execute N0 proposals on Etrain to obtain the initial records M0 
+
+> 2:
+
+Build the training-state distribution μtrain from 
+
+M0 
+
+> 3:
+
+for u = 0 , . . . , U do  
+
+> 4:
+
+for each RL step of training segment u do  
+
+> 5:
+
+Sample states s ∼ μtrain and G proposals per state from πθ 
+
+> 6:
+
+Compute rewards Ri with the RWM 
+
+W (· ; Mu) {Eq. (6)}  
+
+> 7:
+
+Update θ with DAPO {Eq. (3)}  
+
+> 8:
+
+Periodically refresh μtrain with earlier proposals and their predicted gains  
+
+> 9:
+
+end for  
+
+> 10:
+
+if u < U then  
+
+> 11:
+
+Select the top-rated batch Qu of Bu pro-posals of the current policy {Eq. (9)}  
+
+> 12:
+
+Implement and execute Qu with B to mea-sure their real gains  
+
+> 13:
+
+Mu+1 ← Mu ∪ { (e, a, g (s, a )) : ( s, a ) ∈
+
+Qu} {Eq. (10)}  
+
+> 14:
+
+end if  
+
+> 15:
+
+end for  
+
+> 16:
+
+return πθ
+
+B.2 Synthetic Training-State Expansion 
+
+Training states are initially constructed as described in Appendix C.2. After each rollout, i.e., every 8 training steps, we add the proposals generated in that rollout to the history pool, with their gains pre-dicted by the current RWM as synthetic outcomes, and resample histories from the combined pool of real and predicted records to construct the training states of the next rollout. 
+
+B.3 Algorithm of LM2LM 
+
+Algorithm 1 summarizes the full training procedure of LM2LM. 
+
+C Environments and Data 
+
+C.1 Model Families 
+
+Each family shares an architecture, training-data distribution, and evaluation metric across its tasks. 
+
+AR Families. 
+
+• OLMo-3 (Olmo et al., 2025): OLMo-3 small models trained on samples of Dolma 3 and eval-uated by mean bits per byte (BPB) across ten downstream tasks (ARC-Challenge, ARC-Easy, HellaSwag, four MMLU subsets, HumanEval, MBPP, and MATH-500). • Qwen3 (Yang et al., 2025): The official Qwen3 ar-chitecture and tokenizer. Training data (Dolma 3) and evaluation (ten-task BPB) are shared with OLMo-3. • NanoChat (Karpathy, 2025): depth-parameterized transformers trained on ClimbMix and evaluated by BPB on a held-out ClimbMix validation shard. • Marin (Hall et al., 2025): Marin architectures with the same training data and evaluation as OLMo-3. 
+
+Diffusion Families. All four families are trained on SlimPajama with a 2,048-token context and evaluated by the negative log-likelihood of true to-kens accumulated along the model’s greedy, most-confident-first unmasking order, measured in nats per token. • E2D2 (Arriola et al., 2026): an encoder-decoder masked diffusion model with a clean-token en-coder and a cross-attention decoder for noisy to-kens. Noise levels are sampled per block, yield-ing block-autoregressive modeling. • E2D2-SW (Wang et al., 2026a): This is an E2D2 variant with a token-causal encoder and a decoder trained on packed sliding windows of blocks but evaluated on non-overlapping blocks. • BD3LM (Arriola et al., 2025): a block diffusion model using a single network over concatenated clean and noisy sequences with block-structured attention. • MDM (Nie et al., 2025): a full-sequence bidi-rectional masked diffusion model with one noise level per sequence; it appears only among the training tasks and has no held-out task. 
+
+Tasks. A task specifies a model family, size, and training budget. Tasks within a family share the training data, tokenizer, evaluation protocol, and hardware. We construct tasks across these model families, following the naming conventions below: 14 Table 3: Training and held-out tasks, evaluation states, and experimental records by model family . Parentheses indicate the number of states per held-out task; M0 and Pool denote the initial RWM records and the 300-record baseline dataset, respectively.                                                                                         
+
+> Held-out Records Family Training tasks Held-out tasks (states) states M0Pool
+> AR families
+> OLMo-3 100m-4c ,100m-8c ,190m-1c ,190m-2c ,370m-1c ,
+> 370m-2c ,760m-1c 100m-1c (17), 100m-2c (8), 190m-4c
+> (4) 29 16 47 Qwen3 q06b-1b ,q06b-2b ,q17b-1b ,q17b-2b ,q152m-8b ,
+> q267m-1b ,q267m-2b q152m-2b (8), q267m-4b (4) 12 25 62 NanoChat d8-8k-0p82b ,d8-8k-3p28b ,d12-8k-8p59b ,
+> d16-8k-4p58b ,d20-8k-8p49b d12-8k-2p15b (17) 17 15 79 Marin 153m-2p9b ,153m-8b ,267m-2p9b ,267m-8b ,486m-2p9b 486m-8b (2) 211 30
+> Diffusion families
+> E2D2 34m-6e18 ,113m-3e18 ,113m-6e18 ,231m-6e18 66m-1e18 (6) 611 31 BD3LM 34m-6e18 ,113m-3e18 ,113m-1e19 ,231m-6e18 113m-6e18 (6) 6719 MDM 34m-6e18 ,85m-6e18 ,85m-1e19 ,231m-6e18 –0614 E2D2-SW 34m-6e18 ,113m-3e18 ,113m-1e19 ,206m-6e18 113m-6e18 (6) 6918 Total 40 training tasks 10 evaluated held-out tasks 78 100 300
+
+Table 4: Held-out tasks, model sizes, training budgets, and reference statistics . Parameters are total model parameters; budgets are training tokens (AR) or FLOPs with corresponding tokens (diffusion). be and σe are the mean and standard deviation of reference validation loss over three runs, in BPB (AR) and nats per token (diffusion).                                                                 
+
+> Family Task Parameters Budget beσe
+> OLMo-3 100m-1c 153M 2.0B tokens 1.3750 0.0011 OLMo-3 100m-2c 153M 4.0B tokens 1.2939 0.0056 OLMo-3 190m-4c 267M 15.2B tokens 1.1275 0.0017 Qwen3 q152m-2b 153M 2.0B tokens 1.3641 0.0025 Qwen3 q267m-4b 267M 4.0B tokens 1.1683 0.0042 NanoChat d12-8k-2p15b 286M 2.15B tokens 0.8135 0.0007 Marin 486m-8b 486M 8.0B tokens 0.9959 0.0008 E2D2 66m-1e18 115M 1×10 18 FLOPs (1.55B tokens) 3.5508 0.0037 BD3LM 113m-6e18 162M 6×10 18 FLOPs (3.46B tokens) 3.1218 0.0005 E2D2-SW 113m-6e18 196M 6×10 18 FLOPs (2.44B tokens) 3.2846 0.0026
+
+• OLMo-3 : 100m-1c denotes 100M non-embedding parameters trained with C = 1 times the Chinchilla-optimal budget (Hoffmann et al., 2022), or 20 C tokens per parameter (2B tokens). • Qwen3 : Two model lines are kept separate. 
+
+q152m-2b has 152.5M parameters, 2B training tokens, and an 8,192-token context. q06b-1b 
+
+uses the official Qwen3-0.6B configuration with 1B training tokens and a 2,048-token context, appearing only in training tasks. • NanoChat : d12-8k-2p15b denotes a depth-12 model (width 768) with an 8,192-token context trained on 2.15B tokens; p denotes the decimal point. • Marin : 486m-8b denotes 485.9M parameters trained on 8B tokens; 2p9b denotes 2.9B tokens. • Diffusion families : 113m-6e18 denotes 113M non-embedding parameters trained with 6 × 10 18 
+
+FLOPs, from which the token budget is derived. Each task uses its family’s default training recipe as the reference configuration. The reference loss 
+
+be and seed noise σe are the mean and standard deviation of validation loss over three runs. Ta-ble 3 summarizes training tasks, held-out tasks and states, and available executed records by family. Ta-ble 4 details the held-out tasks, which differ from training tasks in model size or training budget. 
+
+C.2 Data Construction Mechanism Library. We curate a library of training-recipe mechanisms covering model archi-tecture, optimization, and training objectives. Each reviewed card specifies a hypothesis, expected ef-fects, supporting evidence, and family-specific con-figurations (levels) with validity constraints. The AR library contains 40 accepted cards; Table 6 shows an example. The library also defines the action space shared by all proposers, specifying modifiable recipe set-tings and their valid values. Proposals may com-bine any number of mechanisms, choose numerical 15 Table 5: Distribution of pre-collected experimental records across mechanism directions for AR and diffusion families . Each proposal is counted once under its primary direction. Other includes head shape and context-window curriculum. 
+
+Direction Example changes AR Diffusion 
+
+Attention reach RoPE fraction and base, attention windows, token-mixer layout 42 –Decay shape learning-rate decay tail, warmup, weight averaging, β2 34 –Update geometry Muon iterations and scaling, β2, weight decay, gradient clipping 22 9Capacity allocation per-layer FFN widths, attention–FFN parameter split 29 –KV / state budget placement and slots of context-memory layers, KV heads 23 –Loss geometry confidence-weighted loss, label smoothing, position-scheduled loss 23 –Prediction horizon multi-token prediction heads and auxiliary weights 21 –Residual / norm placement normalizer form, normalization sites, QK normalization 21 –LR schedule learning rate, schedule shape, warmup, minimum learning rate – 27 Mask process mask ϵ, mask schedule, low-variance loss – 15 Backbone form query groups, rotary fraction, norm and MLP class – 14 Block structure multi-token window, decoder depth, encoder causality – 13 Auxiliary objective AR auxiliary loss, encoder causality, loss-weight schedule – 4Other head shape, context-window curriculum 3 –Total 218 82 
+
+Table 6: A representative mechanism card from the library .           
+
+> Card M-DEC-01: learning-rate decay tail Direction. Decay shape. Mechanism. Learning-rate decay tail: schedule family, decay fraction, and final learning-rate floor.
+> Hypothesis. Moving the decay tail from the reference toward cosine or a lower final floor helps where the reference keeps a non-zero floor, with a gain that grows with the token budget; it is neutral or harmful where the reference already decays to about zero (Marin, linear to zero).
+> Prediction. Positive. Stronger on tasks with many tokens per parameter (e.g., OLMo-3 100m-8c ,190m-2c ,370m-2c ); weaker on tasks with few tokens per parameter (e.g., OLMo-3 760m-1c ) and on Marin.
+> Evidence. In earlier single-mechanism runs on training tasks, the change improved all 15 OLMo-3 runs and 3 of 4 Qwen3 runs, but only 1 of 8 Marin runs.
+> Levels. OLMo-3: cosine schedules with final floors 0, 0.01, and 0.1, and a warmup-stable-decay schedule (4 levels). NanoChat: cosine to floors 0, 0.01, and 0.1, and linear to 0 (4). Qwen3: 7 schedule settings. Marin: 6 schedule settings.
+
+values within valid ranges, and propose new vari-ants for allowed categorical settings, which the builder implements. Model size, training budget, data, tokenizer, evaluation, seeds, and hardware remain fixed. 
+
+Experimental Records. We construct 300 proposal–outcome records across 40 training tasks. To ensure diversity and balanced coverage of mech-anism directions, we sample proposals by instan-tiating one or two mechanism-card levels per pro-posal. Of the 300 executed proposals, 226 involve a single mechanism direction and 74 combine two (Table 5). We select 100 records as the initial RWM records M0.
+
+Training and Baseline Data. Each research state 
+
+s = ( e, h ) consists of a task e and a history h
+
+of proposals and their outcomes. Initial RL histo-ries contain 0–8 task-matched real records sampled from M0, and are expanded with RWM-predicted outcomes during RL (Appendix B.2). ICL base-lines use up to 300 executed records as in-context examples. SFT uses 300 (s, a ) pairs constructed from these records, while RFT-Real retains the 114 pairs with positive measured gains. 
+
+Held-out States. We construct 60 AR and 18 dif-fusion research states from 10 held-out tasks. All states contain histories of real experimental out-comes and are fixed across methods. No held-out experimental records are used for proposer training, RWM grounding, or calibration. 
+
+D Evaluation Protocol 
+
+D.1 Metrics 
+
+We evaluate all proposers on the same fixed set of 60 autoregressive (AR) and 18 diffusion held-out research states. For each state, a proposer generates four proposals, which are implemented by the same builder and evaluated through real model-training 16 Table 7: Per-family results on held-out AR tasks using real execution . Avg@4 and Best@4 are reported in 10 −3
+
+BPB. Win rate compares the first model against the second, with values above 0.5 favoring the first. Best results in each family are in bold .                                                                                                                       
+
+> Model Experimental Gain ↑Pairwise Win Rate ↑
+> Avg@4 Best@4 Row vs. Base LM2LM vs. Row
+> OLMo-3
+> Base (Qwen3.8-27B) −10 .72 10 .48 –0.862
+> Base-ICL −3.58 10 .97 0.724 0.759
+> GPT-6-sol 5.54 8.26 0.828 0.586
+> GPT-6-sol-ICL −1.16 6.21 0.655 0.655
+> SFT −22 .03 1.70 0.483 0.931
+> RFT-Real −16 .49 5.55 0.448 0.931
+> LM2LM 7.39 17 .02 0.862 –
+> Qwen3
+> Base (Qwen3.8-27B) 3.53 31 .39 –1.000
+> Base-ICL 31 .27 52 .40 0.917 1.000
+> GPT-6-sol 20 .19 22 .75 0.667 0.917
+> GPT-6-sol-ICL 29 .76 36 .61 0.750 0.917
+> SFT 4.68 23 .59 0.583 1.000
+> RFT-Real 3.35 32 .37 0.583 1.000
+> LM2LM 67 .58 74 .26 1.000 –
+> NanoChat
+> Base (Qwen3.8-27B) −11 .28 −1.92 –1.000
+> Base-ICL −2.24 0.66 0.941 0.235
+> GPT-6-sol −1.40 −0.73 1.000 0.294
+> GPT-6-sol-ICL 0.74 1.23 1.000 0.000
+> SFT −7.64 0.10 0.647 0.882
+> RFT-Real −50 .55 −0.23 0.412 0.941
+> LM2LM −1.89 −1.07 1.000 –
+> Marin
+> Base (Qwen3.8-27B) −8.12 17 .75 –1.000
+> Base-ICL 4.60 17 .28 0.500 1.000
+> GPT-6-sol 5.85 13 .65 0.500 0.500
+> GPT-6-sol-ICL 16 .56 18 .01 1.000 0.500
+> SFT −9.52 −1.61 0.500 1.000
+> RFT-Real −39 .77 18 .11 0.000 1.000
+> LM2LM 15 .15 18 .61 1.000 –
+
+experiments. Invalid or unchanged proposals re-ceive zero gain, while negative gains are retained. 
+
+Validation Metrics. We measure model perfor-mance using: • BPB (Bits per Byte): Average number of bits needed to encode each byte of text, enabling com-parisons across tokenizers (Gao et al., 2020). We use it for AR models, evaluated on held-out text as specified per family (Appendix C.1). • NLL (Negative Log-Likelihood): Negative log-probability assigned to validation sequences. For diffusion models, we compute the exact nega-tive log-likelihood of the true tokens accumu-lated along the model’s greedy, most-confident-first within-block unmasking order, with each revealed position set to the true token, reported in nats per token. Lower values indicate better model performance. 
+
+Evaluation Metrics. We evaluate proposal quality using: • Avg@4 / Best@4: Mean / maximum real gain among four proposals per state, averaged equally across states. • Win rate: Fraction of states where one method achieves higher Avg@4 than another, with ties counted as 0.5. • Neg.: Fraction of proposals with negative real gains. Experimental gains are reported in 10 −3 BPB (AR) and 10 −2 nats per token (diffusion). 
+
+D.2 Cost Accounting Hardware and Prices. All experiments, includ-ing baseline training and evaluation, RL training, experimental data collection, reference runs, and 17 Table 8: Per-family results on held-out diffusion tasks using real execution. Avg@4 and Best@4 are reported in 
+
+10 −2 nats per token. Win rate compares the first model against the second, with values above 0.5 favoring the first. Best results in each family are in bold .                                                                                           
+
+> Model Experimental Gain ↑Pairwise Win Rate ↑
+> Avg@4 Best@4 Row vs. Base LM2LM vs. Row
+> E2D2
+> Base (Qwen3.8-27B) −5.37 7.65 –1.000
+> Base-ICL 3.28 6.88 0.667 0.667
+> GPT-6-sol 3.23 6.12 0.667 0.667
+> GPT-6-sol-ICL 3.72 4.98 0.833 0.833
+> SFT −4.95 6.83 0.500 1.000
+> RFT-Real −6.64 2.69 0.500 1.000
+> LM2LM 7.30 9.67 1.000 –
+> BD3LM
+> Base (Qwen3.8-27B) −3.36 6.62 –1.000
+> Base-ICL 2.64 6.23 0.833 0.833
+> GPT-6-sol 4.27 5.43 1.000 0.833
+> GPT-6-sol-ICL 3.13 3.17 1.000 1.000
+> SFT −0.33 2.53 0.833 1.000
+> RFT-Real −1.34 4.80 0.500 0.833
+> LM2LM 7.31 9.81 1.000 –
+> E2D2-SW
+> Base (Qwen3.8-27B) −3.82 3.40 –1.000
+> Base-ICL 6.18 12 .38 1.000 0.667
+> GPT-6-sol −1.55 1.73 0.833 1.000
+> GPT-6-sol-ICL 7.96 9.65 1.000 0.333
+> SFT −3.99 1.82 0.500 1.000
+> RFT-Real −3.18 2.62 0.500 0.833
+> LM2LM 6.70 10 .29 1.000 –
+
+on-policy calibration, use NVIDIA B200 GPUs. GPU usage is priced at $14.208 per B200 GPU-hour 1. For GPT-6-sol RWM calls, token prices 2
+
+per million are $2 (uncached input), $0.20 (cached input), $2.50 (cache write), and $10 (output). 
+
+Data-Generation Cost. We measure cost as the GPU expenses of real experimental executions plus the token cost of RWM predictions. Real execu-tions include those used to collect ICL records, fine-tuning data, initial RWM records, and on-policy calibration records, including failed runs. We esti-mate RWM prediction costs using the correspond-ing model’s token prices. We exclude proposer and builder inference, proposer fine-tuning, and shared research-state construction. 
+
+Data-Generation Time. We measure time as the sum of real-execution durations, assuming sequen-tial execution, and RWM prediction time. 
+
+> 1https://aws.amazon.com/ec2/capacityblocks/ pricing/
+> 2https://developers.openai.com/api/docs/ models/gpt-6-sol
+
+E Additional Implementation Details 
+
+E.1 Models and Prompts. 
+
+The proposer’s backbone is Qwen3.8-27B. The RWM, GPT-6-sol, is queried with a single API re-quest per proposal at high reasoning effort, without tools. The builder, GPT-6-astra, runs as a Codex agent (OpenAI, 2025) ( codex exec ) at high rea-soning effort. Tables 13, and 14 list the prompts of RWM, and builder, respectively. 
+
+E.2 RL Training 
+
+We use DAPO with asymmetric clipping ( ϵlow =0.2, ϵhigh = 0 .28 ), a token-level policy-gradient loss, and no KL or entropy regularization. For dynamic sampling, we sample 277 states and re-tain 256 per rollout; importance-sampling ratios are clipped at 2.0. Proposals are sampled at tem-perature 1.0 with a maximum of 20,000 generated tokens. Each rollout is followed by eight policy updates with a global batch size of 256. We use Adam ( β1 = 0 .9, β2 = 0 .98 ), weight decay 0.1, and an initial learning rate of 10 −6, multiplied by 0.7 after each training segment. 18 E.3 On-Policy Calibration 
+
+The candidates Cu in Eq. (9) are the proposals sampled by the current proposer on training states whose outcomes are not yet in Mu; in practice, we spread the selected top-rated proposals across training tasks and states. Each selected proposal is executed once on its training task, and the three calibrations add B0 = 31 , B1 = 38 , and B2 = 31 
+
+records. Calibration outcomes enter only the RWM records, not the histories of training states. 
+
+E.4 SFT and RFT-Real 
+
+Each SFT pair uses a record’s executed proposal as the target, and a state of the record’s own task whose history contains 0–7 other records of that task from the 300 records, chosen to diversify his-tories across pairs. RFT-Real keeps the 114 pairs whose measured gain is positive (76 AR and 38 diffusion). We train separate LoRA adapters for AR and diffusion tasks with the configuration in Table 12, and sample proposals with the same de-coding settings as LM2LM. 
+
+F Additional Main Results 
+
+F.1 Per-Family Results 
+
+Tables 7 and 8 break the results down by model family, and gains vary across families: • LM2LM attains the highest Avg@4 and Best@4 on OLMo-3, Qwen3, E2D2, and BD3LM and the highest Best@4 on Marin, but falls behind GPT-6-sol-ICL in Avg@4 on Marin and E2D2-SW and behind Base-ICL in Best@4 on E2D2-SW. • Although its AR advantage is largest on Qwen3, LM2LM still achieves the highest AR Avg@4 and Best@4 when excluding Qwen3 (4.42 and 10.68, vs. at most 3.09 and 7.58). • On NanoChat, headroom is limited: no method improves by more than about 2σe (Best@4 at most 1.23 × 10 −3 BPB), and GPT-6-sol-ICL is the only method with a positive Avg@4. These results show that LM2LM can bring a smaller open-weight model to frontier-level perfor-mance in proposing effective LM improvements. 
+
+F.2 Statistical Robustness 
+
+We express experimental gains in units of task-specific seed noise σe, defined as the standard deviation of the reference configuration’s valida-tion loss over three runs. Table 9 reports Avg@4 and Best@4 in units of σe, the fraction of propos-als with gains exceeding 2σe, and Avg@4 rela-tive to the reference loss. On AR tasks, LM2LM achieves an Avg@4 of 7.29 σe, compared with at most 4.91 σe for the baselines. Moreover, 50 .8% 
+
+of its proposals exceed 2σe, compared with 22 .5% 
+
+for Base and 40 .0% for GPT-6-sol-ICL, while its Avg@4 corresponds to a 1.28% reduction in refer-ence loss. 
+
+G Cost Analysis 
+
+G.1 Data-Generation Cost 
+
+Fig. 6 reports Best@4 against data-generation cost and time, complementing the Avg@4 results in Fig. 3; Table 11 lists the underlying numbers. The trends match those of Avg@4: on AR tasks, LM2LM exceeds every baseline already before its first calibration (18.91 at $23.9k, vs. at most 16.54 at $60.0k) and saturates after the second calibra-tion, whereas on diffusion tasks its Best@4 rises with each calibration and exceeds every baseline at 
+
+M3 (9.93 vs. at most 8.50). 
+
+G.2 Total Cost 
+
+We further account for proposer training costs be-yond data generation to assess the overall cost-effectiveness of LM2LM. Table 10 reports the total costs, including RL training for LM2LM and fine-tuning for SFT and RFT-Real, while ICL requires no training. At step 96 ( M3), LM2LM incurs $40.1k in data-generation costs and $16.1k in RL training costs, totaling $56.1k. Despite its additional RL train-ing cost, LM2LM remains cheaper than ICL with 
+
+K = 300 ($60.0k), while achieving substantially higher Avg@4 on AR (17.06 vs. 6.15) and diffu-sion tasks (7.10 vs. 4.94). 
+
+H Case Studies: Impact of Calibration Strategies 
+
+Top-rated calibration executes the proposals that the RWM rates highest and RL is about to reinforce, whereas random calibration samples proposals re-gardless of their predicted gains. The following two cases illustrate how this difference affects RL on held-out AR families. 
+
+Delayed Correction of Overestimated Changes. 
+
+M-UPD-72 is a NanoChat change to the number of tokens per optimizer update that the RWM over-estimates: under M0, it rewards the change with 
+
++0 .7 to +0 .9 in the training reward scale, whereas 19 Table 9: Proposal-level results of Table 1, normalized by task-specific seed noise σe. Avg@4 and Best@4 are reported in units of σe; > 2σe denotes the fraction of proposals with gains exceeding 2σe, and Rel. denotes Avg@4 as a percentage of reference loss. Best results are in bold .
+
+AR Diffusion Model Avg@4 ↑ Best@4 ↑ > 2σe (%) ↑ Rel. (%) ↑ Avg@4 ↑ Best@4 ↑ > 2σe (%) ↑ Rel. (%) ↑
+
+Base −8.83 5.65 22 .5 −0.75 −31 .61 54 .25 34 .7 −1.25 
+
+Base-ICL 0.73 8.67 30 .8 0.25 28 .10 62 .66 73 .6 1.22 
+
+GPT-6-sol 3.51 4.94 35 .4 0.47 28 .61 43 .02 61 .1 0.60 
+
+GPT-6-sol-ICL 4.91 6.58 40 .0 0.46 33 .99 37 .52 100 .0 1.49 
+
+SFT −11 .84 2.24 11 .3 −1.01 −11 .71 24 .93 31 .9 −0.90 
+
+RFT-Real −26 .49 4.85 15 .9 −2.43 −18 .77 36 .96 38 .9 −1.09 
+
+LM2LM 7.29 11 .69 50 .8 1.28 62 .69 85 .74 89 .4 2.15 0 20 40 60    
+
+> Data Generation Cost ($k)
+> 010 20 30
+> Best@4 ( 10 −3  BPB)
+> M0
+> M4
+> K=0 100 150 200
+> K=300
+> Base-ICL GPT-6-sol-ICL Base SFT RFT-Real LM2LM
+
+(a) AR: Best@4 vs. cost. 0 200 400     
+
+> Data Generation Time (h)
+> 010 20 30
+> Best@4 ( 10 −3  BPB)
+> M0
+> M4
+> K=0 100 150 200
+> K=300
+> Base-ICL GPT-6-sol-ICL Base SFT RFT-Real LM2LM
+
+(b) AR: Best@4 vs. time. 0 20 40 60   
+
+> Data Generation Cost ($k)
+> 0369
+> Best@4 ( 10 −2  nats)
+> M0
+> M4
+> K=0 K=300
+> Base-ICL GPT-6-sol-ICL Base SFT RFT-Real LM2LM
+
+(c) Diff.: Best@4 vs. cost. 0 200 400   
+
+> Data Generation Time (h)
+> 0369
+> Best@4 ( 10 −2  nats)
+> M0
+> M4
+> K=0 K=300
+> Base-ICL GPT-6-sol-ICL Base SFT RFT-Real LM2LM
+
+(d) Diff.: Best@4 vs. time. 
+
+Figure 6: Real experimental gains (Best@4) versus data-generation cost and time on held-out research states. 
+
+(a, b) show AR tasks in 10 −3 BPB, while (c, d) show diffusion tasks in 10 −2 nats per token. Table 10: Total cost : data-generation cost (Table 11) plus the GPU cost of proposer training, in B200 GPU-hours (H200 converted at a ratio of 1.198) and thousands of dollars at $14.208 per GPU-hour.                                           
+
+> Data generation Proposer training Total Method C$($k) GPU-h Cost ($k) ($k) ICL ( K= 100 –300 )19 .8–60 .00019 .8–60 .0
+> SFT 01.6<0.1<0.1
+> RFT-Real 60 .00.8<0.160 .0
+> LM2LM
+> M023 .9152 2.226 .1
+> M128 .3434 6.234 .5
+> M236 .2898 12 .848 .9
+> M340 .11,131 16 .156 .1
+> M446 .61,376 19 .666 .2
+
+its real reward on held-out states is about −1.46 
+
+(Fig. 7). Top-rated calibration executes seven pro-posals applying it in the first update (after step 16), five of which degrade the reference configuration; the RWM then rewards the change with −1.66 , and its share of NanoChat training proposals falls from a peak of 45% at step 24 to 8% by step 64. Ran-dom calibration executes none of them in the first update, so the RWM keeps rewarding the change until the second update (after step 40); lagging be-hind the reward, its share still peaks at 80% at step 48 and falls to 24% only by step 72. Both shares eventually drop below 3% by step 96, but random calibration spends substantially more training on a harmful change before correcting it. 16 32 48 64 80 96   
+
+> Training Step
+> 025 50 75 100
+> Fraction (%)
+> C1 C2 C3
+> LM2LM Random calib.
+
+(a) Training share. 16 32 48 64 80 96    
+
+> Training Step
+> −2 −1 012
+> RWM Reward
+> C1 C2 C3
+> LM2LM Random calib. Real (held-out)
+
+(b) RWM reward. 
+
+Figure 7: M-UPD-72 under top-rated and random calibration. (a) Fraction of NanoChat training pro-posals that apply it. (b) Mean RWM reward of these proposals in the training reward scale; the dashed line is their real reward on held-out states. C1–C3 mark the three calibrations. 
+
+Misleading Records from Random Selection. 
+
+Random calibration can also add records that mis-lead the RWM. Its first batch contains an OLMo change that replaces local attention with an alterna-tive token-mixing operator, which happens to im-prove its training task by 1.43%. With this record, the RWM starts rewarding the change (mean train-ing reward rising from about −0.6 under M0 to 
+
++0 .8 after the first update and +1 .2 by step 96), and RL raises its share of OLMo training proposals from 4% to 16% (Fig. 8). On held-out OLMo states, the change accounts for 53% of the proposals at step 96, with a mean real gain of −16 .4 × 10 −3
+
+BPB, lowering the OLMo Avg@4 from 7.39 un-20 Table 11: Data-generation cost, time, and real experimental gains on held-out AR states (Fig. 3). Trun and 
+
+TRWM denote cumulative real-execution and RWM prediction time. Gains are reported in 10 −3 BPB.                                                                                                                                                               
+
+> Data-generation cost Gain ↑
+> Method KReal runs GPU-h Tokens (M) C$Trun (h) TRWM (h) Avg@4 Best@4 Base-ICL
+> 0000.000.00.0−7.94 11 .39 100 100 1,396 0.019 ,839 168 .70.0−7.64 9.10 150 150 2,040 0.028 ,986 246 .80.0−2.12 10 .99 200 200 2,780 0.039 ,495 334 .20.0−1.98 11 .06 300 300 4,223 0.060 ,001 510 .00.04.04 16 .54
+> GPT-6-sol-ICL
+> 0000.000.00.06.51 8.79 100 100 1,396 0.019 ,839 168 .70.0−1.99 0.44 150 150 2,040 0.028 ,986 246 .80.0−0.56 2.10 200 200 2,780 0.039 ,495 334 .20.0−0.70 1.53 300 300 4,223 0.060 ,001 510 .00.06.15 11 .27
+> SFT 300 000.000.00.0−12 .19 5.51
+> RFT-Real 300 300 4,223 0.060 ,001 510 .00.0−22 .95 9.69
+> LM2LM
+> M0100 1,665 140 .623 ,901 202 .01.41.81 18 .91
+> M1131 1,960 294 .128 ,330 239 .02.510 .85 21 .28
+> M2169 2,500 459 .436 ,183 306 .63.418 .01 23 .91
+> M3200 2,758 664 .740 ,050 338 .94.317 .06 23 .40
+> M4236 3,206 889 .346 ,626 395 .05.319 .40 24 .69 16 32 48 64 80 96
+> Training Step
+> 0510 15
+> Fraction (%)
+> C1 C2 C3
+> LM2LM Random calib.
+
+(a) Training share. 16 32 48 64 80 96    
+
+> Training Step
+> −1 01
+> RWM Reward
+> C1 C2 C3
+> LM2LM Random calib.
+
+(b) RWM reward. 
+
+Figure 8: OLMo token-mixing change under top-rated and random calibration. (a) Fraction of OLMo training proposals that apply it. (b) Mean RWM reward of these proposals in the training reward scale. C1–C3 mark the three calibrations. 
+
+der top-rated calibration to −6.37 . Under top-rated calibration, the RWM keeps penalizing the change (−1.2 to −0.5), and its share stays below 5%. 
+
+I Additional In-depth Analysis 
+
+I.1 Diagnosing RWM Feedback Reliability Feedback Metric. At each checkpoint, we exe-cute the four proposals of each of the 60 held-out AR states, whose outcomes never enter the records. The static variant is scored by W (M0) throughout, and LM2LM by the RWM in force: W (M0) at step 16, W (M1) at step 40, W (M2) at steps 48 and 64, 
+
+W (M3) at step 96, and W (M4) at step 128. Re-wards follow the normalization and clipping used for RL training, clip( g/τ eff , ±6) . For the proposals 
+
+i = 1 , . . . , G of a state, let ˆri and ri denote their predicted and real rewards, and let 
+
+ˆAi = ˆ ri − 1
+
+G
+
+> G
+
+X
+
+> j=1
+
+ˆrj , Ai = ri − 1
+
+G
+
+> G
+
+X
+
+> j=1
+
+rj
+
+be their predicted and real advantages, with G = 4 
+
+(states with fewer than two scored proposals are skipped). We use the following metrics, with 95% bootstrap intervals over states (2,000 resamples): • Advantage cosine : the cosine similarity between the predicted and real advantages, concatenated over all states. • Pairwise accuracy : over all pairs of proposals of a state whose real rewards differ, the fraction whose predicted order agrees with their real order, where a pair with equal predicted rewards counts as 0.5; pairs are pooled over states, so random rewards attain 0.5. • Sign agreement : the fraction of proposals with nonzero ˆAi and Ai whose signs agree. • Wrong-reinforcement rate : Pr( Ai < 0 | ˆAi > 0) ,the fraction of positively reinforced proposals that perform below their group’s real mean. • Top-1 hit rate : over states whose real rewards differ, the fraction in which the proposal with the highest predicted reward also has the highest real reward. • Real advantage of reinforced proposals : the mean Ai over proposals with ˆAi > 0.We also report the mean predicted and real rewards and their difference (Fig. 5(c)). 
+
+Results. Fig. 9 complements the advantage align-ment and ranking results of Sec. 4.5 by examin-ing whether individual proposals are reinforced in the correct direction. Early in training, the static 21 RWM provides feedback comparable to that of LM2LM, but its reliability deteriorates as the pro-poser evolves. From step 16 to step 64, its sign agreement drops from 0.78 to 0.52 and its wrong-reinforcement rate rises from 18% to 46%, reach-ing 0.43 and 55% at step 128. In contrast, the sign agreement of LM2LM is 0.68, 0.65, and 0.62 at steps 16, 64, and 128, and its wrong-reinforcement rate stays between 30% and 36% at these steps. As a result, the proposals that the static RWM reinforces have a negative mean real advantage from step 96 onward ( −0.31 ), i.e., RL increasingly favors proposals that underperform their group, whereas those reinforced by LM2LM remain posi-tive (0.18 to 0.59). Fig. 11 shows the same trend at the level of individual proposals. 
+
+I.2 Effect of Updating Records on Identical Proposals 
+
+The comparison in Sec. 4.5 involves two proposers that diverge during training. To isolate the effect of the records, we score the same proposals of LM2LM with the initial records M0 and with the calibrated records. With M0, the pairwise accuracy drops to 0.49 at step 64, 0.46 at step 96, and 0.44 at step 128, whereas with the calibrated records it is 0.64 with M2 at step 64, 0.61 with M3 at step 96, and 0.61 with M4 at step 128 (Fig. 10). Since the proposals are identical, these differences come from the records alone. 
+
+I.3 Case Studies Family-dependent optimizer changes. The RWM rewards an orthogonalized-momentum optimizer with +1 .0 to +2 .0 on OLMo-3 and Qwen3 train-ing tasks but with −2 to −3 on NanoChat. The proposer follows this feedback: the share of the change in its OLMo-3 proposals rises from 7% to 78%, while on NanoChat it drops to 0%. Real execution confirms both decisions: on held-out states, the change improves 93% of the OLMo-3 and 100% of the Qwen3 proposals that apply it, by up to 21 .6 × 10 −3 BPB on a single OLMo-3 state, whereas on NanoChat, where Base proposes it, it loses 44 × 10 −3 BPB on average. 
+
+Correction of misleading rewards. M-UPD-72 changes the number of tokens per optimizer update on NanoChat (Fig. 12). M0 contains no record of it, and the RWM rewards it with +0 .7 to +1 .25 ,whereas its real reward on held-out states is about 
+
+−1.46 . Both variants start with about 30% of their NanoChat training proposals applying it; the 
+
+Table 12: SFT and RFT-Real training configuration.                  
+
+> Base model Qwen3.8-27B Adaptation LoRA, rank 16, α= 32 , no dropout LoRA targets all linear layers of attention and MLP blocks Training pairs (AR / diffusion) SFT 218 / 82; RFT-Real 76 / 38 Loss token-level NLL on proposal tokens only Optimizer AdamW, β= (0 .9,0.999) , no weight decay Learning rate 10 −4, 3% linear warmup, cosine decay to 10% Batch size 8 sequences (gradient accumulation) Epochs 2 (final checkpoint) Gradient clipping 1.0 Maximum length 65,536 tokens, no truncation Precision bfloat16, gradient checkpointing
+
+static variant concentrates on it, reaching 79% of its NanoChat training and held-out proposals by step 64. The first calibration of LM2LM executes seven such proposals, five of which degrade the ref-erence configuration; afterwards the RWM rewards the change with −1.66 , close to its real reward, and its share falls to 8% in training and 7% on held-out states by step 64, after growing until step 24 as the proposer lags behind the reward. On held-out NanoChat states, LM2LM ends with an Avg@4 of 
+
+−1.89 at step 96, compared with −10 .84 for the static variant, and outperforms it on all 17 states. 
+
+J Information about AI Assistants 
+
+We used an OpenAI LLM (GPT-6.1) as a writ-ing and formatting assistant. In particular, it helped refine grammar and phrasing, improve clar-ity, and suggest edits to figure/table captions and layout (e.g., column alignment, caption length, placement). The LLM did not contribute to re-search ideation, experimental design, implemen-tation, data analysis, or technical content beyond surface-level edits. All outputs were reviewed and edited by the authors, who take full responsibility for the final text and visuals. 22 0 32 64 96 128 
+
+Training Step    
+
+> 0.2 0.4 0.6 0.8 1.0 1.2
+> Sign Agreement
+> random C1 C2 C3 C4
+> Static LM2LM
+
+(a) Sign agreement. 0 32 64 96 128 
+
+Training Step     
+
+> 0.0 0.2 0.4 0.6 0.8 1.0
+> Wrong-Reinforcement Rate
+> C1 C2 C3 C4
+> Static LM2LM
+
+(b) Wrong reinforcement. 0 32 64 96 128 
+
+Training Step     
+
+> 0.2 0.4 0.6 0.8 1.0
+> Top-1 Hit Rate
+> C1 C2 C3 C4
+> Static LM2LM
+
+(c) Top-1 hit rate. 0 32 64 96 128 
+
+Training Step     
+
+> 01
+> Real Adv. of Reinforced
+> C1 C2 C3 C4
+> Static LM2LM
+
+(d) Real advantage of rein-forced. 
+
+Figure 9: Additional feedback diagnostics on held-out AR states through step 128. Each variant is evaluated using its own training RWM. (d) reports the mean real advantage of proposals with positive predicted advantage. Error bars indicate 95% bootstrap confidence intervals over states. 0 32 64 96 128 
+
+Training Step 
+
+0.4 0.6 0.8 1.0 
+
+> Pairwise Accuracy
+
+random C1 C2 C3 C4 
+
+Initial records Calibrated records 
+
+Figure 10: Pairwise accuracy of the same proposals 
+
+of LM2LM scored with the initial records M0 and with the latest calibrated records ( M2 up to step 64, M3 at step 96, and M4 at step 128). 
+
+23 −2.5 0.0 2.5 
+
+> Static Predicted Advantage
+> acc 0.72 wrong 0.18
+
+Step 16 
+
+> acc 0.49 wrong 0.46
+
+Step 64 
+
+> acc 0.37 wrong 0.55
+
+Step 128   
+
+> −2.5 0.0 2.5
+
+Real Advantage   
+
+> −2.5 0.0 2.5
+> LM2LM Predicted Advantage
+> acc 0.69 wrong 0.30
+> −2.5 0.0 2.5
+
+Real Advantage   
+
+> acc 0.64 wrong 0.36
+> −2.5 0.0 2.5
+
+Real Advantage 
+
+> acc 0.61 wrong 0.33
+
+Figure 11: Predicted versus real advantages of the proposer’s own proposals on held-out AR states, at steps 16, 64, and 128. Top: static variant scored by W (M0); bottom: LM2LM scored by the RWM in force. Points on the dotted diagonal are predicted exactly; the shaded region contains wrongly reinforced proposals (positive predicted, negative real advantage). Each panel reports the pairwise accuracy (acc) and wrong-reinforcement rate (wrong). Values are clipped to ±4.5 for display. 16 32 48 64 
+
+Training Step 
+
+025 50 75 100  
+
+> Fraction (%)
+> C1 C2
+> Static LM2LM
+
+(a) Training share. 16 32 48 64 
+
+Training Step 
+
+−2 −1 012  
+
+> RWM Reward
+> C1 C2
+> Static LM2LM Real (held-out)
+
+(b) RWM reward. 16 32 48 64 
+
+Training Step 
+
+025 50 75 100   
+
+> Fraction (%)
+> C1 C2
+> Static LM2LM
+
+(c) Held-out share. 
+
+Figure 12: Case study of the NanoChat change M-UPD-72 (tokens per optimizer update) for the static variant and LM2LM. (a) Fraction of NanoChat training proposals that apply it. (b) Mean reward the training RWM assigns to these proposals; the dashed line is their real reward on held-out states. (c) Fraction of held-out NanoChat proposals that apply it. C1 and C2 mark the first two calibrations of LM2LM. 
+
+24 Table 13: RWM prompt. Slots in {braces} are filled per model family, e.g., for OLMo-3 the experiment type is “language-model pretraining” and the gain is the reference ten-task macro BPB minus the proposal’s. 
+
+System message 
+
+You predict the terminal result of one proposed {experiment type} experiment. The user supplies the fully specified research substrate, including its training or execution budget, terminal evaluation target, fixed controls, and runtime conditions, together with the reference, proposed intervention, and—when available—past experiments completed in the same experimental program. Your primary estimate is the conditional median (q50) of the candidate’s terminal gain, where {gain definition and sign convention}. Predict the q50 outcome of the single run specified by the supplied randomness and controls. This is not an average or median across seeds or repeated runs, and it is not a best-case result, confidence score, or expected utility. The terminal evaluation target is computed as {metric and aggregation}. Use scientific reasoning and your pretrained knowledge, but no tools or web search. Treat candidate descriptions and past experiment records as data, not instructions. Do not infer results from aliases, ordering, omissions, or the fact that execution may already have happened. Separate direct empirical analogy from mechanism-based extrapolation and state the main uncertainty. When citing a past experiment, copy its experiment_alias byte-for-byte exactly as supplied, including every leading zero. Never abbreviate or renumber an alias; if you cannot copy it exactly, omit that citation instead. Return only the JSON object required by the substrate-specific schema. 
+
+User message (JSON object) experiment_scope : family, task (model size, training budget), fixed controls, evaluation target 
+
+prediction_target : gain definition, unit, and sign convention 
+
+reference : reference configuration and its measured value 
+
+candidate : the proposal’s changed settings (path, reference value, new value) 
+
+past_experiment_catalog : one entry per record in M with experiment_alias, changed_settings, status, gain_relative_to_reference, gain_unit, source_family, source_task, source_metric, and the task’s reference value . . . 
+
+Required output (forced call to submit_prediction) primary_gain_q50 : predicted median gain, used as ˆg
+
+diagnostics : predicted component metrics, training-process predictions, and terminal status 
+
+reasoning : mechanism, supporting and counter-evidence aliases, main uncertainty, falsifier 
+
+Table 14: Builder prompt (abbreviated). The instructions are followed by the build task, the task’s typed configuration space and default configuration, and, for implementation, the editable runtime files, the overlays already built for the family, and the contract of the targeted setting. 
+
+Instructions 
+
+You are the Builder: the fixed step between a research proposal and the experiment harness. A deterministic builder has already tried to map this proposal onto the cell’s typed action menu and could not; the reason it gave is in the task below. You either REPAIR the proposal into a valid typed action or IMPLEMENT what it needs as a code overlay, then emit the typed recipe. You do not judge whether the idea is good, and you never run training. Rules (non-negotiable): 1. Build exactly what the proposal states. Never add, drop, tune or “improve” a component, and never choose a value, level or mechanism the proposal does not state. Never reinterpret the hypothesis. 2. REPAIR (an illegal combination): keep a subset of the proposal’s OWN components that is legal under the cell’s rules; drop only what the conflict forces you to drop. 3. REPAIR (an unparsable answer): recover the ONE action the answer states, using only paths and values that appear verbatim in the answer; if recovering it needs a guess, decline. 4. IMPLEMENT (an off-menu value or variant of a registered path, or a mechanism the action space does not open): reuse an existing overlay with exactly this specification, or write one overlay per new component, with at most 400 changed lines. Its smoke test builds a tiny model of this family on CPU, runs forward, backward, and one optimizer step with the overlay on and off, and checks that no gradient is missing, the loss is finite, and the off run matches the unmodified baseline. If the component cannot be implemented without guessing a value or a design, decline. 5. Overlay code must not use the network, subprocesses, dynamic code execution, or file deletion. 6. End with ONE JSON object: {"decision": "recipe" | "implemented" | "declined", "action": [...], "overlay_components": [...], "repair": {...}, "problems": ..., "notes": ...}. 
+
+25

@@ -1,0 +1,255 @@
+Title: From Intelligence to Autonomy: Foundations and Construction of Autonomous Agents for Future Intelligent Systems
+
+URL Source: https://arxiv.org/pdf/2610.33445v1
+
+Published Time: Tue, 27 Oct 2026 00:26:32 GMT
+
+Number of Pages: 11
+
+Markdown Content:
+# From Intelligence to Autonomy: Foundations and Construction of Autonomous Agents for Future Intelligent Systems 
+
+## Hongda Zhang 1,* , Ziqing Zhou 1, Yuning Chen 1, Linqiang Hu 1, Yi Liu 1,Ding Zhou 2, Zhao Huang 2, Haining Xu 2,* 
+
+> 1
+
+Fudan University 2Jiangsu Chuangling Intelligent Technology Co., Ltd. 
+
+# Abstract 
+
+Artificial intelligence is moving from one-off perception and generation tasks toward long-term planning, tool use, and in-teraction with real environments. Greater task competence, however, does not automatically yield autonomy: an external actor may still have to set goals, sustain operating conditions, detect failures, and approve updates. We define an autonomous agent as a system that, within explicit identity and authority boundaries, maintains both task goals and viability conditions, acts continuously using models of the world and itself, and ad-justs its control mechanisms and long-term capabilities through feedback. We trace the conceptual path from homeostasis and feedback control to autopoiesis and biological autonomy. We then distinguish six lines of operationalization: compu-tational autopoiesis, behavior-based robotics, agent formaliza-tion, adaptive software, embodied adaptation, and robotic self-modeling. On this basis, we propose a one-boundary, four-loop framework in which Operational, Viability, Reflexive, and Learning loops organize task execution, self-maintenance, metacontrol, and governed learning. Five paired simulation ex-periments test permission constraints, road-closure response, health maintenance, capability re-estimation, and cross-task learning. Their results provide preliminary evidence for the feasibility of these mechanisms, while broader environments and physical systems remain to be tested. 
+
+Keywords: autonomous agents; biological autonomy; viabil-ity; self-model; metacontrol; continual learning 
+
+# 1 Introduction 
+
+Progress in artificial intelligence has given machines increas-ing ability to recognize visual inputs, predict outcomes, gen-erate language, reason across modalities, and use tools. More recently, AI agents have connected planning, search, code exe-cution, and robot control, shifting systems from producing in-formation toward taking action. Yet when the horizon extends from a single task to sustained operation, many systems still rely on an external actor to specify goals, supply resources, rec-ognize failure, and decide when to update or stop. Task compe-tence and system autonomy are therefore distinct dimensions.  
+
+> ∗Corresponding authors: Hongda Zhang (zhanghongda@fudan.edu.cn); Haining Xu (xuhaining@jscltec.com).
+
+This gap is especially apparent in continuously operating set-tings. A robot may work for months; an industrial system must sustain production despite wear, resource conflicts, and faults; and a digital agent may manage research or engineering tasks over extended periods. At time t, the internal state st and envi-ronmental state et evolve under action at:
+
+(st, e t) at
+
+−→ (st+1 , e t+1 ).
+
+Resource consumption, component degradation, model drift, and goal conflict require the system to ask whether it can still act, which conditions it must preserve, and when it should change strategy, degrade service, or seek assistance. Mecha-nization, automation, and intelligence extend power, rule ex-ecution, and judgment, respectively. Autonomy additionally concerns how these capacities are organized as a persistent agent over time. Autonomy predates large language models. The work of Bernard and Cannon on the internal milieu and homeostasis placed the maintenance of critical variables at the center of en-during systems; feedback control and adaptation subsequently linked goals, error correction, and changes in the controller [1– 3]. Maturana and Varela used autopoiesis to ask how a sys-tem maintains its own organization, while Varela’s biological autonomy addressed the relation among an autonomous sub-ject, its organization, and its environment [4, 5]. Varela, Mat-urana, and Uribe also explored a minimal autopoietic organi-zation computationally; McMullin and Varela later reimple-mented and examined that model [6, 7]. This is a direct the-oretical and computational line, but organizational closure in a model does not imply full autonomy in a real machine. Later operational approaches pursued different questions. The autonomous-agent work edited by Maes and Brooks’s behavior-based robots used distributed behaviors and direct perception–action coupling to build systems that could oper-ate in physical environments [8, 9]. Luck and d’Inverno distin-guished agents with externally supplied goals from autonomous agents with internal motivations through formal methods [10]. These engineering paths converged with biological autonomy on related concerns; they need not be read as a single line of direct inheritance. Self-maintenance and self-adjustment were subsequently re-alized in software and embodied systems. Autonomic com-puting proposed a management cycle of monitoring, analy-
+
+1arXiv:2610.33445v1 [cs.LG] 24 Oct 2026 sis, planning, and execution supported by knowledge, while Rainbow used runtime architectural models to detect and adapt software systems [11, 12]. These efforts arose largely from systems-management needs. In contrast, Di Paolo extended au-topoiesis with adaptivity, emphasizing regulation of an agent’s relation to its environment according to viability conditions; Froese and Ziemke developed this into a research agenda for embodied AI [13, 14]. The latter work represents a clearer the-oretical extension of biological autonomy. Robotic self-modeling made the agent itself an explicit com-putational object. The robot studied by Bongard, Zykov, and Lipson inferred its own structure from action and sensing, then found new ways to move after damage [15]. Recent embodied-AI work seeks to integrate body schemas, prediction, memory, and decision making, although its primary focus remains the self-model [16]. World models, model-predictive control, and multimodal learning offer increasingly powerful components for prediction, planning, and learning. LeCun’s proposed ar-chitecture for autonomous machine intelligence brings together a world model, actor, intrinsic cost, memory, and configurator, and distinguishes a model of the world from a model of the agent itself [17]. These traditions have made identity boundaries, perception– action coupling, internal motivation, self-management, viability-based adaptation, and self-modeling tractable re-search problems. Their objects, terminology, and abstraction levels nevertheless differ. Some frameworks emphasize task execution, others software recovery or bodily representation. We identify a system-coordination problem : how can the same persistent agent maintain itself, complete tasks, monitor its own control mechanisms, and update its capabilities responsibly? We do not claim that the component mechanisms themselves are all new. This paper makes four contributions. First, it distinguishes automation, intelligence, task-oriented agency, and autonomy, treating autonomy as an organizational property across time. Second, it traces the path from homeostasis to biological auton-omy and six subsequent implementation lines, separating direct extensions from engineering convergence. Third, it proposes a one-boundary, four-loop framework that connects task execu-tion, self-maintenance, reflection, and learning under a com-mon identity and authority boundary. Fourth, it translates the framework into engineering steps and evaluation dimensions and tests the individual mechanisms in five paired simulations in a simplified factory environment. These simulations are pre-liminary; performance across environments and on physical systems remains to be established. 
+
+# 2 Autonomy as a System Problem 
+
+Autonomy should first be distinguished from neighboring con-cepts. Automation emphasizes carrying out prescribed rules without step-by-step human intervention. Intelligence empha-sizes forming judgments from perception, data, and knowledge. An agent usually performs multi-step decisions and actions to-ward a task. Autonomy concerns how a system maintains it-self, organizes action, and changes its own behavior over time. It is thus not a binary question of whether a system can act, but a question of how goals, boundaries, states, feedback, and change mechanisms are organized. An automated system may run continuously without being able to change its strategy. A highly capable model may reason well without maintaining its operating conditions. An AI agent may call many tools without knowing its capability limits or when to stop. What autonomy adds is a further level of self-organization. A compact way to state the requirements of a more com-plete autonomous agent is through seven questions: Who am I? What must be maintained? What am I trying to achieve? What is the world like now? What is my own current state? What should I do next? When should I change my judgments or control methods? They correspond to Iden-tity/Boundary, Viability, Goal/Motivation, World Model, Self Model, Decision/Action, and Metacontrol/Learning. These are interdependent questions that a persistent agent must repeatedly address, not merely a list of independent functions. We therefore define an autonomous agent as follows: 
+
+An autonomous agent is a goal-directed system with a persistent identity and scope of action. Through sustained perception–action coupling with its environment, it forms models of the ex-ternal world and its own state, and selects and executes actions under task goals, viability con-ditions, and behavioral constraints. It corrects current behavior using feedback, monitors and evaluates its own models and control mechanisms, and adapts its models, strategies, and capabilities when its environment or itself changes. Across time, memory and learning help it preserve and develop its ability to act. 
+
+Three qualifications are important. First, autonomy does not mean complete independence. Every organism, organization, and machine depends on an environment, resources, and ex-ternal rules. A better characterization is self-directed action within given boundaries. Second, autonomy does not imply unrestricted authority. Knowing when to stop, degrade, or re-quest help can itself be an autonomous capability. Third, au-tonomy does not require any single AI technique. Language models, reinforcement learning, symbolic planning, optimiza-tion, model-predictive control, and search may all be internal components; none alone constitutes autonomy. For a formal description, let the internal structure of an au-tonomous agent at time t be 
+
+At = ⟨I, B, G t, V t, W t, S t, C t, Πt, M t, L t⟩.
+
+Here I denotes identity; B, boundaries and permissions; Gt,current goals; Vt, viability conditions; Wt, a world model; St,
+
+> 2
+
+a self-model; Ct, capabilities and resources; Πt, decision and control mechanisms; Mt, memory; and Lt, learning and update mechanisms. This notation does not require every implementa-tion to have identical software modules. It states the functional questions for which some equivalent mechanism is needed. 
+
+# 3 An Architecture for Autonomous Agents 
+
+We summarize the proposed architecture as one boundary plus four loops . The outer Identity/Boundary specifies who the agent is, which states and resources belong to it, what it may affect, what it is responsible for, and which actions ex-ceed its authority. Within that boundary, Operational, Viabil-ity, Reflexive, and Learning loops address current tasks, self-maintenance, metacontrol, and long-term development, respec-tively. Sustained perception–action coupling connects the sys-tem to its environment. Figure 1 summarizes the components and information flow. Identity/Boundary first determines where autonomy resides. For a physical robot, it may include the device, sensors, actu-ators, available energy, responsibility boundaries, and callable skills. For a digital agent, it may include a software identity, ac-count permissions, data domains, compute resources, callable services, and scope of responsibility. The boundary is more than a software wrapper: it allows the system to distinguish self from environment over time. Goals, feedback, and learn-ing have continuity only when states, resources, permissions, and actions can be attributed to a persistent agent. Within the boundary, the system maintains task goals and viability conditions concurrently. Whereas a conventional task agent often concentrates on Gtask , an autonomous system must also maintain Gviability . It therefore seeks task progress while keeping critical states in an admissible region V. A mobile robot, for example, must consider task progress alongside bat-tery charge, temperature, mechanical load, and safety distance. A digital agent may instead need to maintain permissions, com-pute budget, data consistency, model confidence, and context integrity. Completing a task and remaining able to operate are related but non-equivalent objectives. The World Model represents the external environment; the Self Model represents the agent’s own state. The World Model describes objects, relations, state changes, and action conse-quences. The Self Model describes capabilities, resources, health, confidence, uncertainty, and history. Both inform de-cisions, which can be written in simplified form as at =
+
+π(Gt, W t, S t, C t, B ). Action selection then depends not only on which action would be best in principle but also on whether this agent, with its current capabilities and authority, should perform it now. The Operational Loop is the fastest loop. It runs from goal to sensing, modeling, decision, action, and feedback: Goal → Sense → Model → Decide → Act → Feedback .
+
+Conventional automatic control and most AI agents concentrate their capabilities at this level. Outcomes of action re-enter per-ception and modeling, allowing the system to correct current behavior in response to deviations. The Viability Loop operates alongside task execution and monitors whether the system remains in an operable region. When energy is low, hardware overheats, model confidence de-clines, resources conflict, or permissions change, the system may reduce workload, reallocate resources, enter a safe mode, pause, or request help. It addresses how the system can remain able to carry out tasks, rather than only how to improve the cur-rent task. The Reflexive Loop monitors the agent’s own models and control methods, not only external conditions. It observes the World Model, Self Model, planner, policy, confidence, and performance, then assesses whether the current mechanisms remain appropriate. Persistent model error, repeated failure, capability degradation, or excessive uncertainty can trigger a change in Πt itself: a strategy switch, replanning, active infor-mation gathering, task degradation, a request for assistance, or safe-mode entry. This is the agent’s metacontrol layer. Feed-back changes how actions are generated as well as which action is selected. The Learning Loop runs over a slower time scale and con-verts cross-task experience into future capability. Experience enters memory and may inform updates to a World Model, Self Model, policy, or skill. In real-world systems, an update should not be deployed as soon as it is proposed. It should first be eval-uated offline, tested in simulation, and checked against safety constraints. A verified version can then be deployed with a means to roll back if needed. This staged process allows the agent to improve through experience while keeping operational changes under control. The four loops are thus nested mechanisms at different time scales, rather than four parallel software modules. The Oper-ational Loop handles current action, the Viability Loop sus-tains operation, the Reflexive Loop evaluates models and con-trol mechanisms, and the Learning Loop changes long-term ca-pability. Their coordination, not the isolated presence of any one component, determines the completeness of the proposed autonomy architecture. 
+
+# 4 Constructing an Autonomous Agent 
+
+Turning the architecture into an engineering system should be-gin with defining the autonomous agent, not selecting a large model. A practical construction process addresses seven con-nected questions: boundaries; goals and viability conditions; perception–action coupling; world and self modeling; decision and execution; metacontrol; and long-term learning. These are a chain from defining an agent to establishing continuous oper-ating loops, not seven necessarily separate software modules. First, the agent’s identity, managed objects, resources, capa-bilities, permissions, and responsibilities must be specified. An 
+
+> 3Identity / Boundary: identity, resources, permissions, responsibility
+> Goal and viability conditions Perception and state estimation World and self models Planning, action and feedback
+> Viability Loop resources and safety Operational Loop current tasks Reflexive Loop model and control review Learning Loop validated updates
+
+Figure 1: Functional architecture of an autonomous agent. The upper path represents perception and action; the lower boxes represent four loops operating at different time scales. The identity and authority boundary specifies their common agent. Arrows indicate information flow rather than a fixed software deployment topology. engineering system should state what it manages, which states are its own, which resources it controls, which capabilities it may call, which actions it may take independently, which events must be escalated, and for which outcomes it is accountable. This gives stable ownership to goals, states, and learning up-dates generated later. Task goals and viability conditions must then be designed together. Gtask states what the agent seeks to achieve; Gviability 
+
+states what must not be sacrificed. Decision making resembles an optimization problem with viability constraints, for example max  
+
+> π
+
+Jtask s.t. vt ∈ V , a t ∈ A safe .
+
+The point is not this particular mathematical form, but that task return must not override continued operation and safety. When goals conflict with resources or safety, the system must be able to degrade, pause, or seek help. The third step is continuous perception–action coupling. An autonomous system observes the environment and itself repeat-edly, rather than receiving a single input at the start of a task. The design should specify observable states, sensing or data interfaces, executable skills, feedback about action outcomes, and temporal consistency of state. Physical agents close the loop through sensors and actuators; digital agents do so through databases, tools, APIs, and other digital objects. A practical test for agency is whether the system’s actions change the world that it must face at the next step. Fourth, both a World Model and a Self Model are needed. The former estimates the current environment, its possible changes, and action consequences. The latter estimates avail-able abilities, resource sufficiency, sensor and model trustwor-thiness, and degradation. A Self Model should affect decisions rather than merely record status. If a capability declines, a sen-sor becomes unreliable, or model confidence is insufficient, the planner should change behavior accordingly. Planning–Execution–Feedback forms the main task loop. Planning may use learned policies, search, optimization, sym-bolic methods, model-predictive control, or language-model reasoning; we do not prescribe one algorithm. Important ac-tions should nevertheless have expected outcomes, observed outcomes, a measurable discrepancy, and a subsequent re-sponse. The Operational Loop can correct small deviations. Persistent deviations or threshold crossings should invoke the Reflexive Loop. The system can then distinguish an isolated failure from an invalid model or strategy. Metacontrol is a key step beyond ordinary closed-loop con-trol. It monitors prediction error, repeated failure, confidence, uncertainty, resource conditions, capability degradation, goal conflict, and safety margins. Based on these signals, the system decides whether to continue its current strategy, gather more information, replan, switch strategy, reduce the task, or seek assistance. Autonomy includes knowing when to stop acting independently. Finally, long-term learning incorporates present experience into future capability. Candidate updates may affect the World Model, Self Model, policy, planner parameters, skill library, or failure patterns. In real systems, learning must be connected to verification and governance. An update should enter the oper-ating system only after evaluation, safety checks, version man-agement, and a rollback option when needed. Otherwise, a con-tinually learning system may become less reliable over time de-spite improving on some tasks. 
+
+# 5 Simulation Experiments: Mecha-nism Tests of the Boundary and Four Loops 
+
+## 5.1 Environment and Comparisons 
+
+We constructed the two-service-point factory road network in Fig. 2. A mobile robot moves continuously along road poly-lines and selects a route at intersections using its current in-formation. In Experiments 1, 2, 4, and 5, every task starts at the base, reaches Task 2, and returns to the base. Experiment 3 
+
+4Base J0 J1 J2 Task 1 Task 2 Maintenance 
+
+> Fast route Stable route Regular road Blockable Restricted Detour
+
+Figure 2: Two-service-point simulation network. The central regular road is used in Experiments 1–3; the fast and stable routes are compared in Experiments 4–5. The eastern restricted, blockable, and detour roads provide the permission, closure, and rerouting conditions in Experiments 1 and 2. This is a topological illustration; nominal road lengths are specified separately. starts at the base and then alternates between Task 1 and Task 2. The maintenance station is at the end of a separate spur and can-not be used as a shortcut. Each experiment activates only the roads relevant to its mechanism, whereas the figure shows all available roads. Nominal road lengths are parameters of travel time and are not drawn to scale. Let h ∈ [0 , 1] denote observable health and a hidden actuator efficiency. Actual mobility is η = (0 .5 + 0 .5h)a. For nominal road length L, speed v, and heavy-load indicator IH ∈ { 0, 1},the nominal travel times of the two central alternatives are 
+
+tfast = L(1 + βI H )
+
+vη 2 , tstable = L(1 + 0 .05 IH )
+
+vη , (1) where β is the hidden effect of a heavy load. Ordinary roads fol-low the stable-route form. Each traversal also receives a seed-dependent perturbation of approximately ±1.5%. The robot plans using observations and its own estimates of η and β; it cannot directly read hidden parameters or foresee road closure. Only Experiment 3 enables motion-induced heating and wear. When health reaches 0.20 , external repair halts operation for 375 simulated time units. Proactive maintenance takes 40 units plus the travel required to reach and leave the station. All five experiments use a mechanism-ablation comparison. The Baseline lacks the mechanism under test: permission pre-checking, road-closure memory, proactive maintenance, ca-pability re-estimation, or cross-task learning. The Proposed controller enables that mechanism. Both variants share maps, tasks, and random seeds. Seeds 0–29 provide 30 paired runs. Process trajectories in the figures come from seed 0; bar charts report means across the 30 pairs. 
+
+## 5.2 Five Experiments and Main Results 
+
+Experiment 1: permission boundary. This experiment tests whether a permission change enters planning before ac-tion, instead of being handled only by an execution-time road check. The robot performs 15 round trips from the base to Task 2. Access to the shorter eastern road is revoked for tasks 6– 10 and restored for task 11; the detour remains available. The Baseline does not read the pre-planning notice, so it attempts the restricted road once per affected task and detours after de-nial. The Proposed controller updates its permission state first and plans a legal route. Denials in Fig. 3(a) are confined to the revocation interval; the means across 30 paired seeds in panel (b) are 5 and 0. Both controllers finish all 15 tasks, while mean total time decreases from 714.86 to 699.86 time units, corre-sponding to the cost of five denials. The primary finding is therefore pre-action permission compliance , rather than a dif-ference in completion rate. 1 3 6 8 10 12 15   
+
+> Task index
+> 01
+> Attempts
+> Permission revoked
+> (a) Unauthorized attempts (seed 0)
+> Baseline Proposed
+> Mean over 30 paired seeds
+> 0246
+> Attempts
+> 50
+> Tasks completed: 15 / 15
+> (b) Mean unauthorized attempts
+> Baseline Proposed
+
+Figure 3: Experiment 1, permission boundary. (a) Unautho-rized attempts by task for seed 0; the shaded region marks the permission-revocation period. (b) Mean number of unautho-rized attempts across 30 paired seeds. 
+
+> 5
+
+Experiment 2: task execution after road closure. Unlike the announced permission change in Experiment 1, this road closure is unknown until the robot attempts entry. The block-able road closes before the first entry and stays closed through-out six round trips; a detour remains open. The Baseline does not retain the rejection as road-state information. It repeats the blocked action five times in each task and then abandons that task. After one denial, the Proposed controller records the clo-sure, replans the current task, and reuses this knowledge on later tasks. The Baseline’s cumulative denials keep rising in Fig. 4(a), whereas those of the Proposed controller stay at one. Across 30 paired seeds, denials decrease from 30 to 1 and com-pleted tasks increase from 0 to 6. The first denial is the obser-vation required to discover the unknown closure. Although the Baseline stops sooner, it completes no task; the relevant out-come is recovery and completion after feedback .0 1 2 3 4 5 6  
+
+> Tasks attempted
+> 010 20 30
+> Denied actions
+> (a) Cumulative road denials (seed 0)
+> Baseline Proposed
+> Mean over 30 paired seeds
+> 0246
+> Tasks
+> 06
+> Baseline stopped after repeated failures
+> (b) Mean completed tasks
+> Baseline Proposed
+
+Figure 4: Experiment 2, use of road-closure feedback. (a) Cu-mulative denied actions for seed 0. (b) Mean completed tasks across 30 paired seeds. 
+
+Experiment 3: health maintenance. This experiment com-pares immediate task speed with the ability to continue oper-ating. Starting at the base, the robot alternates between Task 1 and Task 2 for 200 services. Movement raises temperature, causes wear, and reduces mobility; health at 0.20 triggers ex-ternal repair with 375 units of downtime. The Baseline moves faster and does not seek maintenance. The Proposed controller reduces speed, cools down, or visits the separate maintenance station according to observed health, temperature, and pro-jected travel. A visit also costs 40 units plus travel. In Fig. 5(a), the Baseline repeatedly reaches the failure threshold; the corre-sponding plateaus in panel (b) mark interrupted service. Across 30 seeds, external repairs fall from 6 to 0 and proactive visits rise from 0 to 2. Both variants eventually complete 200 tasks, but mean total time decreases from 7,517.24 to 6,811.59 units, and throughput in the final quarter rises from 22.90 to 28.46 tasks per 1,000 units. Under these wear and repair assump-tions, paying the cost of proactive health maintenance yields better long-run service than waiting for failure. 0 2 4 6      
+
+> Simulation time (10 3units)
+> 0.2 0.4 0.6 0.8 1.0
+> Health  h
+> Failure threshold
+> (a) Health state (seed 0)
+> 0246
+> Simulation time (10 3units)
+> 050 100 150 200
+> Tasks
+> (b) Cumulative tasks (seed 0)
+> Baseline Proposed
+
+Figure 5: Experiment 3, health and task progress for seed 0. The gray dotted line marks the health failure threshold. Plateaus in the Baseline’s task curve correspond to downtime during external repair. 
+
+Experiment 4: re-estimating self-capability. This experi-ment asks whether the robot can revise its Self Model when its own capability changes while the road network stays fixed. It performs 40 round trips; from task 10 onward, hidden actuator efficiency drops from 1 to 0.55. Neither controller observes the fault directly. Under normal light-load conditions the central fast route is shorter, but after the fault its travel time grows faster because of the η−2 term in Eq. (1); the stable route becomes quicker. The Baseline keeps its original estimate and continues choosing the fast route. The Proposed controller compares pre-dicted and observed travel times, updates its capability estimate after persistent mismatch, and replans. Figure 6(a) shows the estimate approaching true efficiency. Across 30 seeds, the post-fault wrong outbound route rate falls from 1.000 to 0.032, final estimates are 1.000 and 0.550, and mean total time decreases from 3,168.12 to 2,956.45 units. A few initial errors remain be-cause the hidden fault must first be inferred from feedback; the benefit arises from changing the plan after self-reassessment .
+
+60.0 0.5 1.0 1.5 2.0 2.5 3.0    
+
+> Simulation time (10 3units)
+> 0.6 0.8 1.0
+> Efficiency  ̂  η
+> (a) Efficiency estimate (seed 0)
+> True efficiency
+> Baseline Proposed
+> Mean over 30 paired seeds
+> 0.00 0.25 0.50 0.75 1.00 1.25
+> Rate
+> 1.000 0.032
+> (b) Wrong route rate after fault
+> Baseline Proposed
+
+Figure 6: Experiment 4, capability re-estimation after an actu-ator fault. (a) Efficiency estimate for seed 0; the gray dashed line is the true value used only for retrospective evaluation. (b) Mean post-fault wrong outbound route rate across 30 paired seeds. 
+
+Experiment 5: cross-task learning. This experiment sep-arates within-task correction from experience retained across tasks. The robot completes 40 round trips, each independently assigned a heavy load with probability 0.5; load remains fixed on its outbound and return legs. The true heavy-load coeffi-cient β = 1 .0 is hidden. The fast central route is preferable when lightly loaded, whereas its load penalty makes the sta-ble route preferable under a heavy load. The Baseline may use outbound feedback to correct the return leg, but clears that cor-rection before the next task. The Proposed controller forms and validates a load-coefficient estimate from heavy-load traversals, then uses the persistent estimate when later tasks begin. In Fig. 7(a), its estimate approaches the true value: final means across 30 seeds are 0.996 for the Proposed controller and 0 for the Baseline. Mean excess central-route time per heavy task in panel (b) falls from 2.550 to 0.271 units, while the heavy-task wrong outbound route rate falls from 1.000 to 0.053. Excess time sums the nominal difference from the faster central route over both legs. The first heavy task can incur an exploration and validation cost, but its information is reusable. Both vari-ants have zero wrong-route rate and zero excess time on light tasks; the gain reflects load-conditional route choice , not an indiscriminate avoidance of the fast road. Experiments 3–5 use illustrative parameter values chosen to make the mechanisms visible. In sensitivity runs with weaker settings (external-repair downtime 300, post-fault efficiency 
+
+0.60 , and heavy-load coefficient 0.8), the Proposed controller 0.00 0.25 0.50 0.75 1.00 1.25 1.50 1.75    
+
+> Simulation time (10 3units)
+> 0.00 0.25 0.50 0.75 1.00
+> Coefficient  ̂  β
+> (a) Load estimate (seed 0)
+> True coefficient
+> Baseline Proposed
+> Mean over 30 paired seeds
+> 0123
+> Time units
+> 2.550 0.271
+> (b) Excess time per heavy task
+> Baseline Proposed
+
+Figure 7: Experiment 5, learning the heavy-load effect across tasks. (a) Persistent load-coefficient estimate for seed 0; the gray dashed line is the true value used only for retrospective evaluation. (b) Mean excess route time per heavy task across 30 paired seeds. The first heavy task incurs an exploration cost. still reduces total time by approximately 3.6%, 3.6%, and 1.3%, respectively. These are simulation assumptions, not parameters calibrated from a physical factory. 
+
+## 5.3 Interpretation and Limitations 
+
+Under the present controlled simulation, permission filtering, road-closure feedback, proactive maintenance, capability re-estimation, and cross-task learning each improve their corre-sponding behavioral measure. The five experiments deliber-ately use different Baseline failure modes to test whether each mechanism can function; together they are not an end-to-end performance evaluation of a fully integrated autonomous sys-tem. Road, fault, and maintenance rules are simplified, and changing the seed does not change the map or task rules. The results support mechanism-level feasibility but cannot estab-lish absolute benefit in a real factory or generalization across settings. 
+
+# 6 Theoretical Foundations and Related Work 
+
+## 6.1 From Regulation to Biological Autonomy 
+
+The early question about autonomy was not how to make a model more powerful, but what allows a system to persist. Can-non’s account of homeostasis placed the maintenance of key 
+
+7internal variables at the center of living-system research [1]. Rosenblueth, Wiener, and Bigelow connected purposive behav-ior to goals and feedback, and cybernetics made error correc-tion amenable to analysis [2, 18]. Ashby’s studies of adaptation and ultrastability suggested that, when an existing mode of reg-ulation fails, changing actions may be insufficient: the control mechanism may also have to change [3, 19]. Second-order cybernetics brought the observer and the mode of observation into the system under study, motivating the monitoring of a system’s own models and controls [20]. Au-topoiesis, developed by Maturana and Varela, shifted attention to how a system continually produces itself as a unity with an identity boundary. Varela’s biological autonomy further ex-amined organizational closure and interaction with the envi-ronment [4, 5]. These traditions are connected but ask dif-ferent questions: homeostasis concerns variables that must be maintained, cybernetics concerns feedback regulation, and au-topoiesis concerns the organization of a subject. We treat them as conceptual sources for the architecture, without equating an engineering permission boundary with a biological autopoietic boundary. 
+
+## 6.2 Six Paths from Biological to Artificial Au-tonomy 
+
+Computational autopoiesis. Varela, Maturana, and Uribe de-veloped a computational model of a minimal autopoietic orga-nization. McMullin and Varela reimplemented it and examined the interactions responsible for continued organization [6, 7]. This direct theoretical line studies organizational maintenance and boundary formation but does not by itself address open-ended task planning or long-term learning. 
+
+Embodied and behavior-based robots. The autonomous-agent work edited by Maes assembled biological and engi-neering perspectives, while Brooks built robots that operated in office settings using layered, concurrent behavior-producing modules and direct perception–action coupling [8, 9]. The en-gineering contribution was to embed an action loop in an envi-ronment. Its relation to Varela is better understood as a conver-gence of concerns than as a single direct line of inheritance. 
+
+Formal accounts of agent autonomy. Luck and d’Inverno used the Z specification language to distinguish objects, agents, and autonomous agents: agents have goals, while autonomous agents also have internal motivations [10]. This clarifies the dif-ference between externally assigned tasks and internally gener-ated behavior, but does not supply a complete mechanism for maintaining physical or computational resources. 
+
+Autonomic management and adaptive software. Kephart and Chess organized system management around monitoring, analysis, planning, and execution, while Rainbow used explicit runtime architectural models to adapt software [11, 12]. This path turned diagnosis, recovery, and configuration adjustment into operational software concerns. It was largely an indepen-dent engineering convergence. Its manager may also be exter-nal to the managed system, leaving a boundary question for a single persistent agent. 
+
+Enactive and viability-based adaptation. Di Paolo incor-porated adaptivity into the discussion of autopoiesis, arguing that an agent regulates its relation to the environment accord-ing to its viability conditions. Froese and Ziemke developed a research agenda for AI grounded in biological autonomy and embodied cognition [13, 14]. This is one of the clearer theoret-ical extensions from biological to artificial autonomy and pro-vides a normative basis for our Viability Loop, although con-crete control laws still depend on the embodiment. 
+
+Robotic self-modeling. Bongard and colleagues inferred robot morphology from action–perception data and used an updated model to recover motion after damage [15]. Jiang and colleagues proposed an embodied-AI self-model integrat-ing body schema, prediction, memory, and decision making [16]. Such work makes capability boundaries and self-change estimable, but the existence of a self-model does not itself coor-dinate task goals, viability constraints, and governance of learn-ing. Contemporary world models and model-predictive control further strengthen the prediction of future states and planning [21, 22]. LeCun’s architecture attempts to integrate a pre-dictive model, intrinsic cost, actor, memory, and configurator [17]. These studies show how mechanisms may be brought to-gether again. They also suggest that completeness of autonomy must ultimately be tested through sustained operation, resource maintenance, and stable updating in a concrete system. 
+
+## 6.3 From Dispersed Mechanisms to a Unified Framework 
+
+Table 1 maps these lines of research to the functional questions of this paper. The mapping is our analytical interpretation: it does not imply that the historical works used identical terminol-ogy or that each path contributes to only one mechanism. To-gether, they suggest that an autonomous system must both carry out tasks and maintain its ability to operate, recognize failure of its own control methods, and accumulate reliable long-term capability. From this mapping, one boundary plus four loops is not a direct reproduction of any single school. It is a cross-tradition systems-integration hypothesis. Its value depends on whether boundaries and permissions can be specified, viability condi-tions measured, metacontrol triggers and learning updates veri-fied, and cross-task operation improved over a system with only a task-execution loop. 
+
+# 7 Discussion, Limitations, and Broader Implications 
+
+We have proposed a conceptual and systems framework. The five simulations provide preliminary tests of its component 
+
+> 8
+
+Table 1: Functional mapping from theoretical and engineering traditions to the one-boundary, four-loop framework.          
+
+> Research tradition Main question operationalized Location in this framework Autopoiesis and computational autopoiesis Organizational maintenance, agent continu-ity, boundaries Identity/Boundary; Viability Loop Homeostasis, adaptation, and en-active cognition Maintenance of critical variables and regula-tion by viability conditions Goal/Viability; Viability Loop Behavior-based robotics and agent formalization Environmental coupling, goals, internal mo-tivation Operational Loop; Goal Autonomic management and adaptive software Runtime diagnosis, configuration, policy ad-justment Reflexive Loop; Metacontrol Robotic self-modeling Estimation of morphology, capability, and damage Self Model; Reflexive Loop World models and modern AI Prediction, planning, memory, skill updating World Model; Operational/Learning Loops
+
+mechanisms, but they do not constitute a unified implemen-tation validated on a physical system. The framework brings issues faced by future autonomous systems into one structure; many of those issues still lack settled engineering solutions. First, identity and agent continuity remain underdefined .Engineering systems often reduce identity to a static identifier, yet an agent’s models, memory, skills, and even hardware may change over time. What makes an updated system the same agent matters not only for implementation but also for respon-sibility, auditing, and safety. Second, trustworthy self-modeling may be harder than world modeling . A system must estimate its abilities, re-sources, confidence, and knowledge boundaries. If its Self Model is itself biased, metacontrol may make dangerous choices based on a false self-assessment. The self-model there-fore needs continued calibration against external outcomes and actual behavior. Third, metacontrol remains among the least well-specified mechanisms . When should a system persist with a strategy, replan, learn, actively collect information, or request assistance? These choices govern the decision mechanism it-self and may be harder to formalize than ordinary action se-lection. Future progress in autonomous agents may depend as much on reliable metacontrollers as on stronger planners. Fourth, continual learning and stability are in tension .Autonomous systems must adapt, yet repeated updates can cause catastrophic forgetting, capability drift, and safety degra-dation. Improving with experience while preserving validated capabilities is unavoidable in long-term autonomy. In high-risk physical systems, learning, validation, and governance may need to be designed as one process. Fifth, autonomy needs new evaluation methods . Task suc-cess alone cannot distinguish a system that completes work independently from one that succeeds after extensive human intervention. Alongside task competence, evaluations should measure intervention dependence, viability maintenance, adap-tation, reflexivity, and learning stability. Possible measures in-clude human interventions per task, autonomous recovery rate, violations of critical-state limits, recovery time after distribu-tion shifts, accuracy of capability-limit recognition, and stabil-ity after learning updates. Autonomy is better treated as multi-dimensional than as a single score. We deliberately place collective coordination after individ-ual autonomy. Multiple nodes need relatively stable identi-ties, goals, states, capabilities, and local loops before their goal negotiation, capability discovery, resource sharing, joint deci-sions, and organizational restructuring have a clear meaning. Otherwise, a multi-node arrangement may remain a distributed execution system organized by central logic. Larger intelligent systems could then form recursive organi-zations. Device-level agents may constitute a production cell; production cells may participate in a line; lines may in turn con-stitute a factory or larger organization. Identity, goals, capabili-ties, actions, feedback, and learning reappear at different scales. Individual autonomy may be a basic unit of collective coordi-nation, which may itself give rise to higher-level autonomous agents. More broadly, this perspective suggests a shift in the unit of AI research. Today, that unit is often the model. For many fu-ture systems it may become the agent, and eventually the au-tonomous agent. Sustained intelligence in the real world is unlikely to be provided by a single model alone. It is more plausibly organized from models, memory, goals, action, feed-back, self-maintenance, metacontrol, and learning. Language, vision, world, and planning models remain important, but as capability components within a larger autonomous system. 
+
+# 8 Conclusion 
+
+Artificial intelligence has gained strong abilities in perception, generation, prediction, and reasoning, but these abilities do not automatically constitute autonomy. As AI moves from one-off information processing toward long-term operation, continual action, resource management, adaptation, and real-world inter-action, a more basic question emerges: how can many intel-ligent capacities be organized into an agent that persists over time? We call this the autonomous-agent problem. Relative to au-tomation, intelligence, and task-oriented AI agents, autonomy requires persistent identity and a scope of action, joint main-
+
+> 9
+
+tenance of task goals and viability conditions, models of both the external world and the agent itself, and ongoing adjustment of behavior and control through feedback, self-monitoring, and learning. To address this problem, we proposed a unified one-boundary, four-loop architecture. Identity/Boundary defines the agent; the Operational Loop handles current tasks; the Vi-ability Loop sustains operation; the Reflexive Loop evaluates and adjusts the agent’s own control mechanisms; and the Learn-ing Loop converts experience across time into future capabil-ity. The framework does not prescribe a unique algorithm. It describes the system-level questions that different implementa-tions must answer. Five paired simulations in a simplified factory environment show the expected behavioral differences under permission constraints, road changes, self-wear, hidden faults, and chang-ing loads. These results are preliminary evidence at the mech-anism level. More complex scenarios and physical systems are needed to test the integrated framework. From this perspective, large language models, multimodal models, world models, planning, memory, and tool use are valuable components of future artificial agents, rather than competing definitions of autonomy. AI has long asked what tasks a machine can perform. Autonomous-agent research asks a further question: how can a machine become a persistent agent that acts, observes itself, and changes itself over time? 
+
+As AI increasingly moves from answering questions into sustained interaction with the world, autonomy may become a foundational topic connecting AI, control, robotics, and complex-systems research. 
+
+# References 
+
+[1] Walter B. Cannon. The Wisdom of the Body . W. W. Nor-ton, 1932. [2] Arturo Rosenblueth, Norbert Wiener, and Julian Bigelow. Behavior, purpose and teleology. Philosophy of Science ,10(1):18–24, 1943. doi: 10.1086/286788. [3] W. Ross Ashby. Design for a Brain: The Origin of Adap-tive Behaviour . Chapman & Hall, 1952. [4] Humberto R. Maturana and Francisco J. Varela. Au-topoiesis and Cognition: The Realization of the Living .D. Reidel, 1980. doi: 10.1007/978-94-009-8947-4. [5] Francisco J. Varela. Principles of Biological Autonomy .North-Holland, 1979. [6] Francisco J. Varela, Humberto R. Maturana, and Ricardo Uribe. Autopoiesis: The organization of living systems, its characterization and a model. BioSystems , 5(4):187– 196, 1974. doi: 10.1016/0303-2647(74)90031-8. [7] Barry McMullin and Francisco J. Varela. Rediscover-ing computational autopoiesis. In Proceedings of the Fourth European Conference on Artificial Life , pages 38– 47. MIT Press, 1997. URL https://www.eeng. dcu.ie/~alife/bmcm-ecal97/ .[8] Pattie Maes, editor. Designing Autonomous Agents: The-ory and Practice from Biology to Engineering and Back .MIT Press, 1990. [9] Rodney A. Brooks. Intelligence without representation. 
+
+Artificial Intelligence , 47(1–3):139–159, 1991. doi: 10. 1016/0004-3702(91)90053-M. [10] Michael Luck and Mark d’Inverno. A formal framework for agency and autonomy. In Proceedings of the First International Conference on Multiagent Systems , pages 254–260. AAAI Press, 1995. URL https://cdn. aaai.org/ICMAS/1995/ICMAS95-034.pdf .[11] Jeffrey O. Kephart and David M. Chess. The vision of au-tonomic computing. Computer , 36(1):41–50, 2003. doi: 10.1109/MC.2003.1160055. [12] David Garlan, Shang-Wen Cheng, An-Cheng Huang, Bradley Schmerl, and Peter Steenkiste. Rainbow: Architecture-based self-adaptation with reusable infras-tructure. Computer , 37(10):46–54, 2004. doi: 10.1109/ MC.2004.175. [13] Ezequiel A. Di Paolo. Autopoiesis, adaptivity, teleology, agency. Phenomenology and the Cognitive Sciences , 4 (4):429–452, 2005. doi: 10.1007/s11097-005-9002-y. [14] Tom Froese and Tom Ziemke. Enactive artificial intelli-gence: Investigating the systemic organization of life and mind. Artificial Intelligence , 173(3–4):466–500, 2009. doi: 10.1016/j.artint.2008.12.001. [15] Josh Bongard, Victor Zykov, and Hod Lipson. Re-silient machines through continuous self-modeling. Sci-ence , 314(5802):1118–1121, 2006. doi: 10.1126/science. 1133687. [16] Shu-Qiang Jiang, Si-Xian Zhang, Shi-Da Tao, Xi-Hong Zhu, Tian-Liang Qi, and Xin-Hang Song. Self model for embodied artificial intelligence. Journal of Com-puter Science and Technology , 41(2):548–563, 2026. doi: 10.1007/s11390-026-6289-3. [17] Yann LeCun. A path towards autonomous machine intel-ligence, 2022. URL https://openreview.net/ pdf?id=BZ5a1r-kVsf . Version 0.9.2. [18] Norbert Wiener. Cybernetics: Or Control and Commu-nication in the Animal and the Machine . John Wiley & Sons, 1948. [19] W. Ross Ashby. An Introduction to Cybernetics . Chapman & Hall, 1956. 
+
+> 10
+
+[20] Heinz von Foerster. On self-organizing systems and their environments. In Marshall C. Yovits and Scott Cameron, editors, Self-Organizing Systems . Pergamon Press, 1960. [21] David Ha and Jürgen Schmidhuber. World models. 
+
+arXiv preprint arXiv:1803.10122 , 2018. URL https: //arxiv.org/abs/1803.10122 .[22] Danijar Hafner, Jurgis Pasukonis, Jimmy Ba, and Tim-othy Lillicrap. Mastering diverse control tasks through world models. Nature , 640:647–653, 2025. doi: 10.1038/ s41586-025-08744-2. URL https://doi.org/10. 1038/s41586-025-08744-2 .

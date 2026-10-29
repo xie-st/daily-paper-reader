@@ -1,0 +1,625 @@
+Title: Assembling Insights for Agentic Machine Learning Engineering Systems
+
+URL Source: https://arxiv.org/pdf/2610.04927v1
+
+Published Time: Tue, 06 Oct 2026 01:21:09 GMT
+
+Number of Pages: 22
+
+Markdown Content:
+# Assembling Insights for Agentic Machine Learning Engineering Systems 
+
+BIHUI JIN, University of Waterloo, Canada 
+
+YINXI LI, University of Waterloo, Canada 
+
+KAIYUAN WANG, Google Inc., USA 
+
+PENGYU NIE, University of Waterloo, Canada Agentic machine learning engineering (MLE) is an emerging AI4SE application, targeting complex machine learning tasks and taking a step toward the recursive self-improvement of AI systems. Recent agentic MLE systems highlight the importance of collecting and leveraging insights from closely-related MLE tasks: some systems condition code generation on expert domain knowledge, which is implicitly curated from peer MLE tasks; some systems have a loop of solving an MLE task, gathering validation feedback, and refining their prompts, skills, or memory to benefit future tasks. However, collecting and injecting insights is ad hoc, and existing evaluations do not control the sources of insights, leaving data leakage a threat to validity. To close these gaps, we systematically study how insights assembled from closely-related MLE tasks affect an agentic MLE system, and how their effect depends on the type of insights and the way they are injected. We first collect a new benchmark, MLE-InsightBench, consisting of 160 Kaggle competitions clustered into 12 domains. MLE-InsightBench is designed to keep target task information out of the insights: one competition from each domain is held out as a target task, and only the remaining 148 competitions, none of which can have been influenced by the target tasks (e.g., as a later edition of the same series or by reusing their solutions), serve as source competitions. We then design and implement an insight assembly agent, MLE-InsightForge, that explores the source competitions, their top human-written solutions, and writeups, and assembles them into three types of insights: 12 domain insights (summarizing domain-level best practices), 148 competition insights (describing competition-level winning solutions), and 16 improvement insights (detailing generic debugging and improvement strategies). The extracted insights can be injected into an agentic MLE system as skills, which the agent reads selectively on demand, or as a playbook placed upfront in its initial context. In our evaluation, the extracted insights improve the normalized private-test score of an agentic MLE system by 123.9% over the baseline without insights. Further controlled experiments show that: the three types of insights are complementary, the better injection mode (skill vs. playbook) varies across tasks, with skills being more cost-effective overall, and the improvements from insights generalize across backend LLMs. 
+
+1 Introduction 
+
+Machine learning engineering (MLE) is the end-to-end work of turning a dataset and a modeling objective into an executable machine learning (ML) solution, including data inspection, model selection, validation design, debugging, and compute allocation. ML solutions are typically written in Python, as Jupyter notebooks or scripts [19, 51], and the SE community has studied them as software artifacts with distinct engineering challenges, such as data management, code quality, and reproducibility [1, 31, 46, 51]. This makes ML solutions a natural target of LLM-based coding agents, but also a challenging one. Existing code generation benchmarks, including those for data science code, check a generated function, notebook cell, or patch against tests or reference outputs [30, 37, 70]. An ML solution, in contrast, has no test oracle: its quality is a metric value on unseen data, which can only be estimated by executing long-running training code and improved by repeatedly revising the solution. Agentic MLE is an emerging application of coding agents in which LLMs perform this work by iteratively writing, executing, and refining code [7, 27, 29]. Agentic MLE systems target complex 
+
+> Authors’ Contact Information: Bihui Jin, University of Waterloo, Waterloo, Canada, bihui.jin@uwaterloo.ca; Yinxi Li, University of Waterloo, Waterloo, Canada, yinxi.li@uwaterloo.ca; Kaiyuan Wang, Google Inc., Mountain View, USA, kaiyuanw@google.com; Pengyu Nie, University of Waterloo, Waterloo, Canada, pynie@uwaterloo.ca. , Vol. 1, No. 1, Article . Publication date: October 2026. arXiv:2610.04927v1 [cs.SE] 4 Oct 2026
+
+2 Bihui Jin, Yinxi Li, Kaiyuan Wang, and Pengyu Nie  
+
+> Benchmark
+> MLE-InsightBench (§3)
+> Kaggle competitions
+> 160 high-quality competitions in 2020–2025
+> Domain clustering
+> 12 domains of closely-related tasks
+> Held-out split
+> target (12): one per domain; source (148): causal non-descendants
+> Data leakage control
+> target materials blocked during insight assembly; no web search when solving
+> Private-test grading
+> MLE-bench-compatible graders; private-test set never exposed
+> Technique
+> MLE-InsightForge (§4)
+> Insight assembly agent
+> reads all sources; records the evidence of each insight
+> 12 domain insights
+> domain-level best practices
+> 148 competition insights
+> decisions of the winning solutions
+> 16 improvement insights
+> consolidated debugging and improvement strategies
+> Insight injection
+> as skills (on demand) or playbooks (in the initial context)
+> Evaluation
+> Systematic study (§5)
+> Solving agent
+> State-of-the-art ReAct agent developing a solution tree
+> Six conditions
+> Baseline, Full-skill, Full-playbook, and three ablations
+> Fixed budget
+> 12 hours, 250 steps, and one GPU per run
+> Metrics
+> normalized private-test score, token consumption, and time
+> ?Ablation studies
+> insight types, injection modes, and backend LLMs
+
+Fig. 1. Overview of our study. 
+
+ML tasks, such as Kaggle competitions, and are a step toward the recursive self-improvement of AI systems, since a system that can engineer ML solutions can, in principle, contribute to building better AI systems [7]. Evolution has been rapid: on MLE-bench [7], the fraction of competitions in which the best system earns a medal grew from 17% in late 2024 to over 60% in early 2026. Recent agentic MLE systems highlight the importance of collecting and leveraging insights from closely-related MLE tasks. Some systems generate code based on expert domain knowledge, which is implicitly curated from peer MLE tasks, either by searching the web for state-of-the-art models and winning solutions of similar tasks [8, 50] or by drawing on knowledge bases synthesized from open-source repositories, competition platforms, and competition discussions [12, 13, 48]. Other systems have a loop of solving an MLE task, gathering validation feedback, and refining their prompts, skills, or memory to benefit future tasks [18, 73, 77]. However, in these systems, the process of collecting and injecting insights is ad hoc: each system fixes one design, without a controlled comparison of the alternatives. Each system collects insights from different sources (web search, curated knowledge bases, or its own past runs), represents them differently, and injects them into the agent’s context in its own way. The ablation studies in these work typically remove the entire insight source, e.g., the knowledge base or the cache of prior wisdom [12, 77], which shows that insights help as a whole but leaves open which types of insights contribute and how they should be injected. Moreover, existing evaluations of these systems do not control for the sources of insights, which leaves data leakage as a threat to validity: the sources are chosen by each system rather than fixed by the benchmark, so whether they exclude the target tasks is left to each system and rarely verifiable. For example, web search at solving time [8, 50] can retrieve the winning writeups of the very competition being evaluated, and knowledge bases built from competition platforms may contain its solutions; even when the benchmark competitions are excluded by name [68, 77], closely-related editions of the same competition series can remain. Such concerns were raised on the MLE-bench leaderboard [62], which has since paused new submissions to ensure fair and comparable results. To bridge these gaps, we systematically study how insights assembled from closely-related MLE tasks affect agentic MLE systems, and how their effect depends on the type of insights and the way they are injected. Figure 1 illustrates the workflow of our study. We first build MLE-InsightBench from Kaggle competitions with human-written solutions, i.e., gold-medal teams’ notebooks and writeups, and group them into domains of closely-related competitions. One competition of each 
+
+, Vol. 1, No. 1, Article . Publication date: October 2026. Assembling Insights for Agentic Machine Learning Engineering Systems 3
+
+domain is held out as a target task, and only the remaining 148 competitions, all causal non-descendants of the target tasks (i.e., none can have been influenced by a target task, as a later edition of the same series or a competition reusing its solutions could), serve as source competitions, which mirrors practice and rules out insights derived from a target task’s own winning solutions. MLE-InsightForge then reads the descriptions, datasets, solution notebooks, and writeups of the source competitions and assembles three types of insights: competition insights on the decisions behind each competition’s winning solutions, domain insights that reconcile them into domain-level best practices, and improvement insights that connect problems encountered during development to their resolutions. Each insight consists of trigger–action items that a system can skip when they do not apply, and is backed by records of its source passages. The insights can be injected as skills, whose full text is read on demand [2], or as a playbook in the initial context [72]. On the 12 target tasks, the assembled insights improve the normalized score of an agentic MLE system by 123.9% over the baseline without insights, improving every task (significantly on 11) when injected as skills; on an energy forecasting task, every run with insights beats the best run without them, although none of its peer competitions involves energy. Further controlled ablation studies show that the three types of insights are complementary: each type alone significantly improves fewer tasks (9, 8, and 8) than their combination (11). The improvements from insights generalize across backend LLMs, including a stronger proprietary LLM ( GPT-6.1-Sol ). However, the better injection mode varies across tasks, with skills being more cost-effective overall, because they reach a similar score with fewer input tokens (7.7% versus 25.2% more than the baseline). The main contributions of this work are threefold: 
+
+• Benchmark . We collect MLE-InsightBench, a benchmark of 160 Kaggle competitions clustered into 12 domains, that provides a controlled environment for studying insights: its held-out split makes the sources of insights explicit and keeps target task information out of them. 
+
+• Technique . We design and implement MLE-InsightForge, an agent that assembles evidence-based domain insights, competition insights, and improvement insights from human-written solutions and writeups, and injects them into agentic MLE systems as skills or playbooks. 
+
+• Experiments . We systematically evaluate the impact of assembled insights on an agentic MLE system, including their overall effectiveness, the contributions of the three types of insights, the effectiveness and cost of the two injection modes, and the generalizability across backend LLMs. 
+
+2 Background 2.1 Agentic MLE Systems 
+
+An MLE task asks for an executable ML solution rather than only a fitted model: it involves un-derstanding the data and the metric, designing a validation protocol, implementing preprocessing and training, diagnosing failures, and producing an artifact that satisfies a submission contract. These decisions are coupled: for example, the validation split must reflect the deployment distri-bution, while model and feature choices must respect runtime and memory limits. Competitions on Kaggle [32] expose MLE tasks through a common interface consisting of a task description, datasets, an evaluation metric, a compute environment, and a submission format. Figure 2 shows an example Kaggle competition, Jigsaw – Agile Community Rules Classification [60], which asks whether a Reddit comment violates a given rule, including rules unseen in training, together with a solution developed by an agentic MLE system. The solution prepares features from the training data, validates the model by holding out one rule at a time to mimic the unseen rules, retrains on all training data, and writes the predictions for the test data in the submission format. MLE-bench [7] turns 75 Kaggle competitions into an offline benchmark: each competition’s training data is split into new training and private-test sets, and a submission is graded against the 
+
+> , Vol. 1, No. 1, Article . Publication date: October 2026.
+
+4 Bihui Jin, Yinxi Li, Kaiyuan Wang, and Pengyu Nie  
+
+> (a) Task: Kaggle competition page
+> kaggle.com/competitions/jigsaw-agile-community-rules
+
+Jigsaw – Agile Community Rules Classification 
+
+> Using AI models to help moderators uphold community-specific norms.
+
+Description 
+
+> Your task is to create a binary classifier that predicts whether a Reddit comment broke a specific rule. [. . . ] The test dataset contains additional rules that are not seen in the training data [. . . ]
+
+Dataset   
+
+> train.csv (2,029 rows) and test.csv , e.g.:
+> body : code free tyrande [Imgur](. . . ) for you and your friend 2 codes for 4 dollars https://www.paypal.com/. . .
+> rule : No Advertising: Spam, referral links, unsolicited advertising, and promotional content are not allowed.
+> subreddit : hearthstone
+> positive_example_{1,2} : [. . . ]
+> negative_example_{1,2} : [. . . ]
+> rule_violation : 1 (target)
+
+Metric 
+
+> Column-averaged AUC: the AUC within each rule, aver-aged over the rules.
+
+Submission              
+
+> submission.csv with the predicted probability of
+> rule_violation for each row_id .
+> (b) Solution: solution.py
+> # data preparation
+> train = pd.read_csv(’/kaggle/input/train.csv’) test = pd.read_csv(’/kaggle/input/test.csv’) enc = SentenceTransformer(’intfloat/e5-large-v2’).encode
+> def build_features(df): body = enc(df[’body’]) sims = [cos(body, enc(df[c])) for cin [’rule’, ’positive_example_1’, ..., ’negative_example_2’]]
+> return np.stack(sims + [df[’body’].str.count(’http’), ...], axis=1) X, y = build_features(train), train[’rule_violation’]
+> # validation: leave one rule out
+> aucs = []
+> for rule in train[’rule’].unique(): held = (train[’rule’] == rule) clf = LogisticRegression().fit(X[~held], y[~held]) p = clf.predict_proba(X[held])[:, 1] aucs.append(roc_auc_score(y[held], p)) print(’Validation AUC:’, np.mean(aucs))
+> # training
+> clf = LogisticRegression().fit(X, y)
+> # test
+> proba = clf.predict_proba(build_features(test))[:, 1] pd.DataFrame({’row_id’: test[’row_id’], ’rule_violation’: proba}) .to_csv(’/kaggle/working/submission/submission.csv’)
+
+Fig. 2. An example Kaggle competition and a simplified ML solution developed by Baseline. 
+
+private-test labels and compared with the human leaderboard. MLRC-Bench [74] instead targets research competitions held at ML conferences (e.g., NeurIPS and KDD Cup), but contains only seven tasks. Neither benchmark specifies a temporal or causal ordering among the tasks, i.e., there is no standard of which other tasks may serve as sources of insights for a given task. An agentic MLE system combines an LLM with tools for inspecting data, editing code, executing experiments, and observing validation feedback, typically following the ReAct pattern of interleaved reasoning and tool use [69]. Beyond a single linear trajectory, most recent systems search over candidate solutions. AIDE [29] maintains a tree of solutions that are drafted, debugged, and improved; ML-Master [40] explores such trees with Monte Carlo tree search, and AIRA-dojo [63] compares search policies and operators over them; and FM Agent and LoongFlow [38, 64] evolve populations of solutions. Within a task, these systems accumulate the code, scores, and reflections produced by earlier candidates to guide later ones. 
+
+2.2 Insights in Agentic MLE Systems 
+
+We use insight to denote a reusable, natural-language statement about how to solve MLE tasks, derived from tasks other than the one being solved. Recent systems obtain insights in two ways: 
+
+• External knowledge: Insights are curated from external sources, such as solutions of similar MLE tasks on open-source repositories and competition platforms, API documentations, and forum dis-cussions. Some techniques retrieve them on the fly, typically via web search (e.g., MLE-STAR [50] and MARS [8]); others build a knowledge base offline which is used for retrieval-augmented gen-eration (RAG) at solving time (e.g., DS-Agent [20], MLEvolve [13], AutoMLGen [12], KAPSO [48], AIBuildAI-2 [73], and FM Agent [38]). 
+
+• Self-improvement across tasks: Insights are distilled from the system’s own runs on previous tasks, usually generated by the agent itself or a separate surrogate agent. Examples include the accumulated memory of Agent K [18], the “prior wisdom” cache of ML-Master 2.0 [77], and the takeaways of completed runs of AIBuildAI-2 [73] (which augments its external knowledge base). 
+
+, Vol. 1, No. 1, Article . Publication date: October 2026. Assembling Insights for Agentic Machine Learning Engineering Systems 5
+
+Regardless of their source, insights reach the agent as text in its context, and systems differ in when this happens. In the skill mode [2], only compact metadata of each insight (a name and a description) is placed in the context, and the agent loads the full text on demand, a design known as progressive disclosure. In the playbook mode [72], the insights are placed directly in the initial context as a playbook; unlike a human-written prompt, a playbook is generated and maintained by LLM agents. Skills save context but depend on the agent retrieving the right insight, whereas playbooks make every insight available but consume context even for irrelevant insights. 
+
+2.3 Data Leakage in Evaluating Agentic MLE Systems 
+
+An evaluation of an agentic MLE system suffers from data leakage when the system has access, during solving, to information about the target task that would not be available when solving a genuinely new task, most notably the task’s own winning solutions. This differs from train–test leakage in a generated solution, which some systems check [13, 50], and from contamination of the backend LLM’s pre-training data, which several papers acknowledge as a limitation [50, 63]. Insights are a direct channel for such leakage, because their sources are usually the same public competition materials from which target tasks are drawn. Web search at solving time is not reported to be restricted to materials of other tasks [8, 50], and knowledge bases built from competition platforms typically do not report whether the target tasks were excluded [12, 13]. Some work did exclude the target tasks by competition name [68, 77], which does not cover later editions of the same competition series. For example, MLE-InsightBench contains two AI Mathematical Olympiad: Progress Prize 1 [67] and Progress Prize 2 [16]; if the first were a target task, excluding it by name would still admit the second, whose description states that it builds upon the first and one of whose gold-medal notebooks reuses code from the winning solution of the first. Cross-task memory raises a related concern about the order of tasks. Accumulating experience over a sequence of tasks, i.e., online learning, is not leakage by itself, as it mirrors how practitioners gain experience over time. However, when the memory keeps accumulating across the target tasks themselves, a task may be solved after another task that it influenced. Avoiding leakage thus requires a chronological or causal ordering of the tasks. These practices have been raised as a fairness concern on the MLE-bench leaderboard [62], which is one of the reasons that the leaderboard has paused new submissions. Contamination-free benchmarks in code generation address a similar problem by evaluating only on problems released after the model’s training cutoff [28]; MLE-InsightBench (§3) applies a similar principle to insight sources by using only competitions that cannot have been influenced by the target tasks. 
+
+3 MLE-InsightBench: A Controlled-Environment Benchmark 
+
+In MLE-InsightBench, the source competitions are fixed and disjoint from the target tasks: com-petitions are grouped into domains so that every target task has closely-related peer tasks, and the split is fixed before any insight is assembled. outliers c0 c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 
+
+## 1
+
+> Fig. 3. UMAP embeddings of the com-petition descriptions (12 clusters).
+
+Competition collection . We collect Kaggle competitions using Meta Kaggle [33] and Meta Kaggle Code [34]. We retain competitions that are launched in 2020 or later, use Python, have downloadable datasets, and have high-performing self-contained solutions, and exclude playground competitions; a solution counts as high-performing and self-contained if it received a gold medal and uses no datasets other than the competition’s own. This step yields 191 competitions, from which we manually remove 18 that do not involve training                                         
+
+> , Vol. 1, No. 1, Article . Publication date: October 2026. 6Bihui Jin, Yinxi Li, Kaiyuan Wang, and Pengyu Nie
+> Table 1. Target tasks of MLE-InsightBench.
+> Domain Target task Metric Type Agriculture Recognition CSIRO Biomass [39] 𝑅 2↑Simple Bioinformatics CAFA 5 Protein Function [15] Fmax ↑Simple Geography Retrieval and Localization Image Matching 2025 [5] mAA ↑Simple Medical Image Recognition RSNA Aneurysm Detection [55] AUC ↑Code NLP Jigsaw Community Rules [61] AUC ↑Simple Physiological Signal Processing PhysioNet ECG Digitization [54] SNR ↑Simple Quantitative Finance Mitsui Commodity Prediction [11] Sharpe ↑Code Scientific Signal Processing Ariel Data Challenge 2025 [71] GLL ↑Simple Sport Tournament Prediction March Mania 2025 [59] Brier ↓Simple Time Series Prediction Energy Behavior of Prosumers [14] MAE ↓Code Video Recognition NFL Player Contact [24] MCC ↑Simple Other POG Series S01E01 [47] MAE ↓Simple
+
+ML models (simulation competitions and optimization puz-zles, such as the Santa series [52]), leaving 173 candidate competitions. For each competition, we collect the task de-scription, the public writeups of the teams ranked within the gold-medal zone of the leaderboard, and the high-performing self-contained solution notebooks; we refer to the latter two as the competition’s human-written solutions. 
+
+Domain clustering . We group the candidate competitions by clustering their natural-language descriptions (overview and dataset description), and then manually assign a human-readable label to each cluster. We embed each description with harrier-oss-v1-27b [45], a text embedding model, by instructing it to cluster competitions by ML task formulation and application domain. We then reduce the embeddings to 11 dimensions with UMAP [44] (cosine distance, 20 neighbors) and cluster them with HDBSCAN [6] (minimum cluster size 5, minimum samples 3), which determines the number of clusters from the data and leaves outliers unassigned. This yields 12 clusters and 7 outliers (unable to be clustered), as shown in Figure 3. We label each cluster by inspecting its member competitions and its most distinctive terms under class-based TF-IDF [17], and manually move the outlier WiDS Datathon 2022 [43] into the cluster that contains its other editions. Domains serve two purposes: they define the scope of domain insights, and they ensure that every target task has closely-related peer tasks from which insights can be assembled. We exclude the Audio Recognition cluster, where none of its 8 competitions satisfies the eligibility rule for target tasks described below, as well as 4 other competitions without any writeup from the gold-medal zone, and Jane Street Market Prediction [9], whose dataset was available at our initial collection but is no longer publicly accessible. The resulting MLE-InsightBench consists of 160 competitions in 12 domains, including a residual domain labeled Other for the remaining outliers. 
+
+Held-out split . From each domain, we hold out one eligible competition as a target task and use the remaining 148 competitions as source competitions. A competition is eligible if the mean runtime of its collected solutions is at most the 75th percentile of the runtimes of all collected solution notebooks (25.5 minutes), which keeps the evaluation within a fixed compute budget. We also manually mark some competitions as ineligible where the executable environment for the tasks are hard to replicate (e.g., using a huge dataset): AMP Parkinson’s Disease Progression Prediction [35], Drawing with LLMs [21], Bengali.AI Speech Recognition [25], Cornell Birdcall Identification [26], 
+
+> , Vol. 1, No. 1, Article . Publication date: October 2026.
+
+Assembling Insights for Agentic Machine Learning Engineering Systems 7              
+
+> (a) Assembly agent
+> Assembly task
+> ReAct loop
+> LLM
+> context summary
+> Tools
+> files, notebooks datasets, sandbox web, PDFs, repos images, videos
+> Validator
+> full reads, evidence
+> tool calls observations submit reject
+> Workspace
+> read-only
+> Web
+> filtered insights + evidence
+> (b) Assembly workflow
+> source competition 1. Assemble 148 competition insights domain descriptions 2. Synthesize 12 domain insights problem–fix writeups 3. Assemble 1,068 raw improvement insights
+> 4. Cluster, synthesize
+> 16 improvement insights
+> per domain clustered
+
+Fig. 4. Architecture of MLE-InsightForge: (a) the assembly agent and (b) the four assembly stages. 
+
+and the BirdCLEF series (e.g., BirdCLEF+ 2025 [36]). Among the eligible competitions of the most recent year in a domain, we select the one with the shortest solution runtime. The resulting non-descendant split ensures that every source competition is a causal non-descendant of its target task, i.e., a competition that cannot have been influenced by the target task as a later edition of the same series or reusing its solutions. This mirrors how insights would be used in practice: an agentic MLE system facing a new task can draw on prior experience, but not on experience derived from the new task itself. While a chronological split (i.e., choosing the latest competition of each domain) is more straightforward, it would reduce the size of benchmark because the latest competitions sometimes are not eligible as a target task, causing dropping of valuable source competitions that could otherwise be used with our more careful split. Table 1 lists the 12 target tasks, of which 9 are standard competitions with a submission file and 3 are code competitions whose predictions are produced through a competition-specific evaluation API. 
+
+Leakage control . MLE-InsightBench controls the sources of insights at three points. First, the materials of the target tasks (datasets, descriptions, writeups, and solutions) are excluded from insight assembly, so no assembled insight can be derived from a target task’s own winning solutions. Second, because the split only requires the source competitions to be causal non-descendants of the target task, earlier editions of a recurring competition series (e.g., March Machine Learning Mania) remain legitimate source competitions, as they would be for a practitioner. Third, the agentic MLE system under evaluation is not given web-search tools and receives only the public data of the target task; the private-test inputs are substituted only when the final solution is graded (same as how Kaggle grades submissions), and the private-test labels are never exposed. 
+
+4 Methodology 4.1 MLE-InsightForge: Insight Assembly Agent 
+
+MLE-InsightForge explores the descriptions, datasets, top human-written solutions, and writeups of the source competitions and assembles three types of insights from them. Separating what 
+
+insights are assembled from how they are injected (§4.2) lets us vary the two independently. 
+
+4.1.1 Agent Architecture. MLE-InsightForge (Figure 4(a)) is a ReAct-style agent [69], using 
+
+gpt-5.6-sol-pro as its backend LLM during our study. Each run of the agent performs one assembly task, specified by the instructions of its stage and the list of source files it must read. The agent’s tools read files and notebooks, inspect datasets, run targeted analyses in a sandboxed 
+
+, Vol. 1, No. 1, Article . Publication date: October 2026. 8 Bihui Jin, Yinxi Li, Kaiyuan Wang, and Pengyu Nie 
+
+container (e.g., checking a preprocessing step or a validation split claimed in a writeup, without rerunning the solution end-to-end), and read the materials linked from writeups, such as web pages, PDFs, code repositories, images, and videos. 
+
+Leakage prevention . The source materials are mounted read-only in the agent’s workspace, which contains only the source competitions and not the target tasks. Because some URLs in the source materials may also link to the target tasks, web access goes through a blacklist of 1,985 URL patterns, which we extract from the descriptions, writeups, and solution notebooks of the target tasks; links to Kaggle or GitHub the competition’s or repository’s all sub-pages, while general documentation and tutorial sites (e.g., library documentation and Wikipedia) are manually exempted. 
+
+Evidence-based submission . The agent submits each insight through a validated submission interface, which rejects the submission until the agent has read every required source in full, otherwise returns the incomplete insight to the agent for repair. To minimize hallucination, the interface also requires an evidence record for every insight, listing the original source passages it is based on; this ensures that every insight can be traced back to its original source. 
+
+Assembly stages . Figure 4(b) shows the four stages in which MLE-InsightForge runs. It first assembles one competition insight per source competition and then synthesizes one domain insight per domain from the competition insights of that domain. Independently of these two types, it assembles raw improvement insights from the writeups and consolidates them by clustering. 
+
+4.1.2 Insight Types. MLE-InsightForge assembles 148 competition insights, 12 domain insights, and 16 improvement insights, at a total API cost of $903 USD at the list prices of gpt-5.6-sol-pro 
+
+($565, $22, and $317 USD for the three types, respectively). 
+
+Competition insights . MLE-InsightForge first reads the description to identify the objective, data, metric, and constraints, and then reads every collected writeup in full. It consults the solution notebooks to disambiguate implementation details and to check that a technique claimed in a writeup is actually present, and inspects the datasets to understand their characteristics and to check claims about them. The resulting insight is organized around the decisions that distinguished the winning solutions and states the conditions under which each decision was made, rather than reproducing a particular solution, since the insight is used for other tasks, to which a complete solution tailored to the source competition’s data and metric does not transfer. 
+
+Domain insights . A target task has no insight of its own, but it shares task properties with the other competitions in its domain. MLE-InsightForge reads the descriptions and competition insights of all source competitions in the domain and reconciles recommendations that recur, complement each other, or conflict. It replaces competition-specific prescriptions with conditional guidance; for example, it associates a validation strategy with grouped subjects or temporal deployment rather than as universally applicable. A domain insight drops recommendations specific to a single competition, keeping only those supported by several competitions or a task archetype. outliers c0 c1 c2 c3 c4 c5 c6 c7 c8 c9 c10 c11 c12 c13 c14 
+
+## 1
+
+> Fig. 5. UMAP embeddings of the raw improvement insights (15 clusters).
+
+Improvement insights . While the other two types describe the decisions behind the final solutions, improvement in-sights capture how their authors diagnosed and fixed prob-lems along the way, by connecting an observed problem (e.g., a validation split that does not match the deployment setting, or an inference pipeline that exceeds the runtime budget) to the resolution that fixed it. MLE-InsightForge first filters writeups, with an LLM, for those that report both a con-crete problem and an actionable resolution. For each retained writeup, it then assembles standalone insights, keeping only those whose outcome is directly reported in the writeup; this  
+
+> , Vol. 1, No. 1, Article . Publication date: October 2026. Assembling Insights for Agentic Machine Learning Engineering Systems 9
+
+step yields 1,068 raw improvement insights. Because many improvement strategies recur across competitions, exposing all of them individually would make them costly to discover and highly redundant. We therefore cluster the raw improvement insights by their descriptions, using the same approach as Domain Clustering (§3), and let MLE-InsightForge synthesize each cluster into one consolidated insight under the same evidence constraints. Specifically, we embed the text of each raw insight with harrier-oss-v1-27b , using an instruction to identify the pre-diction task type, data modality, and application domain that the insight targets, and cluster the embeddings with UMAP (15 dimensions, 20 neighbors) and HDBSCAN (minimum cluster size 20, minimum samples 5); we select these hyperparameters by a grid search for clusters that are stable across random seeds, align with the data modality and solution stage of the insights, and cover most insights. This yields 15 clusters, and the outliers (4.9% of the raw insights) form the residual cluster, as shown in Figure 5. MLE-InsightForge then synthesizes each cluster into one consolidated improvement insight, including one for the residual cluster, resulting in 16 improvement insights. A manifest records the member insights and evidence of each cluster, so that every improvement insight remains traceable to its raw ones. 
+
+4.1.3 Insight Representation. A competition insight or domain insight consists of insight items following the trigger–action pattern: a trigger (a task or data condition that can be checked before acting), one recommended action, and a rationale for its expected effect. Triggers are phrased in terms of general task and data properties, so the agentic MLE system can skip the items that do not apply to its task; conflicting findings are kept as items with mutually exclusive triggers. The items are grouped by five aspects of an ML solution (data modality, data, model, training, and other) and ordered within each aspect by the cost of following them. An improvement insight is a single item whose trigger is the observed problem and whose action is the resolution, elaborated with its limitations, cost, and how to check whether it worked. Each insight has a name and a description; its evidence records are stored separately and enter the context only if explicitly read. 
+
+4.2 Usage of Insights 
+
+4.2.1 Base Agentic MLE System. The assembled insights can be injected into any agentic MLE system that accepts textual context. In our study, we inject them into a ReAct-style agentic MLE system that develops solutions in an isolated container with access to the public data of the target task, whose workflow is shown in Figure 6. The system can inspect data, edit files, execute candidate solutions, and validate submissions. Each execution is recorded as a node in a solution tree, so the system can branch from an earlier candidate when a modification fails, similar to AIDE [29]. At the deadline, the selected solution is rerun from scratch on the private-test inputs and graded outside the agent loop. Without insights, this system is the Baseline of our evaluation (§5).  
+
+> current domain other domains domain insight improvement insights competition insights source competition target task
+> Fig. 7. Scope of the insights injected for a tar-get task.
+
+4.2.2 Insight Injection Modes. For a target task, the sys-tem receives the domain insight of the task’s domain, the competition insights of the source competitions in the same domain, and all improvement insights, which are assembled from the source competitions of every domain (Figure 7). The two injection modes hold the insights, system, prompt, harness, task, and budget con-stant, and only change when the competition insights and improvement insights enter the context; the do-main insight is always in the initial context. 
+
+> , Vol. 1, No. 1, Article . Publication date: October 2026.
+
+10 Bihui Jin, Yinxi Li, Kaiyuan Wang, and Pengyu Nie      
+
+> container with public data only
+> Orchestrator MLE agent (ReAct loop) Solution tree Submission validator Insight skills task, public data, insights (playbook), insight descriptions (skill)
+> loop [until final submission or budget exhausted] LLM call: reason and act execute solution new node, val. score validate submission valid / format errors read skill insight details submit final node grading: attach private-test set, rerun solution, compute metrics
+
+Fig. 6. Workflow of the agentic MLE system, with the insights highlighted. 
+
+Skill mode . Following the progressive-disclosure de-sign of Agent Skills [2], the initial context lists only compact metadata (name and short description) of each available insight. This mode preserves context for task observations and execution feedback, but its benefit depends on the system recognizing a relevant insight from its description and retrieving it. 
+
+Playbook mode . Following the use of evolving playbooks as agent context [72], the full texts of all available insights are rendered directly into the system prompt before the system begins. This mode removes the retrieval decision and makes every insight immediately available, at the cost of a longer context that may contain insights irrelevant to, or inconsistent with, the target task. 
+
+4.2.3 Application to New Competitions. The assembled insights are not tied to MLE-InsightBench: a new competition from outside it can use them in the same way as a target task. For one or a few new competitions, the only step needed is to determine the domain of each competition, either manually or by embedding its description as in Domain Clustering (§3) and assigning it to the closest cluster; the domain insight and competition insights of that domain and all improvement insights are then directly usable without further assembly. Once a new competition has ended and its writeups and solutions are available, it can be added as a source competition by an incremental update that reruns only the affected assembly tasks. MLE-InsightForge assembles the competition insight of the new competition and re-synthesizes the domain insight of its domain; if its writeups yield new raw improvement insights, they are assigned to the existing clusters, and only the improvement insights of the clusters that receive them are re-synthesized. Re-clustering is needed only when many competitions have been added, which may shift the cluster structure, or when a new competition belongs to no existing domain. 
+
+, Vol. 1, No. 1, Article . Publication date: October 2026. Assembling Insights for Agentic Machine Learning Engineering Systems 11 
+
+Domain insight 
+
+name: Time Series Prediction 
+
+description: This category covers temporal prediction from panels of geographic rates, regional cumulative outcomes, and hierarchical item-location counts. [. . . ] 
+
+## DATA 
+
+- With a fixed multi-step horizon, 1 use target lags and rolling baselines anchored at least one horizon behind each target because this exposes recurring structure without future labels or recursive baseline error. 
+
+- When a rate target’s denominator changes over time, 2 normalize historical rates to the denominator available for the forecast period because denominator revisions otherwise masquerade as target dynamics. 
+
+- When external features arrive with reporting lags, 3 align each backtest value to its actual publication vintage because later releases in earlier folds create forward bias. [. . . ] 
+
+Competition insight 
+
+name: godaddy-microbusiness-density-forecasting 
+
+description: Monthly U.S. county records provide [. . . ] The task is to pro-duce static forecasts of future monthly microbusiness density for every county. 
+
+## DATA 
+
+- When a rate target’s denominator changes across years, 2 normalize all historical rates to the denominator ex-pected at forecast time because otherwise population revisions masquerade as business dynamics. 
+
+- When entities have tiny counts or nearly flat histories, use last-value forecasts for that segment because [. . . ] 
+
+- When external annual or monthly covariates are merged into backtests,  
+
+> 3
+
+align each value to its real publication vintage because later census values in earlier folds created forward bias. [. . . ] 
+
+Improvement insight 
+
+name: deployment-contract-temporal-backtesting 
+
+description: When a forecasting or sequential prediction task is served at fu-ture origins and ordinary batch validation differs from the serving contract in avail-able history, eligible queries, state-update order, or forecast-horizon coverage. When a forecasting or sequential task has batch validation that differs from future serving in available history, eli-gible queries, state updates, or horizon coverage, gate every candidate with one deployment-contract backtest replayed across several forecast origins, because  
+
+> 3
+
+matching the as-of information bound-ary and full served horizon removed leakage-driven rankings and made model selection more stable across later periods. [. . . ] 
+
+## Example 
+
+contract = read_serving_contract(...) 
+
+[. . . ] 
+
+(a) Excerpts of the three types of insights available for the task. 
+
+Without insights MAE ↓: 29.24 (validation), 234.15 (private-test) 
+
+@@ features @@ LAGS = [48, 72, 96, ..., 1008] # hours  
+
+> 1
+
+− out[f’rmean_{w}’] = piv.rolling(w).mean() 
+
+− .shift(2, freq=’h’)  
+
+> 3
+
+− df[’client_date’] = df[’datetime’] 
+
+− .dt.normalize() 
+
+− df = df.merge(c_agg, on=[..., ’client_date’]) @@ training @@  
+
+> 2
+
+− m.fit(sub[feature_cols], sub[’target’]) @@ prediction through the time-series API @@ 
+
+for (test, revealed_targets, client_b, ...) in iter_test:  
+
+> 3
+
+− t = t.merge(fl.c_agg, 
+
+− on=[..., ’client_date’]) 
+
+− t[num_cols] = t[num_cols].fillna(0) env.predict(...) 
+
+With insights MAE ↓: 31.91 (validation), 57.12 (private-test) 
+
+@@ features @@ LAGS = [48, 72, 96, ..., 1080] # hours  
+
+> 1
+
++ d[’t_mean7d’] = np.nanmean( + d[[f’t_lag{h}’ for h in LAGS[:7]]], axis=1)  
+
+> 3
+
++ client[’as_of_date’] = client[’date’] + + pd.Timedelta(days=2) + d = d.merge(client, on=[..., ’as_of_date’]) @@ training @@  
+
+> 2
+
++ d[’target_ratio’] = d[’target’] + / d[’installed_capacity’] + y = trm[’target_ratio’] # production @@ prediction through the time-series API @@ 
+
+for (test, revealed, client, ...) in iter_test:  
+
+> 3
+
++ c[’as_of_date’] = c[’date’] + + pd.Timedelta(days=2) + test = test.merge(c, on=[..., ’as_of_date’])  
+
+> 2
+
++ pred = pred * test[’installed_capacity’] env.predict(...) 
+
+(b) Excerpts of the final solutions without and with insights; numbered changes relate to (a). Fig. 8. Running example on Energy Behavior of Prosumers. 
+
+4.3 Running Example 
+
+We illustrate the assembly and usage of insights with the competition Energy Behavior of Prosumers, the target task of the Time Series Prediction domain. The task asks for hourly forecasts of the electricity produced and consumed by Estonian customers with solar panels, given weather forecasts, energy prices, and client data such as the installed photovoltaic capacity, and is evaluated by mean absolute error (MAE). Predictions are made through a time-series API that serves the test data day by day, in which the latest revealed targets and client data lag two days behind the prediction times. 
+
+, Vol. 1, No. 1, Article . Publication date: October 2026. 12 Bihui Jin, Yinxi Li, Kaiyuan Wang, and Pengyu Nie 
+
+The four source competitions of the domain forecast COVID-19 cases, microbusiness density, and retail sales, and none of them involves energy. 
+
+Insights . Figure 8a shows excerpts of the three types of insights available for this task. Three aspects of the domain insight have triggers that hold for Energy Behavior of Prosumers: 1 target lags anchored at least one horizon behind each target match the two-day delay of the revealed targets, 2 the denominator normalization matches the production that scales with the installed capacity, which grows over time, and 3 aligning external features to their publication vintage matches the two-day delay of the client data. The competition insight of GoDaddy Microbusiness Density Forecasting [23] contains the items from which 2 and 3 are generalized, whereas other items, such as the one on entities with tiny counts, have triggers that do not hold and can be skipped. The improvement insight deployment-contract-temporal-backtesting recommends accepting a candidate solution only if it improves in a backtest that replays the serving contract, i.e., the available history, the gap, and the horizon, across several forecast origins, which requires  
+
+> 3
+
+matching the information available at each origin. 
+
+Impact on the solutions . Over six runs each, the agentic MLE system reaches a private-test MAE of 228 ± 76.8 without insights and 64.8 ± 6.15 with insights (lower is better, since MAE measures the prediction error). Figure 8b compares the final solutions of a run without insights and a run with insights, in which all three insights are injected via the playbook mode. The solution without insights anchors its rolling target means only two hours before each prediction time and joins the client data of the same day, although the API reveals the targets and client data only two days later. Its hold-out validation on the training data cannot detect this mismatch and reports an MAE of 29.24; at prediction time, the rolling means and the capacity are missing (the client data served by the API is ignored), filled with zeros, and the private-test MAE rises to 234.15. The solution with insights makes three changes that implement the highlighted insight parts: 1 it computes its rolling means only from target lags of at least 48 hours, 2 it learns the production per unit of installed capacity and rescales its predictions by the capacity, and 3 it joins the client data as of two days earlier, both in training and from the data served by the API. Its validation MAE (31.91) is worse but reflects the deployment setting, and its private-test MAE is 57.12. 
+
+5 Evaluation 
+
+We answer the following research questions: 
+
+• RQ1 : How much do the assembled insights improve the solutions of an agentic MLE system? 
+
+• RQ2 : How do the three types of insights contribute to the improvement? 
+
+• RQ3 : How do the two injection modes, skills and playbooks, compare in effectiveness and cost? 
+
+• RQ4 : Do the improvements generalize across backend LLMs? 
+
+5.1 Experimental Setup 
+
+Target tasks and system . We evaluate on the 12 held-out target tasks of MLE-InsightBench (Table 1), using the insights that MLE-InsightForge assembled from the 148 source competitions. The base agentic MLE system is backed by deepseek-v4-flash-0731 . Each run receives one NVIDIA RTX A6000 GPU (48G of RAM built with cuda_11.5.r11.5), four AMD EPYC 7343 CPUs (16 cores @ 1.5GHz), a 12-hour development budget, and at most 250 agent steps.                      
+
+> Table 2. Insight injection modes of each condition.
+> Mode Domain Competition Improvement Baseline –––Full-skill playbook skill skill Full-playbook playbook playbook playbook D-playbook playbook ––C-playbook –playbook –I-playbook ––playbook
+
+Conditions . Table 2 lists the six conditions in our experiments, combining different injection modes. Baseline receives no insight. Full-skill and Full-playbook inject all three types of in-sights, as skills and as a playbook, respectively  
+
+> , Vol. 1, No. 1, Article . Publication date: October 2026. Assembling Insights for Agentic Machine Learning Engineering Systems 13
+
+Table 3. Overall results.                                                                  
+
+> Baseline Full-skill Full-playbook D-playbook C-playbook I-playbook Normalized private-test score 0.302 0.676 0.673 0.595 0.608 0.611 Change from Baseline –123.9% 122.8% 96.9% 101.4% 102.1% Normalized validation score 0.468 0.575 0.548 0.560 0.600 0.572 Per-task input tokens 24.0M 25.9M 30.1M 27.3M 25.4M 26.7M Per-task reasoning tokens 20.4K 68.1K 66.6K 77.9K 77.8K 74.4K Per-task output tokens 114.9K 123.3K 129.1K 250.1K 258.2K 231.9K Per-task time [min] 228 292 297 335 337 282 Total time [day] 11.4 14.6 14.9 16.7 16.9 14.1 Per-task cost $1.72 $1.88 $1.95 $2.00 $1.74 $1.77 Total cost $124 $135 $141 $144 $125 $127
+
+(§4.2.2). Specially, domain insights are always injected as playbook since they are short and most relevant. The three ablation conditions, D-playbook, C-playbook, and I-playbook, each inject a single type of insight (domain insights, competition insights, and improvement insights, respectively) as a playbook. 
+
+Metrics . The primary metric is the private-test score of the final solution, computed by the task’s MLE-bench-compatible grader. Because raw scores are not comparable across MLE-InsightBench tasks, we min–max normalize the scores of each task on a fixed range, after reversing lower-is-better metrics, and compute the average improvement over the baseline for each mode across all tasks: 
+
+Δ = Δ𝑚 − Δ𝐵𝑎𝑠𝑒𝑙𝑖𝑛𝑒 
+
+Δ𝐵𝑎𝑠𝑒𝑙𝑖𝑛𝑒 
+
+× 100% , Δ𝑚 = 1
+
+𝑇 
+
+> 𝑇
+
+∑︁ 
+
+> 𝑡 =1
+
+1
+
+𝐾 
+
+> 𝐾
+
+∑︁ 
+
+> 𝑘 =1
+
+𝑁 𝑚,𝑡,𝑘 , 𝑁 𝑚,𝑡,𝑘 = 𝑥 𝑚,𝑡,𝑘 − 𝐿 𝑡 
+
+𝑈 𝑡 − 𝐿 𝑡 
+
+, (1) where Δ𝑚 and Δ𝐵𝑎𝑠𝑒𝑙𝑖𝑛𝑒 denote the average normalized scores of mode 𝑚 and Baseline over 𝑇 
+
+tasks ( 𝑇 = 12) and 𝐾 repetitions ( 𝐾 = 6), 𝑁 𝑚,𝑡,𝑘 and 𝑥 𝑚,𝑡,𝑘 are the normalized and raw scores of mode 𝑚 on task 𝑡 in the 𝑘 -th run, and 𝐿 𝑡 and 𝑈 𝑡 are the worst and best scores over the runs of Baseline, Full-skill, and Full-playbook on task 𝑡 . The same range is used for every condition to put all conditions on one scale, so an ablation run outside it may be normalized to below 0 or above 1. To measure cost, we record the input, reasoning, and output tokens consumed by the backend LLM and the wall-clock time of each run. We convert the tokens to a monetary cost at the OpenRouter API prices of deepseek-v4-flash-0731 : $0.44 per million uncached input tokens, $0.014 per million cached input tokens, and $1.32 per million output tokens, where the output tokens include the reasoning tokens. For each task and condition, we report the mean with a 95% Student-𝑡 confidence interval, and compare each condition with Baseline using a two-sided Mann–Whitney 𝑈 test [41] at 𝛼 = 0.05. Since each condition is compared with Baseline on 12 tasks, we also report the number of significant tasks after the Holm–Bonferroni correction [22] over the tasks of each condition. Every condition has 72 runs, i.e., six runs per task. In addition to the private-test score of the final solution, we analyze the validation scores that the system measures on its own validation split for every scored candidate solution during development, which show how the solution quality evolves over time. The validation scores are normalized in the same way as private-test scores; at each minute, we take the median over the runs of a task and average it over tasks. 
+
+> , Vol. 1, No. 1, Article . Publication date: October 2026.
+
+14 Bihui Jin, Yinxi Li, Kaiyuan Wang, and Pengyu Nie 
+
+Table 4. Per-task change of the normalized score from Baseline (bold: significant). 
+
+Competition Full-skill Full-playbook D-playbook C-playbook I-playbook Ariel Data Challenge 2025 186.6% 193.8% 154.4% 180.0% 232.2% 
+
+CAFA 5 Protein Function 116.2% 198.4% 162.0% 118.3% 91.6% CSIRO Biomass 176.6% 193.5% 151.5% 123.4% 214.6% 
+
+Energy Behavior of Prosumers 149.4% 148.9% 106.7% 132.9% 112.5% 
+
+Image Matching 2025 680.8% 613.4% 174.2% 430.5% 169.9% Jigsaw Community Rules 236.9% 215.4% 155.3% 153.1% 197.4% 
+
+March Mania 2025 110.6% 107.5% 79.8% 110.7% 76.3% 
+
+Mitsui Commodity Prediction 229.2% 282.8% 248.0% 39.4% 248.4% 
+
+NFL Player Contact 209.6% 243.0% 195.4% 186.3% 237.1% 
+
+POG Series S01E01 7.2% -24.2% 3.8% -1.4% -12.7% PhysioNet ECG Digitization 118.0% 67.9% 83.2% 150.5% 116.3% 
+
+RSNA Aneurysm Detection 84.7% 100.5% 78.6% 82.0% 63.6% Tasks improved 12 11 12 11 11 Tasks improved significantly 11 11 9 8 80 250 500            
+
+> Minutes
+> 52.5 55.0 57.5
+> Validation score (a) Best so far
+> 0250 500
+> Minutes since first score
+> 0.0 2.5 5.0 7.5
+> (b) Gain
+> 0200 400
+> Minutes since first score
+> 0.0 2.5 5.0 7.5
+> (c) Gain, ablation
+> 0250 500
+> Minutes since first score
+> 0246
+> (d) Gain minus Baseline’s
+> Baseline Full-skill Full-playbook D-playbook C-playbook I-playbook
+> 1
+
+Fig. 9. Validation scores during development; gains are over the first solution of Baseline. 
+
+5.2 RQ1: Effectiveness of Insights 
+
+As shown in Tables 3 and 4, injecting the assembled insights improves the normalized score from 0.302 for Baseline to 0.676 for Full-skill (123.9%) and 0.673 for Full-playbook (122.8%). The improvement is consistent across tasks: Full-skill improves the mean score on 12 of the 12 tasks, significantly so on 11 of them (11 after the Holm–Bonferroni correction), with POG Series S01E01 as the only task where the improvement is not significant; Full-playbook improves on 11 tasks, significantly on 11 (10 after the correction). The largest gains occur on tasks, such as Image Matching 2025 and Energy Behavior of Prosumers, where the validation design and task-specific modeling choices documented in peer competitions are consequential. Figure 9(a, b) shows that the insights help both in drafting the initial solution and in improving it: the first scored solutions of Full-skill and Full-playbook are 1.8 and 2.9 points above those of Baseline; they reach the final best score of Baseline after 80 and 40 minutes, and end with gains of 7.8 and 5.9 points over the first solution of Baseline, compared with 3.3 points for Baseline itself. 
+
+, Vol. 1, No. 1, Article . Publication date: October 2026. Assembling Insights for Agentic Machine Learning Engineering Systems 15 3,838 5,376 3,883 4,918 3,666 8,786 509,717   
+
+> Baseline Full-skill Full-playbook
+> (a) Baseline, Full-skill, and Full-playbook
+> 1,184 1,238 860 12,345 766 2,081 1,982 4,566 1,232 1,328 2,830 6,896 2,873 7,954 509,377
+> Baseline D-playbook C-playbook I-playbook
+> (b) Baseline and the single-type ablations 1
+
+(a) Baseline, Full-skill, and Full-playbook 3,838 5,376 3,883 4,918 3,666 8,786 509,717    
+
+> Baseline Full-skill Full-playbook
+> (a) Baseline, Full-skill, and Full-playbook
+> 1,184 1,238 860 12,345 766 2,081 1,982 4,566 1,232 1,328 2,830 6,896 2,873 7,954 509,377
+> Baseline D-playbook C-playbook I-playbook
+> (b) Baseline and the single-type ablations 1
+
+(b) Baseline and the single-type ablations Fig. 10. Private-test items correctly predicted only by the enclosing conditions. 
+
+Answer to RQ1: The assembled insights improve the solution quality of the agentic MLE system by 123.9% (Full-skill) and 122.8% (Full-playbook) in normalized score, with Full-skill improving on 12 of the 12 target tasks; the system with insights starts from better solutions and improves them faster. 
+
+5.3 RQ2: Contribution of Insight Types 
+
+We compare Full-playbook with the single-type ablations (last three columns of Table 3). Each type of insight alone improves the normalized score over Baseline (0.302): to 0.595 with domain insights (96.9%), 0.608 with competition insights (101.4%), and 0.611 with improvement insights (102.1%). All three remain below Full-playbook (0.673). Hence, the three types are comple-mentary rather than redundant, and their benefits accumulate when combined. The accumulation is not additive, but the combination is more robust: the best single type varies across tasks (e.g., I-playbook on Ariel Data Challenge 2025 and CSIRO Biomass, and C-playbook on PhysioNet ECG Digitization), whereas Full-playbook has a higher mean score than all three single-type conditions on 7 of the 12 tasks. They are also less consistent: their improvement is significant on only 9, 8, and 8 tasks (2, 4, and 0 after the correction), compared with 11 (10) for Full-playbook (Table 4). Figure 9(c, d) shows the validation scores of the ablation modes during development. All three single-type modes are ahead of Baseline from their first scored solution on, by similar margins in the first 100 minutes (3.0, 2.2, and 3.1 points); afterwards, C-playbook pulls ahead and ends 6.1 points above Baseline, compared with 4.4 and 3.2 points for I-playbook and D-playbook. On the five tasks graded on per-item correctness (CAFA 5, Jigsaw, March Mania, NFL, and RSNA), we also compare the private-test items that each condition predicts correctly, i.e., that at least four of its six runs predict correctly. Each type also yields private-test items that no other condition predicts correctly (Figure 10(b)): 12,345 with competition insights, 4,566 with improvement insights, and 1,238 with domain insights, compared with 1,184 for Baseline. 
+
+Answer to RQ2: The three types of insights are complementary: each type alone improves the score, but significantly on fewer tasks and less than the combination of all three types; competition insights contribute the most to the late-stage improvements and to the predictions that no other condition gets right. 
+
+5.4 RQ3: Comparison of Injection Modes 
+
+Overall, the two injection modes reach similar normalized scores (0.676 for Full-skill and 0.673 for Full-playbook in Table 3), but the better mode varies across tasks. Full-playbook has the higher mean score on 6 tasks and Full-skill on 6; notably, Full-playbook falls below Baseline on POG Series S01E01 (though not significantly), whereas Full-skill stays above it. A playbook guarantees that  
+
+> , Vol. 1, No. 1, Article . Publication date: October 2026. 16 Bihui Jin, Yinxi Li, Kaiyuan Wang, and Pengyu Nie
+
+Table 5. Private-test scores (mean ±95% CI) with two backend LLMs (bold: significant). 
+
+Competition LLM Baseline Full-skill Full-playbook 
+
+Image Matching 2025 (mAA ↑)
+
+deepseek-v4-flash-0731 21.1 ±1.8 35.2 ±6.7 33.8 ±5.4 
+
+GPT-6.1-Sol 42.8 ±1.6 52.0 ±9.3 49.9 ±10.5 
+
+POG Series S01E01 (MAE ↓)
+
+deepseek-v4-flash-0731 0.0255 ±0.0009 0.0249 ±0.0004 0.0273 ±0.0031 
+
+GPT-6.1-Sol 0.0261 ±0.0014 0.0251 ±0.0006 0.0253 ±0.0005 
+
+Overall 
+
+Change from Baseline deepseek-v4-flash-0731 – 61.8% 27.5% 
+
+GPT-6.1-Sol – 80.3% 61.9% Total time [day] deepseek-v4-flash-0731 1.7 2.1 2.5 
+
+GPT-6.1-Sol 3.6 3.7 3.9 Total cost deepseek-v4-flash-0731 $22 $21 $22 
+
+GPT-6.1-Sol $153 $128 $160 
+
+every insight is seen but can steer the system toward insights that do not fit the task, whereas skills let the system skip irrelevant insights but depend on it retrieving the relevant ones. Although Full-skill reaches a similar score to Full-playbook, its trajectories show that the system rarely retrieves the full text of a skill: only 19 of its 72 runs call read_skill at all, 14 of them to read a competition insight (typically that of the most similar source competition, e.g., Image Matching Challenge 2024 [4] for Image Matching 2025) and 5 to read an improvement insight. The improvement of Full-skill therefore stems mostly from what every run receives in its initial context rather than from the retrieved texts: the domain insight, with which D-playbook alone reaches 0.595, and the metadata of the skills, whose descriptions state when each insight applies, e.g., the problem that each improvement insight resolves. The two modes also lead to different correct predictions (Figure 10(a)): 5,376 private-test items are predicted correctly only by Full-skill and 4,918 only by Full-playbook, compared with 3,838 only by Baseline. The two modes differ in cost. Relative to Baseline, Full-skill increases the per-task input tokens by only 7.7%, whereas Full-playbook increases them by 25.2%, because the playbook is carried in the context of every model call; the output tokens and time are similar (Table 3). The per-task cost is only $1.72, $1.88, and $1.95, respectively, as most input tokens hit the prompt cache. 
+
+Answer to RQ3: The better injection mode varies across tasks; overall, skills are more cost-effective, reaching a similar score to playbooks with 7.7% instead of 25.2% additional input tokens. 
+
+5.5 RQ4: Generalizability across LLMs 
+
+We repeat Baseline, Full-skill, and Full-playbook using GPT-6.1-Sol , a proprietary LLM perceived to be stronger than deepseek-v4-flash-0731 , on two of the target tasks: Image Matching 2025, where the insights bring the largest gain (680.8% with Full-skill, 613.4% with Full-playbook), and POG Series S01E01, the only task with no significant improvement (7.2% with Full-skill, -24.2% with Full-playbook). We use the same insights and six runs per task. As shown in Table 5, the insights are not specific to one backend LLM: on the normalized scale over both tasks, they also improve GPT-6.1-Sol by 80.3% with Full-skill and 61.9% with Full-playbook. GPT-6.1-Sol is a stronger backend than deepseek-v4-flash-0731 on Image Matching  
+
+> , Vol. 1, No. 1, Article . Publication date: October 2026. Assembling Insights for Agentic Machine Learning Engineering Systems 17
+
+2025: its Baseline already reaches an mAA of 42.8, close to the gold-medal threshold of the human leaderboard (43.34). Although the improvement is smaller than with deepseek-v4-flash-0731 ,the insights still significantly improve the normalized score by 427.9% with Full-skill and 326.9% with Full-playbook, lifting the mean mAA beyond the gold-medal threshold (52.0 and 49.9). On POG Series S01E01, where the insights do not help deepseek-v4-flash-0731 , they improve the normalized score of GPT-6.1-Sol by 38.2% with Full-skill and 29.8% with Full-playbook, although not significantly over six runs; this suggests that a stronger backend LLM can make better use of the insights. Still, no condition with either backend LLM reaches the median of the human leaderboard on this task (MAE 0.016845), so the tasks of MLE-InsightBench remain challenging for future agentic MLE systems. Unlike deepseek-v4-flash-0731 , GPT-6.1-Sol actively retrieves skills: 12 of its 12 Full-skill runs call read_skill (12 for improvement insights and 6 for competition insights), which may explain why Full-skill beats Full-playbook with GPT-6.1-Sol on both tasks. The two backend LLMs also develop solutions differently: on Image Matching 2025, GPT-6.1-Sol 
+
+creates its first solution node earlier (median step 19 vs. 165), uses most of the 12-hour budget (594–629 minutes), and tries 9.2–13.3 solution nodes per run, whereas deepseek-v4-flash-0731 
+
+usually submits its final solution after 210–320 minutes with 2.5–4.0 nodes. 
+
+Answer to RQ4: The improvements from insights generalize to GPT-6.1-Sol , a stronger proprietary LLM from a different model family: the insights improve its normalized score by 80.3% (Full-skill) and 61.9% (Full-playbook), lifting it beyond the gold-medal threshold on Image Matching 2025. Still, some MLE tasks remain challenging to LLM agents: on POG Series S01E01, neither deepseek-v4-flash-0731 nor GPT-6.1-Sol reaches the median of the human leaderboard, with or without insights. 
+
+6 Limitations 
+
+Task scope . MLE-InsightBench is derived from Kaggle competitions, which provide realistic end-to-end MLE tasks but do not represent every production setting. Kaggle emphasizes predictive performance under a fixed metric and submission interface, whereas deployed machine learning systems also require maintainability, monitoring, fairness, and privacy. 
+
+Domain construction . The domains of MLE-InsightBench are induced by clustering competition descriptions. Other representations or clustering choices could change which competitions are considered closely related and thus contribute insights to a target task. 
+
+Insight quality . The insights are assembled by an LLM-based agent. To reduce the risk of hallu-cination and misrepresentation, MLE-InsightForge must read every required source in full and back each insight with an evidence record, which links the insight to the human-written passages it is based on and makes it traceable. 
+
+Leakage beyond the benchmark . MLE-InsightBench excludes the materials of every target task from the insight sources, but it cannot control what the backend LLMs have learned during pre-training. Because Kaggle writeups and notebooks are public, a backend LLM may have seen solutions of the target tasks; this affects all conditions equally, including Baseline, and therefore may inflate absolute scores. Selecting the most recent eligible competition of each domain as the target task reduces, but does not eliminate, this risk. 
+
+Models and costs . The main results use one backend LLM for the agentic MLE system and one LLM for MLE-InsightForge, so they may depend on these models’ knowledge, tool-use behavior, and long-context capabilities; RQ4 studies the former dependency. The 12-hour, GPU-backed budget also limits accessibility and may favor approaches that spend more compute. Assembling the insights from all 148 source competitions with gpt-5.6-sol-pro cost $903 USD ($1,544 USD including runs repeated during development), a one-time cost that is amortized over all tasks  
+
+> , Vol. 1, No. 1, Article . Publication date: October 2026. 18 Bihui Jin, Yinxi Li, Kaiyuan Wang, and Pengyu Nie
+
+of a domain. The experiments are also costly: with deepseek-v4-flash-0731 , each condition takes 11.4–16.9 GPU days and $124–$144 in API costs, and with GPT-6.1-Sol , the API costs of a condition on all 12 target tasks would reach $957, extrapolated from up to $160 on two tasks. Running MLE-InsightForge with a different backend LLM may yield different findings, which our budget precludes evaluating; to facilitate reproduction and such evaluations by others, we open-source our workflow and insights. 
+
+7 Related Work 
+
+Agentic MLE . MLAgentBench [27] evaluates LLM agents that design, run, and revise ML ex-periments, and MLE-bench [7] evaluates end-to-end solutions of Kaggle competitions against private-test labels. The systems on the MLE-bench leaderboard mostly advance the search over candidate solutions [29, 38, 40, 63, 64, 68] and, increasingly, the use of insights from other tasks (§2.2). Systems that use insights couple a particular source of insights with a particular agent scaffold, and evaluate the combination as a whole on MLE-bench. Our work is complementary: rather than proposing another scaffold, we hold the agentic MLE system fixed and study how the assembled insights, their types, and their injection modes affect it on a benchmark whose source competitions are fixed and disjoint from the target tasks. 
+
+Program synthesis for ML code . Before LLM agents, program synthesis targeted ML code by searching a restricted space of programs. BLAZE [65] synthesizes tensor transformations in a MATLAB-like DSL from input–output examples, and TF-Coder [57] enumerates expressions over TensorFlow operations, prioritized by learned models; INTENT [76] lets users decompose hard tensor transformations, and HySynth [3] guides the search with a grammar learned from LLM completions. Nam et al. [49] predict the sequence of PyTorch and TensorFlow API calls that transforms the inputs into the outputs to guide enumerative search. At a coarser granularity, AutoML-Zero [53] evolves complete ML algorithms from basic mathematical operations, NEAR [56] and dPADS [10] search for differentiable programs in a DSL, and Marinescu et al. [42] search ML pipelines defined by a context-free grammar. These techniques synthesize short programs or pipelines within a predefined search space, whereas an agentic MLE system writes an end-to-end solution in a general-purpose language; the insights assembled by MLE-InsightForge play a role similar to their learned priors, steering the system toward decisions that worked on related tasks. 
+
+Experience, memory, and context for LLM agents . Reflexion [58] stores verbal feedback from earlier trials of the same task, ExpeL [75] extracts natural-language lessons from successful and failed trajectories and retrieves them for new tasks, and Agent Workflow Memory [66] induces reusable workflows from past trajectories. ACE [72] treats the agent’s context as an evolving playbook that is incrementally refined from execution feedback, and Agent Skills [2] package instructions and resources that the agent loads on demand. These approaches mainly learn from the agent’s own trajectories. MLE-InsightForge instead assembles insights from human-written solutions and writeups of peer tasks, organizes them into domain, competition, and improvement insights, and compares the skill and playbook modes of injecting the same insights. 
+
+Mining Kaggle artifacts . DistilKaggle [46] curates Kaggle notebooks together with code-quality measures, and Jin et al. [31] mine Kaggle notebooks and use MLE-bench-style grading to study their reproducibility under modern execution environments. We use Kaggle descriptions, writeups, and top solutions as sources from which to assemble insights for solving unseen tasks. 
+
+Data contamination in benchmarks . Contamination of evaluation data threatens the validity of LLM benchmarks, and LiveCodeBench [28] mitigates it by continuously collecting problems released after the models’ training cutoffs. For agentic MLE systems, the relevant contamination also comes from insight sources available at solving time (§2.3); MLE-InsightBench controls these sources by construction, using only causal non-descendants of the target tasks as sources. 
+
+> , Vol. 1, No. 1, Article . Publication date: October 2026.
+
+Assembling Insights for Agentic Machine Learning Engineering Systems 19 
+
+8 Conclusion 
+
+We studied how insights assembled from closely-related MLE tasks affect an agentic MLE system. We collected MLE-InsightBench, whose held-out split of 160 Kaggle competitions in 12 domains keeps target task information out of the insights, and designed MLE-InsightForge, an agent that assembles evidence-backed domain insights, competition insights, and improvement insights from the source competitions and injects them as skills or a playbook. The assembled insights improve the normalized private-test score by 123.9% as skills and 122.8% as a playbook; the three types of insights are complementary, skills are more cost-effective, and the improvements generalize. These findings suggest treating insight assembly as an explicit component of agentic MLE systems whose sources are controlled in evaluations. 
+
+References 
+
+[1] Saleema Amershi, Andrew Begel, Christian Bird, Robert DeLine, Harald Gall, Ece Kamar, Nachiappan Nagappan, Besmira Nushi, and Thomas Zimmermann. 2019. Software Engineering for Machine Learning: A Case Study. In 
+
+International Conference on Software Engineering, Software Engineering in Practice . 291–300. doi:10.1109/ICSE-SEIP. 2019.00042 [2] Anthropic. 2025. Equipping Agents for the Real World with Agent Skills. https://www.anthropic.com/engineering/ equipping-agents-for-the-real-world-with-agent-skills. Accessed September 27, 2026. [3] Shraddha Barke, Emmanuel Anaya Gonzalez, Saketh Ram Kasibatla, Taylor Berg-Kirkpatrick, and Nadia Po-likarpova. 2024. HYSYNTH: Context-Free LLM Approximation for Guiding Program Synthesis. In Conference on Neural Information Processing Systems , Vol. 37. https://proceedings.neurips.cc/paper_files/paper/2024/hash/ 1c9c85bae6161d52182d0fe2f3640512-Abstract-Conference.html [4] Fabio Bellavia, Jiri Matas, Dmytro Mishkin, Luca Morelli, Fabio Remondino, Weiwei Sun, Amy Tabb, Eduard Trulls, Kwang Moo Yi, Sohier Dane, and Ashley Chow. 2024. Image Matching Challenge 2024 - Hexathlon. https://www. kaggle.com/competitions/image-matching-challenge-2024. Kaggle. [5] Fabio Bellavia, Jiri Matas, Dmytro Mishkin, Luca Morelli, Fabio Remondino, Amy Tabb, Eduard Trulls, Kwang Moo Yi, Sohier Dane, Addison Howard, and María Cruz. 2025. Image Matching Challenge 2025. https://www.kaggle.com/ competitions/image-matching-challenge-2025. Kaggle. [6] Ricardo J. G. B. Campello, Davoud Moulavi, and Jörg Sander. 2013. Density-Based Clustering Based on Hierarchical Density Estimates. In Pacific-Asia Conference on Knowledge Discovery and Data Mining . 160–172. https://doi.org/10. 1007/978-3-642-37456-2_14 [7] Jun Shern Chan, Neil Chowdhury, Oliver Jaffe, James Aung, Dane Sherburn, Evan Mays, Giulio Starace, Kevin Liu, Leon Maksin, Tejal Patwardhan, Lilian Weng, and Aleksander Mądry. 2025. MLE-bench: Evaluating Machine Learning Agents on Machine Learning Engineering. In International Conference on Learning Representations . https: //proceedings.iclr.cc/paper_files/paper/2025/hash/7e3767db483c942b883eb4f8cfb74e31-Abstract-Conference.html [8] Jiefeng Chen, Bhavana Dalvi Mishra, Jaehyun Nam, Rui Meng, Tomas Pfister, and Jinsung Yoon. 2026. MARS: Modular Agent with Reflective Search for Automated AI Research. In International Conference on Machine Learning .https://openreview.net/forum?id=qWE13uu99a [9] cnyberg, dd_engi, janestreet-jjia, Maggie, and Will Cukierski. 2020. Jane Street Market Prediction. https://www.kaggle. com/competitions/jane-street-market-prediction. Kaggle competition. [10] Guofeng Cui and He Zhu. 2021. Differentiable Synthesis of Program Architectures. In Conference on Neural Information Processing Systems , Vol. 34. https://proceedings.neurips.cc/paper/2021/hash/5c5a93a042235058b1ef7b0ac1e11b67-Abstract.html [11] Maggie Demkin, Naruaki Takano, Rintaro Rai, Sohier Dane, and Tomoya Kitayama. 2025. MITSUI&CO. Commodity Prediction Challenge. https://www.kaggle.com/competitions/mitsui-commodity-prediction-challenge. Kaggle. [12] Shangheng Du, Xiangchao Yan, Dengyang Jiang, Jiakang Yuan, Yusong Hu, Xin Li, Liang He, Bo Zhang, and Lei Bai. 2025. AutoMLGen: Navigating Fine-Grained Optimization for Coding Agents. arXiv:2510.08511. https://arxiv.org/abs/ 2510.08511 [13] Shangheng Du, Xiangchao Yan, Jinxin Shi, Zongsheng Cao, Shiyang Feng, Zichen Liang, Boyuan Sun, Tianshuo Peng, Yifan Zhou, Xin Li, et al. 2026. MLEvolve: A Self-Evolving Framework for Automated Machine Learning Algorithm Discovery. arXiv:2606.06473. https://arxiv.org/abs/2606.06473 [14] Kristjan Eljand, Martin Laid, Jean-Baptiste Scellier, Sohier Dane, Maggie Demkin, and Addison Howard. 2023. Enefit – Predict Energy Behavior of Prosumers. https://kaggle.com/competitions/predict-energy-behavior-of-prosumers. Kaggle competition. , Vol. 1, No. 1, Article . Publication date: October 2026. 20 Bihui Jin, Yinxi Li, Kaiyuan Wang, and Pengyu Nie 
+
+[15] Iddo Friedberg, Predrag Radivojac, Clara De Paolis, Damiano Piovesan, Parnal Joshi, Walter Reade, and Addison Howard. 2023. CAFA 5 Protein Function Prediction. https://www.kaggle.com/competitions/cafa-5-protein-function-prediction. Kaggle. [16] Simon Frieder, Sam Bealing, Arsenii Nikolaiev, Geoff C. Smith, Kevin Buzzard, Timothy Gowers, Peter J. Liu, Po-Shen Loh, Lester Mackey, Leonardo de Moura, Dan Roberts, D. Sculley, Terence Tao, David Balduzzi, Simon Coyle, Alex Gerko, Ryan Holbrook, Addison Howard, and XTX Markets. 2024. AI Mathematical Olympiad – Progress Prize 2. https://www.kaggle.com/competitions/ai-mathematical-olympiad-progress-prize-2. Kaggle competition. [17] Maarten Grootendorst. 2022. BERTopic: Neural Topic Modeling with a Class-Based TF-IDF Procedure. arXiv:2203.05794. https://arxiv.org/abs/2203.05794 [18] Antoine Grosnit, Alexandre Maraval, Refinath S N, Zichao Zhao, James Doran, Giuseppe Paolo, Albert Thomas, Jonas Gonzalez, Abhineet Kumar, Khyati Khandelwal, et al. 2024. Kolb-Based Experiential Learning for Generalist Agents with Human-Level Kaggle Data Science Performance. arXiv:2411.03562. https://arxiv.org/abs/2411.03562 [19] Konstantin Grotov, Sergey Titov, Vladimir Sotnikov, Yaroslav Golubev, and Timofey Bryksin. 2022. A Large-Scale Comparison of Python Code in Jupyter Notebooks and Scripts. In International Working Conference on Mining Software Repositories . 353–364. doi:10.1145/3524842.3528447 [20] Siyuan Guo, Cheng Deng, Ying Wen, Hechang Chen, Yi Chang, and Jun Wang. 2024. DS-Agent: Automated Data Science by Empowering Large Language Models with Case-Based Reasoning. In International Conference on Machine Learning . 16813–16848. https://proceedings.mlr.press/v235/guo24b.html [21] Ryan Holbrook, DJ Sterling, Paul Mooney, Maggie Demkin, and Elizabeth Park. 2025. Drawing with LLMs. https: //www.kaggle.com/competitions/drawing-with-llms. Kaggle. [22] Sture Holm. 1979. A Simple Sequentially Rejective Multiple Test Procedure. Scandinavian Journal of Statistics 6, 2 (1979), 65–70. https://www.jstor.org/stable/4615733 [23] Addison Howard, Archit Agarwal, Ashley Chow, HCL-Rantig, Kellen J Gracey, Robert JC Brown, and Sohier Dane. 2022. GoDaddy - Microbusiness Density Forecasting. https://www.kaggle.com/competitions/godaddy-microbusiness-density-forecasting. Kaggle. [24] Addison Howard, Britt Evans, Rob Mulla, Ryan Holbrook, Sam Huddleston, and Will Cukierski. 2022. 1st and Future – Player Contact Detection. https://www.kaggle.com/competitions/nfl-player-contact-detection. Kaggle. [25] Addison Howard, Ahmed Imtiaz Humayun, Ashley Chow, Ryan Holbrook, Sushmit, and Tahsin. 2023. Bengali.AI Speech Recognition. https://www.kaggle.com/competitions/bengaliai-speech. Kaggle. [26] Addison Howard, Holger Klinck, Sohier Dane, Stefan Kahl, and Tom Denton. 2020. Cornell Birdcall Identification. https://www.kaggle.com/competitions/birdsong-recognition. Kaggle. [27] Qian Huang, Jian Vora, Percy Liang, and Jure Leskovec. 2024. MLAgentBench: Evaluating Language Agents on Machine Learning Experimentation. In International Conference on Machine Learning . 20271–20309. https://proceedings.mlr. press/v235/huang24y.html [28] Naman Jain, King Han, Alex Gu, Wen-Ding Li, Fanjia Yan, Tianjun Zhang, Sida Wang, Armando Solar-Lezama, Koushik Sen, and Ion Stoica. 2025. LiveCodeBench: Holistic and Contamination Free Evaluation of Large Language Models for Code. In International Conference on Learning Representations . https://openreview.net/forum?id=chfJJYC3iL [29] Zhengyao Jiang, Dominik Schmidt, Dhruv Srikanth, Dixing Xu, Ian Kaplan, Deniss Jacenko, and Yuxiang Wu. 2025. AIDE: AI-Driven Exploration in the Space of Code. arXiv:2502.13138 [cs.AI] https://arxiv.org/abs/2502.13138 [30] Carlos E. Jimenez, John Yang, Alexander Wettig, Shunyu Yao, Kexin Pei, Ofir Press, and Karthik Narasimhan. 2024. SWE-bench: Can Language Models Resolve Real-world GitHub Issues?. In International Conference on Learning Representations . https://openreview.net/forum?id=VTF8yNQM66 [31] Bihui Jin, Kaiyuan Wang, and Pengyu Nie. 2026. Automated Modernization of Machine Learning Engineering Notebooks for Reproducibility. Proceedings of the ACM on Software Engineering 3, ISSTA, Article ISSTA075 (2026), 22 pages. https://doi.org/10.1145/3832166 [32] Kaggle. 2026. Kaggle: Your Machine Learning and Data Science Community. https://www.kaggle.com. Accessed October 2, 2026. [33] Kaggle. 2026. Meta Kaggle. https://www.kaggle.com/datasets/kaggle/meta-kaggle. Public metadata for Kaggle competitions, users, kernels, submissions, and related activity; accessed September 24, 2026. [34] Kaggle. 2026. Meta Kaggle Code. https://www.kaggle.com/datasets/kaggle/meta-kaggle-code. Companion dataset containing public Kaggle notebook source; accessed September 24, 2026. [35] Leslie Kirsch, Sohier Dane, Stacey Adam, and Victoria Dardov. 2023. AMP®-Parkinson’s Disease Progression Prediction. https://www.kaggle.com/competitions/amp-parkinsons-disease-progression-prediction. Kaggle. [36] Holger Klinck, Juan Sebastián Cañas, Maggie Demkin, Sohier Dane, Stefan Kahl, and Tom Denton. 2025. BirdCLEF+ 2025. https://www.kaggle.com/competitions/birdclef-2025. Kaggle. [37] Yuhang Lai, Chengxi Li, Yiming Wang, Tianyi Zhang, Ruiqi Zhong, Luke Zettlemoyer, Wen-tau Yih, Daniel Fried, Sida Wang, and Tao Yu. 2023. DS-1000: A Natural and Reliable Benchmark for Data Science Code Generation. In , Vol. 1, No. 1, Article . Publication date: October 2026. Assembling Insights for Agentic Machine Learning Engineering Systems 21 
+
+International Conference on Machine Learning . 18319–18345. https://proceedings.mlr.press/v202/lai23b.html [38] Annan Li, Chufan Wu, Zengle Ge, Yee Hin Chong, Zhinan Hou, Lizhe Cao, Cheng Ju, Jianmin Wu, Huaiming Li, Haobo Zhang, et al. 2025. The FM Agent. arXiv:2510.26144. https://arxiv.org/abs/2510.26144 [39] Qiyu Liao, Dadong Wang, Rhys Pirie, Joshua Whelan, Rebecca Haling, Jiajun Liu, Rizwan Khokher, Xun Li, Martyna Plomecka, and Addison Howard. 2025. CSIRO - Image2Biomass Prediction. https://www.kaggle.com/competitions/csiro-biomass. Kaggle. [40] Zexi Liu, Yuzhu Cai, Xinyu Zhu, Yujie Zheng, Runkun Chen, Ying Wen, Yanfeng Wang, Weinan E, and Siheng Chen. 2025. ML-Master: Towards AI-for-AI via Integration of Exploration and Reasoning. arXiv:2506.16499. https: //arxiv.org/abs/2506.16499 [41] Henry B. Mann and Donald R. Whitney. 1947. On a Test of Whether one of Two Random Variables is Stochastically Larger than the Other. The Annals of Mathematical Statistics 18, 1 (1947), 50–60. doi:10.1214/aoms/1177730491 [42] Radu Marinescu, Akihiro Kishimoto, Parikshit Ram, Ambrish Rawat, Martin Wistuba, Paulito P. Palmes, and Adi Botea. 2021. Searching for Machine Learning Pipelines Using a Context-Free Grammar. AAAI Conference on Artificial Intelligence 35, 10 (2021), 8902–8911. doi:10.1609/aaai.v35i10.17077 [43] Karen Matthys, Sharada Kalanidhi, Valerie, WiDS Datathon, and Will Cukierski. 2022. WiDS Datathon 2022. https: //www.kaggle.com/competitions/widsdatathon2022. Kaggle. [44] Leland McInnes, John Healy, and James Melville. 2018. UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction. arXiv:1802.03426. https://arxiv.org/abs/1802.03426 [45] Microsoft. 2026. harrier-oss-v1-27b. https://huggingface.co/microsoft/harrier-oss-v1-27b. Model card; accessed October 1, 2026. [46] Mojtaba Mostafavi Ghahfarokhi, Arash Asgari, Mohammad Abolnejadian, and Abbas Heydarnoori. 2024. DistilKaggle: A Distilled Dataset of Kaggle Jupyter Notebooks. In International Working Conference on Mining Software Repositories .647–651. doi:10.1145/3643991.3644882 [47] Rob Mulla. 2022. Predict Youtube Video Likes (Pog Series #1). https://www.kaggle.com/competitions/kaggle-pog-series-s01e01. Kaggle. [48] Alireza Nadafian, Alireza Mohammadshahi, and Majid Yazdani. 2026. KAPSO: A Knowledge-grounded Framework for Autonomous Program Synthesis and Optimization. arXiv:2601.21526. https://arxiv.org/abs/2601.21526 [49] Daye Nam, Baishakhi Ray, Seohyun Kim, Xianshan Qu, and Satish Chandra. 2022. Predictive Synthesis of API-Centric Code. In International Symposium on Machine Programming . 40–49. doi:10.1145/3520312.3534866 [50] Jaehyun Nam, Jinsung Yoon, Jiefeng Chen, Jinwoo Shin, Sercan Ö. Arık, and Tomas Pfister. 2025. MLE-STAR: Machine Learning Engineering Agent via Search and Targeted Refinement. In Conference on Neural Information Processing Systems . https://openreview.net/forum?id=vS1M06Px6u [51] João Felipe Pimentel, Leonardo Murta, Vanessa Braganholo, and Juliana Freire. 2019. A Large-Scale Study About Quality and Reproducibility of Jupyter Notebooks. In International Working Conference on Mining Software Repositories .507–517. doi:10.1109/MSR.2019.00077 [52] Walter Reade and Ashley Oldacre. 2025. Santa 2025 - Christmas Tree Packing Challenge. https://www.kaggle.com/ competitions/santa-2025. Kaggle. [53] Esteban Real, Chen Liang, David So, and Quoc Le. 2020. AutoML-Zero: Evolving Machine Learning Algorithms From Scratch. In International Conference on Machine Learning . 8007–8019. https://proceedings.mlr.press/v119/real20a.html [54] Matthew A. Reyna, Deepanshi, James Weigle, Zuzana Koscova, Kiersten Campbell, Salman Seyedi, Andoni Elola, Ali Bahrami Rad, Amit J Shah, Neal K. Bhatia, Yao Yan, Sohier Dane, Addison Howard, Gari D. Clifford, and Reza Sameni. 2025. PhysioNet - Digitization of ECG Images. https://www.kaggle.com/competitions/physionet-ecg-image-digitization. Kaggle. [55] Jeff Rudie, Evan Calabrese, Robyn Ball, Peter Chang, Rennie Chen, Errol Colak, Maria Correia de Verdier, Luciano Prevedello, Tyler Richards, Rachit Saluja, Greg Zaharchuk, Jason Sho, and Maryam Vazirabad. 2025. RSNA Intracranial Aneurysm Detection. https://www.kaggle.com/competitions/rsna-intracranial-aneurysm-detection. Kaggle. [56] Ameesh Shah, Eric Zhan, Jennifer Sun, Abhinav Verma, Yisong Yue, and Swarat Chaudhuri. 2020. Learning Differen-tiable Programs with Admissible Neural Heuristics. In Conference on Neural Information Processing Systems , Vol. 33. https://proceedings.neurips.cc/paper/2020/hash/342285bb2a8cadef22f667eeb6a63732-Abstract.html [57] Kensen Shi, David Bieber, and Rishabh Singh. 2022. TF-Coder: Program Synthesis for Tensor Manipulations. Transactions on Programming Languages and Systems 44, 2 (2022). doi:10.1145/3517034 [58] Noah Shinn, Federico Cassano, Ashwin Gopinath, Karthik Narasimhan, and Shunyu Yao. 2023. Reflexion: Language Agents with Verbal Reinforcement Learning. In Conference on Neural Information Processing Systems , Vol. 36. 8634–8652. https://proceedings.neurips.cc/paper_files/paper/2023/hash/1b44b878bb782e6954cd888628510e90-Abstract.html [59] Jeff Sonas, Paul Mooney, Addison Howard, and Will Cukierski. 2025. March Machine Learning Mania 2025. https: //www.kaggle.com/competitions/march-machine-learning-mania-2025. Kaggle. , Vol. 1, No. 1, Article . Publication date: October 2026. 22 Bihui Jin, Yinxi Li, Kaiyuan Wang, and Pengyu Nie 
+
+[60] Jeffrey Sorensen, Lucas Dos Santos, Lucy Vasserman, María Cruz, Tin Acosta, and Walter Reade. 2025. Jigsaw – Agile Community Rules Classification. https://kaggle.com/competitions/jigsaw-agile-community-rules. Kaggle competition. [61] Jeffrey Sorensen, Lucas Dos Santos, Lucy Vasserman, María Cruz, Tin Acosta, and Walter Reade. 2025. Jigsaw - Agile Community Rules Classification. https://www.kaggle.com/competitions/jigsaw-agile-community-rules. Kaggle. [62] timeleft--. 2026. The Leaderboard Separation in PR #130 Is Inconsistently Applied. https://github.com/openai/mle-bench/issues/138. GitHub issue #138 of openai/mle-bench, March 23, 2026; accessed September 27, 2026. [63] Edan Toledo, Karen Hambardzumyan, Martin Josifoski, Rishi Hazra, Nicolas Baldwin, Alexis Audran-Reiss, Michael Kuchnik, Despoina Magka, Minqi Jiang, Alisia Maria Lupidi, et al. 2025. AI Research Agents for Machine Learning: Search, Exploration, and Generalization in MLE-bench. In Conference on Neural Information Processing Systems .https://openreview.net/forum?id=RwfrdKSgCE [64] Chunhui Wan, Xunan Dai, Zhuo Wang, Minglei Li, Yanpeng Wang, Yinan Mao, Yu Lan, and Zhiwen Xiao. 2025. LoongFlow: Directed Evolutionary Search via a Cognitive Plan-Execute-Summarize Paradigm. arXiv:2512.24077. https://arxiv.org/abs/2512.24077 [65] Xinyu Wang, Isil Dillig, and Rishabh Singh. 2018. Program Synthesis Using Abstraction Refinement. Proceedings of the ACM on Programming Languages 2, POPL (2018). doi:10.1145/3158151 [66] Zora Zhiruo Wang, Jiayuan Mao, Daniel Fried, and Graham Neubig. 2025. Agent Workflow Memory. In International Conference on Machine Learning . 63897–63911. https://proceedings.mlr.press/v267/wang25bx.html [67] XTX Investments. 2024. AI Mathematical Olympiad – Progress Prize 1. https://www.kaggle.com/competitions/ai-mathematical-olympiad-prize. Kaggle competition. [68] Xu Yang, Xiao Yang, Shikai Fang, Bowen Xian, Yuante Li, Jian Wang, Minrui Xu, Haoran Pan, Xinpeng Hong, Weiqing Liu, Yelong Shen, Weizhu Chen, and Jiang Bian. 2025. R&D-Agent: Automating Data-Driven AI Solution Building Through LLM-Powered Automated Research, Development, and Evolution. arXiv:2505.14738. https: //arxiv.org/abs/2505.14738 [69] Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan, and Yuan Cao. 2023. ReAct: Synergizing Reasoning and Acting in Language Models. In International Conference on Learning Representations .https://openreview.net/forum?id=WE_vluYUL-X [70] Pengcheng Yin, Wen-Ding Li, Kefan Xiao, Abhishek Rao, Yeming Wen, Kensen Shi, Joshua Howland, Paige Bailey, Michele Catasta, Henryk Michalewski, Oleksandr Polozov, and Charles Sutton. 2023. Natural Language to Code Generation in Interactive Data Science Notebooks. In Annual Meeting of the Association for Computational Linguistics .126–173. doi:10.18653/v1/2023.acl-long.9 [71] Kai Hou Yip, Lorenzo V. Mugnai, Rebecca L. Coates, Andrea Bocchieri, Orphée Faucoz, Arun Nambiyath Govindan, Giuseppe Morello, Andreas Papageorgiou, Angèle Syty, Tara Tahseen, Sohier Dane, Maggie Demkin, Jean-Philippe Beaulieu, Sudeshna Boro Saikia, Giovanni Bruno, Quentin Changeat, Camilla Danielski, Pascale Danto, Jack Davey, Pierre Drossart, Paul Eccleston, Billy Edwards, Clare Jenner, Ryan King, Theresa Lueftinger, Michiel Min, Nikolaos Nikolaou, Leonardo Pagliaro, Enzo Pascale, Emilie Panek, Alice Radcliffe, Luís F. Simões, Patricio Cubillos Vallejos, Tiziano Zingales, Giovanna Tinetti, and Ingo P. Waldmann. 2025. NeurIPS – Ariel Data Challenge 2025. https: //www.kaggle.com/competitions/ariel-data-challenge-2025. Kaggle. [72] Qizheng Zhang, Changran Hu, Shubhangi Upasani, Boyuan Ma, Fenglu Hong, Vamsidhar Kamanuru, Jay Rainton, Chen Wu, Mengmeng Ji, Hanchen Li, Urmish Thakker, James Zou, and Kunle Olukotun. 2026. Agentic Context Engineering: Evolving Contexts for Self-Improving Language Models. In International Conference on Learning Representations .https://openreview.net/forum?id=eC4ygDs02R [73] Ruiyi Zhang, Peijia Qin, Qi Cao, Li Zhang, and Pengtao Xie. 2026. AIBuildAI-2: A Knowledge-Enhanced Agent for Automatically Building AI Models. arXiv:2605.27873. https://arxiv.org/abs/2605.27873 [74] Yunxiang Zhang, Muhammad Khalifa, Shitanshu Bhushan, Grant D. Murphy, Lajanugen Logeswaran, Jaekyeom Kim, Moontae Lee, Honglak Lee, and Lu Wang. 2025. MLRC-Bench: Can Language Agents Solve Machine Learning Research Challenges?. In Conference on Neural Information Processing Systems, Datasets and Benchmarks Track . https: //openreview.net/forum?id=t8Okk2PRWU [75] Andrew Zhao, Daniel Huang, Quentin Xu, Matthieu Lin, Yong-Jin Liu, and Gao Huang. 2024. ExpeL: LLM Agents Are Experiential Learners. AAAI Conference on Artificial Intelligence 38, 17 (2024), 19632–19642. doi:10.1609/aaai.v38i17. 29936 [76] Zhanhui Zhou, Man To Tang, Qiping Pan, Shangyin Tan, Xinyu Wang, and Tianyi Zhang. 2022. INTENT: Interactive Tensor Transformation Synthesis. In Symposium on User Interface Software and Technology . doi:10.1145/3526113.3545653 [77] Xinyu Zhu, Yuzhu Cai, Zexi Liu, Bingyang Zheng, Cheng Wang, Rui Ye, Yuzhi Zhang, Linfeng Zhang, Weinan E, Siheng Chen, and Yanfeng Wang. 2026. Toward Ultra-Long-Horizon Agentic Science: Cognitive Accumulation for Machine Learning Engineering. arXiv:2601.10402. https://arxiv.org/abs/2601.10402 , Vol. 1, No. 1, Article . Publication date: October 2026.
