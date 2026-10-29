@@ -1,0 +1,249 @@
+{
+  "date": "20261029",
+  "date_label": "",
+  "generated_at": "2026-10-29 23:32:08 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2610.11613v1",
+      "route": "202610/29/2610.11613v1-agentevolver-system-wide-self-evolution-through-task-execution",
+      "title": "AgentEvolver: System-Wide Self-Evolution Through Task Execution",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "在保持基础模型不变的前提下实现系统级自我演化",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    },
+    {
+      "paper_id": "2610.11803v1",
+      "route": "202610/29/2610.11803v1-praxis-learning-dynamics-of-self-improving-models-with-symbolic-archives",
+      "title": "PRAXIS: Learning Dynamics of Self-Improving Models with Symbolic Archives",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "带符号档案的自改进模型学习动力学的理论分析",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    },
+    {
+      "paper_id": "2610.12233v1",
+      "route": "202610/29/2610.12233v1-resi-recursive-safety-improvement-toward-resistant-and-resilient-ai",
+      "title": "ReSI: Recursive Safety Improvement toward Resistant and Resilient AI",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "将递归自我改进应用于AI系统安全对齐",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    },
+    {
+      "paper_id": "2610.12235v1",
+      "route": "202610/29/2610.12235v1-language-models-as-ai-research-world-models",
+      "title": "Language Models as AI Research World Models",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "用语言模型作为世界模型预测实验以支撑AI研究自我改进",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    },
+    {
+      "paper_id": "2610.14238v1",
+      "route": "202610/29/2610.14238v1-agentic-data-engineering-for-llms-system-design-and-a-controlled-empirical-study",
+      "title": "Agentic Data Engineering for LLMs: System Design and a Controlled Empirical Study",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "智能体用实验反馈自动化LLM数据工程研究",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    },
+    {
+      "paper_id": "2610.15708v1",
+      "route": "202610/29/2610.15708v1-specforge-recursive-self-improvement-for-coding-agents-via-behavioral-specifications",
+      "title": "SpecForge: Recursive Self-Improvement for Coding Agents via Behavioral Specifications",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "通过精化行为规约的递归自我改进闭环",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    },
+    {
+      "paper_id": "2610.16078v1",
+      "route": "202610/29/2610.16078v1-heterogeneous-agentic-coevolution",
+      "title": "Heterogeneous Agentic Coevolution",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "通过联合进化智能体与专用模型，将递归自我改进扩展到领域专用模型。",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    },
+    {
+      "paper_id": "2610.21646v1",
+      "route": "202610/29/2610.21646v1-the-self-improvement-problem",
+      "title": "The Self-Improvement Problem",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "形式化分析自动门控能否可靠区分真正的语义自我改进与虚假更新。",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    },
+    {
+      "paper_id": "2610.24464v1",
+      "route": "202610/29/2610.24464v1-learning-to-compose-recursive-self-improvement-of-shared-executable-stacks-for-zero-shot-long-horizon-robot-manipulation",
+      "title": "Learning to Compose: Recursive Self-Improvement of Shared Executable Stacks for Zero-Shot Long-Horizon Robot Manipulation",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向机器人操作的共享可执行栈递归自我改进",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    },
+    {
+      "paper_id": "2610.25858v1",
+      "route": "202610/29/2610.25858v1-are-self-evolving-agents-continual-learners",
+      "title": "Are Self-Evolving Agents Continual Learners?",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "自演化智能体重写自身框架以持续适应",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    },
+    {
+      "paper_id": "2610.26453v2",
+      "route": "202610/29/2610.26453v2-learning-what-to-remember-resource-efficient-self-improvement-for-lifelong-agents",
+      "title": "Learning What to Remember: Resource-Efficient Self-Improvement for Lifelong Agents",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "联合约束下终身智能体的资源高效自我改进",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    },
+    {
+      "paper_id": "2610.27735v2",
+      "route": "202610/29/2610.27735v2-rsi-control-can-ai-models-perform-covert-sabotage-in-the-self-improvement-process",
+      "title": "RSI Control: Can AI Models Perform Covert Sabotage in the Self-Improvement Process?",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "研究前沿模型自主训练后继模型时的安全风险",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    },
+    {
+      "paper_id": "2610.29677v1",
+      "route": "202610/29/2610.29677v1-toward-recursive-self-improvement-in-physical-ai",
+      "title": "Toward Recursive Self-Improvement in Physical AI",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "将递归自我改进置于机器人学习中并探讨改进过程本身的改进",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    },
+    {
+      "paper_id": "2610.32813v1",
+      "route": "202610/29/2610.32813v1-harnessmm-recursive-self-improvement-for-harness-token-efficiency",
+      "title": "HarnessMM: Recursive Self-Improvement for Harness Token Efficiency",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "利用递归自我改进提升智能体框架的令牌效率与计算成本",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    },
+    {
+      "paper_id": "2610.33447v1",
+      "route": "202610/29/2610.33447v1-efficiency-vs-capability-in-the-intelligence-explosion",
+      "title": "Efficiency vs Capability in the Intelligence Explosion",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "对AI研究自动化中的能力边际与算力效率边际建模并校准，评估自我维持的加速",
+      "first_seen_at": "2026-10-29 23:32:08 UTC",
+      "updated_at": "2026-10-29 23:32:08 UTC"
+    }
+  ]
+}

@@ -1,0 +1,1756 @@
+Efficiency vs Capability in the Intelligence Explosion
+Karthik Tadepalli∗
+October 27, 2026
+Abstract
+AI progress can feed back into AI research in two ways. Capability improvements allow
+AIs to perform a larger share of AI research tasks, while efficiency improvements raise AI
+research output per unit of compute on tasks already automated. In a task automation
+model of AI research, I show that a software-driven intelligence explosion—a self-
+sustaining acceleration in AI progress with fixed compute and human labor—requires
+both margins to improve sufficiently fast, and neither margin can substitute for the
+other. To see whether these conditions hold, I calibrate both margins with data on
+recent AI progress. I estimate that capability progress is likely fast enough to support
+an SIE, while efficiency progress is on the knife-edge. In Monte Carlo simulations, an
+SIE occurs in 49% of draws, indicating that an SIE is plausible but uncertain based on
+historical trends in AI progress. The single largest source of uncertainty is the rate of
+efficiency progress, whose uncertainty is responsible for 45% of the uncertainty about
+whether an SIE occurs, more than all other parameters combined. Thus, better data
+on efficiency progress in frontier models is essential for understanding the likelihood of
+an SIE.
+1
+Introduction
+Frontier AI systems are increasingly being used to accelerate R&D into future AI systems.
+This creates a positive feedback loop where the development of increasingly capable AI
+systems can aid in the development of even more advanced successor systems. Some version
+of this recursive self-improvement loop already operates today, with AI companies reporting
+internal research speedups from using AI [Favaro and Clark, 2026, OpenAI, 2026]. If this loop
+becomes strong enough to sustain itself—accelerating AI progress even with no growth in
+compute or human researchers—the result would be a software-driven intelligence explosion
+∗GovAI, karthik.tadepalli@governance.ai. This paper benefited greatly from the feedback of Sam Manning,
+Cheryl Wu, Alan Chan, Markus Anderljung, Tom Davidson, Phil Trammell, Tom Cunningham, Joseph Levine,
+Kris Gulati, and audiences at OpenAI and Forethought. Any remaining errors are my own. Replication code
+for all figures and tables is available here.
+1
+arXiv:2610.33447v1  [econ.GN]  24 Oct 2026
+
+
+(SIE), potentially leading to runaway AI progress. Understanding the conditions for an SIE
+is one of the most important questions in AI today.
+At the same time, there is no commonly agreed-upon yardstick of AI research automation,
+and no clear understanding of what data we would need to measure the recursive self-
+improvement loop. Frontier developers each report different statistics on research acceleration,
+and it is unclear whether these statistics are the most important ones for forecasting an SIE.
+Thus, we need a conceptual framework not only to tell us whether to expect an SIE, but also
+to understand what data will actually resolve uncertainties around an SIE.
+To establish the conditions for an SIE and key sources of uncertainty, I formalize a model
+of AI research in which AI progress feeds back into itself through two margins. Capability is
+the share of AI research tasks that AI can perform, while efficiency is AI research output per
+unit of compute on automated tasks. I use this model to establish the conditions for an SIE,
+and then calibrate the model with data on AI progress to see whether these conditions hold
+in recent AI progress, and which parameters are the most important for resolving uncertainty
+about an SIE.
+The benchmark model of idea production [Jones, 1995] summarizes research with a scalar
+stock of efficiency units. The pace of technological progress is entirely a function of this stock,
+with no distinction between types of researchers. In this representation, sufficiently many
+low-productivity researchers substitute for any high-productivity researcher. The same logic
+makes sufficiently many copies of a less capable AI a substitute for a more capable model (or
+human). For example, Alec Radford is a renowned AI researcher who led the development
+of OpenAI’s original GPT models. But the benchmark model implies there is some N such
+that N freshman computer-science majors do better AI research than Alec Radford. This is
+an implausible assumption in the context of AI research.
+I replace scalar research progress with the task-based model of Aghion et al. [2019],
+applied to AI research itself, with compute in place of capital. AI progress feeds back into
+AI research through two channels. Capability improvements expand the set of AI research
+tasks that AI can successfully perform; efficiency improvements increase the amount of AI
+research labor supplied by a given compute stock, so they are analogous to population growth
+for automated researchers. The compute that matters for research automation is inference
+compute, the compute used to run trained AI models, as distinct from the training compute
+used to create them. I show that the speed of AI progress is determined by the slower of these
+two margins, so an SIE requires both margins to be sufficiently fast. Efficiency improvements
+alone eventually run into Baumol effects, where non-automated tasks bottleneck AI progress.
+Capability improvements alone fail because automating a larger share of tasks only spreads the
+fixed compute stock thinly across all tasks, without expanding the population of automated
+2
+
+
+researchers.
+In the second half of the paper, I quantify efficiency progress and capability progress using
+recent data on AI progress, to test whether the conditions for an SIE hold. Each leg of the
+SIE condition can be expressed as a ratio of an observable growth rate to the growth rate of
+research inputs, in the manner of the returns-to-software parameter of Eth and Davidson
+[2025]. The efficiency leg is the rate of algorithmic efficiency progress on a fixed set of tasks,
+which I take from the literature. My main empirical contribution is to quantify capability
+growth in a way that connects to the conditions for an SIE. To do so, I use the time horizon
+measured by METR, an AI evaluation nonprofit: the length of task, in the time it takes a
+skilled human, that an AI model completes with 50% probability. On a suite of software
+and research tasks with measured human completion times, the time horizon of frontier
+models has doubled every four to seven months [METR, 2026]. Combining this horizon trend
+with the distribution of human completion times across tasks, and the assumption that this
+distribution has a Pareto tail, gives the growth rate of capabilities.
+In my baseline calibration, point estimates imply both the efficiency and capability
+conditions for an SIE are met: capability returns are 3.45 (95% interval 0.60–8.22), and
+efficiency returns are 1.07 (0.45–2.52). Thus, efficiency rather than capability is the binding
+constraint on an SIE, but the 95% intervals include both conditions failing. In a Monte Carlo
+simulation over the uncertainty in each input, I find that an SIE occurs in 49% of draws.
+Thus, an SIE is plausible. The more robust finding is that efficiency, rather than capability,
+is the likely bottleneck: the efficiency returns are the lower of the two in 80% of draws.
+The main takeaway of the quantitative exercise is therefore not a precise number for the
+likelihood of an SIE, but a magnifying glass on the most important uncertainty behind it:
+the rate of efficiency progress. Learning only the rate of efficiency progress would resolve 45%
+of the uncertainty about whether an SIE occurs, more than all other inputs combined, which
+together would resolve 24%. Across draws, the share that are an SIE rises from 0% among
+those with the slowest fifth of efficiency progress to 85% among those with the fastest. It is
+also the input on which existing estimates disagree most, by an order of magnitude across
+sources. Better measurement of efficiency progress, and of how it responds to research effort,
+is therefore the most valuable step toward knowing whether an SIE is plausible.
+The rest of the paper is organized as follows. Section 2 relates the paper to the literature.
+Section 3 lays out the model. Section 4 derives the two-legged condition for an SIE. Section 5
+maps the model to data and estimates the two margins of progress. Section 6 concludes and
+discusses policy implications.
+3
+
+
+2
+Related Literature
+This paper is part of the still-too-small literature that models AI progress using endogenous
+growth theory. Canonically, these papers [Eth and Davidson, 2025, Davidson and Houlden,
+2025, AI Futures Project, 2025] have used a benchmark endogenous growth model in the
+style of Jones [1995], which measures research in scalar efficiency units and so elides the
+capability-efficiency distinction that I focus on. Some recent papers in this literature have
+taken a different path. Davidson et al. [2026] focus on networked spillovers and feedback
+loops in the macroeconomic setting, with AI as one sector in an economywide feedback loop;
+they do use a task automation model to understand the importance of automation speed
+(which is analogous to capability growth rates in my model). Cunningham and Shetty [2026]
+model AI research as an apple-picking process, where AI can pick apples up to a certain
+“height”, corresponding to task automation in my model. However, they model AI labor as
+abundant, ignoring the efficiency dimension that I focus on. Cunningham et al. [2026] apply a
+similar framework to model AI research automation; they do highlight the capability-efficiency
+distinction. However, their framework focuses on measuring reduced-form elasticities, whereas
+I derive structural elasticities from a task-based model. This requires more assumptions, but
+is better able to use historical data.
+Methodologically, my model is a task automation model, with similarities to others
+deployed in the literature, including those used to study the effect of AI on economic growth
+[Aghion et al., 2019, Jones and Tonetti, 2026]. The mechanics of my model are almost
+identical to those; the feedback loop over effective compute echoes the positive feedback from
+capital in a standard growth model, and many capital-accumulation mechanisms carry over
+to the setting of AI research. My main theoretical contribution is to show that the task
+automation structure implies a two-legged condition for an SIE. Secondarily, while previous
+papers start from the premise of full automation of AI research to derive the conditions for
+an SIE [Eth and Davidson, 2025, Davidson and Houlden, 2025], I derive conditions based on
+the speed of AI research automation, which is observable today.
+Empirically, I draw on the literature that estimates AI progress: fixed-task estimates of
+algorithmic efficiency [Ho et al., 2024, Erdil and Besiroglu, 2022, Gundlach et al., 2025a], the
+time-horizon measurements of Kwa et al. [2025] and METR [2026] and their decomposition
+into compute and software [Whitfill et al., 2025], and estimates of the substitutability of
+compute for research labor [Whitfill and Wu, 2025]. In calibrating the efficiency leg of AI
+progress, I largely rely on this literature. My main empirical contribution is to connect the
+growth of AI capabilities to data on the time horizons of tasks that AI can complete, and
+using this calibration to assess the likelihood of an SIE.
+4
+
+
+3
+Model
+AI development requires a continuum of research tasks i ∈[0, 1], to be performed by a fixed
+stock L > 0 of human researchers or a fixed stock Z > 0 of physical compute (on which
+copies of the frontier AI model run).1
+A key feature of my model is that “compute” denotes inference compute used to run
+automated researchers. This is an important deviation from standard ways of thinking about
+the role of compute in AI progress. Compute is most commonly identified with training
+compute, because scaling laws suggest that scaling training compute increases AI capabilities.
+It is also sometimes identified with experimental compute, which could be a strong complement
+to research labor, and thus could bottleneck AI progress [Whitfill and Wu, 2025]. While both
+of these are reasonable uses of the term “compute”, neither is applicable to this model. This
+is an important restriction: it means that my model does not describe the conditions under
+which training compute bottlenecks or experimental compute bottlenecks could prevent an
+SIE. My model focuses only on the conditions for when AI cognitive labor can substitute for
+human cognitive labor. A full accounting of all the roles that compute plays in AI research,
+and an endogenous allocation between all of these roles, is left to future research.
+AI progress.
+The rate of change ˙At of frontier AI technology is driven by the level of
+current technology At and research output Rt, as in the benchmark semi-endogenous model.
+˙At = δ Rλ
+t A1−β
+t
+,
+δ > 0, β > 0, 0 < λ ≤1
+(1)
+Research output enters (1) with elasticity λ, the stepping-on-toes parameter: when λ < 1,
+parallel research effort duplicates itself, so doubling Rt less than doubles the rate of progress.
+Technology enters with elasticity 1 −β: doubling At less than doubles the rate of progress,
+representing ideas getting harder to find.
+Research production.
+AI research requires performing tasks indexed by i ∈[0, 1]. Re-
+search task i can either be human-only, or automatable (can be performed by AI). Task-specific
+output is given by
+rt(i) =
+
+
+
+ℓt(i) + ν(At) zt(i),
+i ≤α(At),
+ℓt(i),
+i > α(At)
+(2)
+1I hold physical compute fixed because on the short timescales for which people worry about an SIE,
+compute is unlikely to be part of the feedback loop.
+5
+
+
+Here, ν(At) is efficiency, the task output that can be produced with one unit of compute
+on an automated task, and α(At) is capability, the share of tasks that can be performed by
+AI at all; both depend on the level of AI technology, as specified below.
+Tasks are complements in aggregate research output, being combined with a constant
+elasticity of substitution 0 < σ < 1:
+Rt =
+Z 1
+0
+rt(i)
+σ−1
+σ di
+
+σ
+σ−1
+(3)
+Capability and efficiency improvements.
+Efficiency ν and capability α are determined
+by the level of AI technology:
+α(At) = 1 −A−µ
+t ,
+µ ≥0, At ≥A0 ≥1,
+(4)
+ν(At) = c Aη
+t ,
+c > 0, η ≥0
+(5)
+Both of these equations parameterize capability and efficiency in terms of elasticities. µ
+is the capability elasticity and η is the efficiency elasticity: a 1% increase in the technology
+level raises AI research input per unit of compute by η% and shrinks the human-only task
+share 1 −α by µ%.
+Of course, parameterizing capability and efficiency this way assumes that their elasticities
+are constant, no matter the level of technology. This is a particularly important assumption
+when it comes to capability: Equation (4) implies that α < 1, and thus AI research is never
+fully automated. Eth and Davidson [2025] start from the premise of fully-automated AI
+research, and then derive the conditions for an SIE, so this may at first seem to preclude
+the possibility of an SIE. As I show below, this is not true; rather, it casts the condition
+for an SIE in terms of how fast capabilities grow instead of whether research has been fully
+automated, and the former is much easier to measure, which makes empirical analysis of an
+SIE more tractable.
+Define effective compute as the AI research input supplied by physical compute at the
+current level of efficiency,
+Xt ≡ν(At) Z,
+with units chosen so that Xt is measured in researcher-equivalents. Its physical component Z
+is a fixed stock, and its software component ν(At) is produced by the loop itself.
+Finally, the resource constraint is that researchers and physical compute applied across
+tasks exhaust the total available researchers and compute.
+6
+
+
+Z 1
+0
+ℓt(i) di = L,
+(6)
+Z 1
+0
+zt(i) di = Z
+(7)
+Table 1 collects the environment.
+To close the model, we need an allocation rule for labor and compute. I assume that
+the allocation is chosen to maximize aggregate research output R, consistent with labor and
+compute being allocated internally to a profit-maximizing AI developer. Define research
+capacity as this maximized R∗.
+Proposition 1 (Task Allocation). Define α∗≡
+X
+L+X . Research capacity is
+R∗(α; L, X) =
+
+
+
+
+
+h
+α
+1
+σ X
+σ−1
+σ + (1 −α)
+1
+σ L
+σ−1
+σ
+i
+σ
+σ−1 ,
+α ≤α∗,
+L + X,
+α ≥α∗.
+(8)
+Proof. See Appendix A.1.
+Below the threshold, research capacity is a CES aggregate of the two factor stocks. The
+factor weights (1 −α)1/σ on labor L and α1/σ on effective compute determine how important
+each factor is in generating research output. Capability improvements (increases in α) thus
+shift the weight from labor L to effective compute X. Assuming X > L, this means that
+increases in α increase research capacity R∗, even if both X and L are fixed. The labor-
+augmented term L(1 −α)−1/(1−σ) is the most research that can be produced at capability α,
+even if effective compute becomes abundant (Lemma 1 in Appendix A.2), and it is essential
+for the capability leg of the explosion condition below.
+The threshold α∗= X/(L + X) is the point of full factor utilization. Past it, compute
+has been spread so thin that per-task AI input falls below what concentrated researchers
+supply elsewhere; researchers re-enter automated tasks until inputs equalize, and research
+capacity is just the total factor supply, L + X.
+To visualize the relationship between efficiency and capability in producing research effort,
+Figure 1 plots (normalized) research effort R∗/L as a function of (normalized) efficiency
+X/L and capability α, assuming an elasticity σ = 0.61 that will eventually be used in the
+calibration of Section 5.4. This demonstrates what will later become explicit—that research
+effort is only high when both efficiency and capability are high.
+7
+
+
+1×
+10×
+100×
+1,000×
+AI agents per human researcher (efficiency)
+0%
+25%
+50%
+75%
+100%
+Slow:
+too few agents
+Slow: too little automation
+Fast
+Share of research tasks automated (capability)
+1×
+10×
+100×
+1,000×
+Research output,
+vs. humans alone
+Figure 1: Normalized research capacity R∗/L as a function of normalized efficiency X/L and
+capability α, at σ = 0.61.
+8
+
+
+Block
+Statement
+Technology: law of motion
+˙At = δRλ
+t A1−β
+t
+Technology: capability
+1 −α(At) = A−µ
+t
+Technology: efficiency
+ν(At) = cAη
+t
+Research tasks
+rt(i) = ℓt(i) + 1{i ≤α(At)} · ν(At)zt(i)
+Research aggregation
+Rt =
+  R 1
+0 rt(i)
+σ−1
+σ di
+
+σ
+σ−1
+Resources: researchers
+R 1
+0 ℓt(i) di = L
+Resources: physical compute
+R 1
+0 zt(i) di = Z
+Table 1: The economic environment.
+4
+Explosion Conditions
+Definition 1 (Software Intelligence Explosion). Holding L and Z fixed, the model exhibits
+a software intelligence explosion if AI progress eventually raises the growth rate of the
+technology level, gA = ˙At/At, at a sustained proportional rate:
+lim inf
+A→∞
+d ln gA
+d ln A > 0
+(9)
+Locally, acceleration occurs when
+d ln gA
+d ln A > 0
+⇐⇒
+d ln ˙A
+d ln A > 1
+The limit condition in (9) distinguishes a self-sustaining acceleration from a temporary rise
+in gA or convergence to a constant growth rate.
+Another reasonable definition of an SIE would be as a technological singularity, where At
+becomes infinite in finite time. In this model, there is no distinction; the results below hold
+for both definitions.
+Proposition 2 (Asymptotic Growth). Define the efficiency returns, the capability returns
+and the binding returns as
+rE ≡λη
+β ,
+rC ≡
+λµ
+(1 −σ)β ,
+r∗≡min{rE, rC}.
+Holding L and Z fixed,
+lim
+A→∞
+d ln gA
+d ln A
+= β (r∗−1),
+equivalently
+lim
+A→∞
+d ln gA
+d ln Aβ = r∗−1.
+(10)
+9
+
+
+Proof. See Appendix A.3.
+The elasticity of research capacity with respect to technology converges to the smaller of
+two numbers: η, the rate at which effective compute grows, and µ/(1 −σ), the rate at which
+the shrinking human-only task share relaxes its constraint on research. Duplication scales that
+elasticity by λ, and idea difficulty subtracts β. Integrating (1) gives Aβ
+t = Aβ
+0 + βδ
+R t
+0 Rλ
+τ dτ,
+so Aβ grows with cumulative research net of duplication, so the second form of (10) reads:
+each percent of cumulative research raises the growth rate by r∗−1 percent. When r∗< 1
+the growth rate falls at that rate and the technology level grows sub-exponentially.
+The obstacle that an SIE has to overcome is diminishing returns to research effort,
+captured by β: ideas get harder to find [Bloom et al., 2020]. Each idea can only be found
+once, and AI research has used up some of its easiest gains, such as removing duplicated text
+from web-scraped training data [Lee et al., 2022] and correcting the balance between model
+size and training data for a given compute budget [Hoffmann et al., 2022]. Each further
+improvement in AI therefore requires more research effort than the last.
+The two ratios are the objects that matter for the empirical analysis in Section 5: the
+technology level has no natural units, so the elasticities η, µ and β are identified from data
+only up to a common scale and λ only jointly with them, whereas rE and rC are identified
+directly.
+Corollary 1 (SIE Conditions). The model exhibits a software intelligence explosion if and
+only if r∗> 1, that is,
+λη > β
+| {z }
+efficiency leg
+and
+λµ > (1 −σ)β
+|
+{z
+}
+capability leg
+(11)
+The same conditions are necessary and sufficient for At to diverge in finite time. If r∗= 1,
+the growth rate converges to a positive constant.
+Proof. See Appendix A.4.
+Each leg is a rate of return: if cumulative research effort doubles, how many times does the
+margin double? For efficiency, the margin is effective compute X, the supply of automated
+research labor. For capability, it is the human-bottleneck bound R(α) = L(1 −α)−1/(1−σ)
+of Lemma 1: the most research capacity that the economy could produce at capability α
+if effective compute were unlimited. Capability progress raises this ceiling but supplies no
+automated labor; research capacity approaches the ceiling only as effective compute grows.
+When the return exceeds one, each doubling of research effort yields more than one doubling
+of the margin, which more than pays for the next doubling of research effort, so progress
+accelerates. When it falls below one, each round of progress buys less than the next round
+costs, and growth slows.
+10
+
+
+Each inequality rules out a different failure. When either inequality fails strictly and is
+the tighter constraint, that margin eventually pulls the growth rate down.
+Efficiency alone. Suppose efficiency improves fast enough to overcome idea difficulty, but
+capability does not: λη > β but λµ ≤(1 −σ)β. Productivity rises rapidly on automated
+tasks, but the complementary human-only task share contracts too slowly. Those tasks
+become an increasingly important share of the effective cost of research and eventually govern
+aggregate progress. This is the familiar Baumol effect, and the reason why Aghion et al.
+[2019] emphasize full automation as the condition for explosive economic growth: rapid
+progress in some tasks cannot sustain aggregate growth when essential laggard tasks remain.
+Formally, research capacity never exceeds L(1 −α)−1/(1−σ) (Lemma 1 in Appendix A.2),
+so for any efficiency path,
+gA ≤δLλAλµ/(1−σ)−β
+(12)
+Since λµ/(1 −σ) −β ≤0 in this scenario, gA is bounded by δLλ at equality and falls to zero
+when the inequality is strict. Growth slows down as humans become the limiting factor.
+Capability alone. The failure of capability improvements without efficiency improvements
+is more interesting, and is instructive about the difference between AI research and the
+economic growth context that this model is derived from. Capability improvements enter
+research capacity only through the weights in (8): they spread the fixed rival compute stock
+over a larger set of tasks, the dilution α−1/(1−σ)X in the factor-augmenting form above, but
+add no effective compute. The role of efficiency improvements is therefore analogous to the
+role of population growth in a semi-endogenous growth model: they are population growth
+for AI labor, expanding the number of automated researchers available to do AI research.
+Without them, the population of automated researchers is fixed, and a fixed population
+cannot generate exponential growth in a semi-endogenous model. This is why efficiency
+improvements are essential for sustained accelerations in AI progress.
+Formally, research capacity never exceeds total factor supply, R∗≤L + X (Lemma 1),
+and effective compute is X = cZAη, so for any capability path
+gA ≤δ (L + cZAη)λ A−β,
+(13)
+which falls to zero when λη < β and is bounded by δ(L + cZ)λ when λη = β.
+11
+
+
+5
+Calibration
+5.1
+Empirical Mapping
+To map the theory to data, I first clarify the empirical counterparts to the model objects. In
+particular, “capability” and “efficiency” have subtle differences from the way these terms are
+ordinarily used. Eth and Davidson [2025] classify both acquiring new tasks and becoming
+more competent at tasks a system can already attempt as capability improvements, while
+achieving a given capability level with less compute is an efficiency improvement. Those
+definitions are intuitive, and useful for a broad accounting of software progress. But for the
+purpose of SIE accounting in this model, a different boundary is necessary.
+Efficiency.
+Efficiency is useful task output per unit of compute on automated tasks. The
+key feature of this definition is that the efficiency that matters for an SIE is inference efficiency,
+since that determines the quantity of AI labor available for AI research. Thus, the empirical
+counterpart I use is primarily the rate at which the inference compute needed to reach a
+fixed benchmark score has fallen [Gundlach et al., 2025b], triangulated with estimates of
+efficiency progress based on pretraining (Section 5.3) even though these are not the relevant
+margin of efficiency progress.
+The second important and unintuitive element of this definition is that improved quality at
+performing the same task is an efficiency improvement, rather than a capability improvement.
+If a model’s code quality improves for the same compute cost, this may seem like a capability
+improvement, but for SIE accounting it raises efficiency. Within a task, I assume that quality
+and cost are interchangeable, so that an AI that can do a task outstandingly well is isomorphic
+to an AI that can do that task adequately at low cost. Thus, the critique that motivated
+this model—that the standard model treats quality and quantity as interchangeable—still
+applies. However, it is a more palatable assumption at the task level than at the level of AI
+research as a whole. On the whole, this exercise largely tracks previous exercises that aim to
+calculate the returns to software progress as they relate to an SIE (see Table 4), and is not
+conceptually novel.
+Capability.
+In this model, capability is the automated task share α. Unlike efficiency, the
+automated share is not observed: there is no comprehensive enumeration of AI research tasks,
+let alone a record of which of them are automated. Favaro and Wright [2026] take a step in
+this direction: they catalogue Anthropic’s model R&D work into 378 task categories, weight
+each by the staff time spent on it, and rate how far each is automated. They publish only
+aggregate shares, however, not the task list or the per-task ratings, so their task set cannot
+12
+
+
+be used here. So how can we measure the automated share of tasks?
+Mapping the unobservable task share growth to observable quantities is my main empirical
+contribution. To do this, we have to augment the model of Section 3 with four assumptions.
+(a) Task length. Index each research task by a scalar difficulty q > 0, measured as the time
+a human expert needs to complete it (“task length”). Task length is distributed q ∼F.
+(b) Capability threshold. A model at technology level A has some threshold difficulty h(A)
+such that it can perform every task with q ≤h(A) and no task with q > h(A). Define
+h(A) as the model’s time horizon.2
+(c) Task measure. The continuum in (3) weights tasks by their labor requirement: a task
+that takes T hours occupies T units of researcher input. F is therefore the distribution
+of task length across work-hours, F(T) being the fraction of all task-hours in tasks with
+q ≤T, and the automated share is α(A) = F(h(A)).
+(d) Pareto tail. Above some length h0, F has a Pareto tail with index k > 0: 1 −F(T) =
+¯F0 (T/h0)−k for T ≥h0, where ¯F0 ≡1 −F(h0) ∈(0, 1].
+Proposition 3 (Capability from Time Horizons). Under (a)–(d), for every technology level
+with h(A) ≥h0,
+1 −α(A) = ¯F0
+h(A)
+h0
+−k
+,
+µ = k d ln h
+d ln A,
+(14)
+and along any path of AI progress the human-only task share shrinks at rate
+gα ≡−d ln(1 −α)
+dt
+= k gh,
+gh ≡
+˙h
+h.
+(15)
+Proof. See Appendix A.5.
+The intuition is that when we learn how the time horizon of AI models evolves, we learn
+which task lengths it can do with some threshold probability. If we further know how research
+work is spread across task lengths, we can convert a longer horizon into a larger automated
+share. Under the Pareto assumption, each doubling of the horizon automates the same
+fraction of remaining work, whatever the current horizon. With k = 1.31, every doubling
+of the horizon automates about 1 −2−k = 60% of the remaining human-only work. The
+human-only share therefore shrinks at a constant proportional rate, k times the growth rate of
+2Ord [2025]’s model of success rates over a time horizon provides a microfoundation for this step: if AIs
+have a constant probability of failure per unit of human task-time, then the AI success probability falls with
+human task length, and a single length h(A) separates the tasks a model completes at a given reliability from
+those it does not.
+13
+
+
+the horizon. Thus, Proposition 3 replaces the unobservable quantity α(A) with two quantities
+k and gh that can be estimated from the data. This solves our problem of estimating the
+growth rate of capabilities.
+One final adjustment is needed before we can use the horizon trend to estimate capability
+progress. The observed time horizon growth reflects both software progress and the growth
+of training compute, but when studying an SIE we want to know the capability growth that
+came purely from software progress. We can attribute some share s of time horizon growth
+to software progress, so that the software-attributable horizon growth s gh is what enters the
+capability leg.
+5.2
+Identification
+The parameters η, µ, β, λ are defined relative to the technology level A, which has no natural
+units. Only the combinations λη/β and λµ/β are identified from data, and Corollary 1 states
+the SIE conditions in exactly those combinations, rE > 1 and rC > 1. In the data we can
+observe three growth rates that map into the model:
+1. the efficiency growth rate gν ≡˙ν/ν = ηgA
+2. the rate gα = µgA at which the human-only task share shrinks
+3. the growth rate of research capacity gR ≡˙R/R.
+Then the SIE condition—expressed in terms of these growth rates and the observable
+parameters of the model—is:
+Proposition 4 (Returns Ratios). Suppose that over a historical window research capacity
+and technology grow at constant rates gR > 0 and gA. Then βgA = λgR, the returns of
+Proposition 2 are ratios of observable growth rates, and the SIE conditions of Corollary 1 read
+rE = gν
+gR
+> 1
+and
+rC =
+gα
+(1 −σ) gR
+> 1
+(16)
+Proof. See Appendix A.6.
+Both legs are returns parameters. The efficiency returns rE count the doublings of
+efficiency per doubling of cumulative research input along a balanced path, which is the
+returns-to-software parameter r of Eth and Davidson [2025] and Davidson and Houlden
+[2025] applied to inference efficiency. The capability returns rC count the doublings of the
+human-bottleneck bound R(α) = L(1 −α)−1/(1−σ) (Lemma 1) per doubling of cumulative
+research input.
+Proposition 3 further gives gα = k gh; with compute held fixed the relevant horizon growth
+14
+
+
+rate is s gh, so the capability leg reads
+rC =
+k s gh
+(1 −σ) gR
+.
+(17)
+The calibration uses six inputs, listed with their baselines and ranges in Table 2.
+5.3
+Efficiency Leg
+Efficiency progress gν.
+Unlike the returns-to-software estimates of Eth and Davidson
+[2025] and Davidson and Houlden [2025], which use pretraining efficiency, the numerator of
+rE = gν/gR is primarily inference efficiency. I pool four estimates of algorithmic efficiency
+progress at a fixed task and performance level (Appendix B.1 gives each source). The primary
+estimate measures the right object: the decline in the inference compute needed to reach
+a fixed score on GPQA Diamond, a benchmark of graduate-level science questions, net of
+hardware improvements, which Gundlach et al. [2025b] infer from the prices of open-weight
+models. It is 1.17 per year. Because it is identified from a small set of open models over a short
+period, I triangulate it with three training-side estimates and pool the four; Appendix B.1
+describes the sources, the weights and the pooling. The baseline is gν = 0.92.
+Research inputs gR.
+Staff at frontier laboratories has grown rapidly since the release of
+ChatGPT in late 2022. Ho and Whitfill [2025] report a growth rate of 0.85 log points per year
+in OpenAI’s staff count, approximately 2.3× per year. Davidson et al. [2026] report growth
+in AI-laboratory headcount of roughly 140% per year since ChatGPT (i.e. ln 2.4 ≈0.88 log
+points per year), from Epoch AI data. I set a baseline of gR = 0.86 log points per year. Note
+also that since gR is the denominator of both returns ratios, it appears in both SIE conditions.
+5.4
+Capability Leg
+Tail index k.
+I estimate k from the human completion times of the 96 tasks on which
+METR measures time horizons, in its Time Horizon 1.1 release, whose lengths come from
+timed attempts by skilled human professionals [METR, 2026]. Because the horizon trend is
+measured on the same suite, both objects in gα = k gh refer to one distribution. The baseline
+is k = 1.31, with a range from 0.52 to 1.87. Appendix B.2 describes the sample, the estimator,
+the alternative datasets and the fits, and Figure 3 plots the fitted tail.
+15
+
+
+Symbol
+Input
+Baseline
+Range
+Distribution
+gν
+Fixed-task efficiency growth
+0.92
+0.42–2.02
+log-normal
+gR
+Research labor growth
+0.86
+0.64–1.15
+log-uniform
+gh
+Time-horizon growth (50%)
+1.93
+1.57–2.36
+log-normal
+s
+Software share of horizon growth
+0.46
+0.31–0.71
+uniform
+k
+Task-length tail index
+1.31
+0.52–1.87
+log-uniform
+σ
+Task substitution elasticity
+0.61
+0.00–0.83
+uniform
+Table 2: Calibration inputs. Rates are log points per year. Sources in Table 8.
+Task time-horizon growth gh.
+The 50% time horizon is the task length at which a
+model’s fitted success probability is one half [Kwa et al., 2025].3 On METR’s updated Time
+Horizon 1.1 suite, the frontier time horizon has doubled every 196 days over 2019–2025 (95%
+confidence interval 162 to 223 days), and every 131 days since 2023 (107 to 161 days) [METR,
+2026]. I use the faster post-2023 doubling times as the basis for gh = 1.93, because this better
+captures the window in which frontier AI systems have been applied to research tasks.
+Software share s.
+Whitfill et al. [2025] attribute a share s = 0.46 of time-horizon growth
+to algorithmic progress, with the remainder coming from compute growth (Appendix B.2).
+Substitution elasticity σ.
+The model’s σ is the substitutability between research tasks,
+and by Proposition 1 also between effective compute and research labor below the threshold
+α∗. Calibrated models of AI-driven growth set the task elasticity between 0.5 and 0.67
+[Davidson, 2023, Erdil et al., 2025, Korinek and Suh, 2024], drawing on aggregate estimates
+of substitution between capital and labor, and estimates of the elasticity of substitution
+between research compute and research labor range from Leontief to substitutes [Whitfill and
+Wu, 2025]. I set a baseline of σ = 0.61, the value in GATE, Epoch AI’s integrated assessment
+model of AI automation [Erdil et al., 2025], with a range from 0, the Leontief limit, to 0.83,
+the upper bound of the GATE range (Appendix B.2).
+5.5
+Monte Carlo Simulation
+To quantify uncertainty in this calibration, I use Monte Carlo simulations that account for
+the uncertainty in each input. I draw the six inputs from the distributions in Table 2. The
+efficiency rate gν is drawn from the pooled log-normal (21) of Appendix B.1; its median is
+the baseline. The horizon rate gh is log-normal with median at the baseline and dispersion
+3The cutoff success probability changes the level of the horizon but not its growth rate: Kwa et al. [2025]
+report identical doubling times for 50% and 80% time horizons. Since only the growth rate enters the
+capability ratio, it doesn’t matter what cutoff we use.
+16
+
+
+set by its confidence interval; gR and k are log-uniform on their ranges, with the range for gR
+symmetric in logs around the baseline; s and σ are uniform on theirs. The inputs are drawn
+independently of one another, since they come from unrelated data sources, but the two
+ratios are not independent: each draw’s gR is the denominator of both, so a draw with slow
+input growth raises rE and rC together. I take 200,000 draws and report, for each returns
+ratio, its median, its 95% interval (the 2.5th to the 97.5th percentile) and the share of draws
+in which it exceeds one, together with the share of draws in each combination of legs holding.
+Using these simulations, I can measure which parameters are most important in de-
+termining whether an SIE occurs, thus guiding the focus of research and policy attention.
+I use a variance-based sensitivity analysis [Sobol’, 2001, Saltelli et al., 2010], measuring
+what share of the variance in explosion outcomes can be attributed to each input. Let
+Y = 1{rE > 1, rC > 1} indicate that a draw of the inputs is an SIE. Its variance across
+draws is p(1 −p) where p is the share of draws that are an SIE. Then the first-order Sobol
+index of input xi is
+Si = 1 −E
+ Var[Y | xi]
+
+Var(Y )
+the expected share of SIE variance removed by learning xi exactly while the other inputs
+remain uncertain. (The same construction applies to a group of inputs learned jointly.) I
+estimate the indices with a pick-freeze design [Saltelli et al., 2010].
+5.6
+Results
+Table 3 collects the estimates of the returns ratios and their uncertainties from the Monte
+Carlo simulations. Recall that an SIE requires both returns to exceed one (Corollary 1).
+Monte Carlo
+Baseline
+Median
+95% interval
+Share above one
+Efficiency returns rE
+1.07
+1.07
+0.45–2.52
+56%
+Capability returns rC
+3.45
+2.01
+0.60–8.22
+85%
+Binding returns r∗= min{rE, rC}
+1.07
+0.99
+0.44–2.21
+49%
+Share of Monte Carlo draws in which
+both legs hold (an SIE)
+49%
+only the capability leg holds
+37%
+only the efficiency leg holds
+7%
+neither leg holds
+7%
+Table 3: Estimated returns ratios and Monte Carlo simulations (Table 2).
+17
+
+
+Efficiency leg.
+At baseline, rE = 0.92/0.86 = 1.07, with a 95% Monte Carlo interval of
+0.45 to 2.52. Each doubling of cumulative research input makes AI about 2.1× more efficient,
+barely more than the 2× needed to sustain the next doubling. Table 4 places the ratio among
+published estimates of returns to software research, whose central estimates all lie between
+0.8 and 4.
+Capability leg.
+At baseline, rC = k s gh/((1 −σ) gR) = 3.45, with a 95% Monte Carlo
+interval of 0.60 to 8.22: the human-only task share shrinks at 3.45 times the rate (1 −σ)gR
+that the capability leg requires. In terms of doublings, each doubling of cumulative research
+input shrinks the human-only task share 1 −α by a factor of about 2.5. Because tasks
+are complements, that raises the human-bottleneck bound on research capacity R(α) about
+11-fold, far more than the 2× needed to sustain the next doubling. Note that the 11-fold
+increase is in the upper bound on research capacity, the limit as effective compute grows
+without bound; it is not the magnitude of the increase in research capacity R∗itself.
+Joint uncertainty.
+At baseline the efficiency leg sits just above the threshold and the
+capability leg is well clear of it. In the Monte Carlo simulations plotted in Figure 2, both legs
+hold in 49% of draws. This share is not the probability of an SIE; it is the share of draws from
+input distributions chosen to span the published evidence. Even taking the model literally,
+data this noisy, drawn from historical rather than current AI development, cannot support a
+precise probability. The capability leg alone holds in 37% of draws, so that efficiency prevents
+an SIE; the efficiency leg alone holds in 7% of draws, so that capability prevents an SIE; in
+7% of draws, neither holds.
+Notably, the 95% intervals of both returns ratios contain one: 0.45 to 2.52 for the efficiency
+returns and 0.60 to 8.22 for the capability returns. This variability highlights the inherent
+uncertainty of my setting; even capability progress, whose point estimate seems numerically
+all-but-guaranteed to be sufficient for an SIE, cannot be ruled sufficient with the standard of
+rigor usually applied to empirical research.
+A feature of these results is that the median binding return is r∗= 0.99, with a 95%
+interval of 0.44 to 2.21. Thus, while both of the returns ratios are estimated to be above one,
+the median binding ratio is less than 1. Thus, even though each condition holds on average,
+they do not hold together on average. Of course, given the amount of uncertainty in this
+data, there is no meaningful difference between 0.99 and 1.07. This is simply a demonstration
+of the importance of separating the efficiency and capability dimensions of an SIE, since
+focusing on only one of them would overstate the likelihood of an SIE.
+A more robust result is which leg binds. It depends only on which of the two returns is
+18
+
+
+0.1
+0.5
+1
+2
+10
+Efficiency returns rE
+0.1
+0.5
+1
+2
+10
+95% interval of rE: 0.45–2.52
+95% interval
+of rC:
+0.60–8.22
+Capability returns rC
+SIE: 49%
+Capability only: 37%
+Efficiency only: 7%
+Neither: 7%
+Baseline
+Figure 2: Monte Carlo draws of the two returns ratios (Table 2).
+19
+
+
+Source
+Central
+Range
+Basis
+This paper
+1.07
+0.45–2.52
+Section 5.3
+Eth and Davidson [2025]
+—
+1–4
+domain doubling times over
+input growth
+Davidson and Houlden [2025]
+1.2
+0.4–3.6
+computer vision
+Erdil et al. [2024]
+0.83
+0.53–1.12a
+computer chess
+Ho and Whitfill [2025]
+1.89
+1.07–3.21
+language models
+Ho and Whitfill [2025]
+1.26
+0.73–2.09
+computer vision
+a Erdil et al. [2024] report only a bootstrap standard error of 0.15, from which this confidence
+interval is constructed via normal approximation.
+Table 4: rE estimates compared to published estimates on the returns to software.
+lower, not on whether either exceeds one. The efficiency returns are the lower of the two
+in 80% of draws, and at baseline the capability returns are 3.2 times the efficiency returns.
+Efficiency, rather than capability, is the likely bottleneck on an SIE.
+Sources of uncertainty.
+Table 5 reports the first-order Sobol index of each input—the
+share of variance in SIE outcome that would be eliminated by learning about that input—to
+measure how critical they are to resolving uncertainty about an SIE. The single largest source
+of uncertainty is the rate of efficiency progress gν; learning only gν would eliminate 45% of
+uncertainty about whether an SIE occurs, more than the contribution of all other inputs
+combined (learning all five other inputs jointly would resolve 24% of uncertainty).
+Better measures of efficiency progress therefore have the highest value of information for
+assessing whether an SIE is plausible, and the rate of efficiency progress is also the input on
+which existing estimates disagree most. Thus, the single most important measurement we
+can do to understand the likelihood of an SIE is to measure efficiency progress in frontier AI
+systems.
+Input
+Share of SIE uncertainty
+Efficiency progress gν
+0.45
+Research input growth gR
+0.11
+Tail index k
+0.02
+Substitution elasticity σ
+0.02
+Software share s
+0.01
+Time-horizon growth gh
+0.00
+All inputs except gν, jointly
+0.24
+Table 5: First-order Sobol indices of the SIE indicator across Monte Carlo draws.
+20
+
+
+6
+Conclusion
+I separate two margins of AI progress: capability, the share of AI research tasks that AI
+can perform, and efficiency, the AI research output that a unit of compute supplies on those
+tasks. A software intelligence explosion requires both margins to improve fast enough relative
+to idea difficulty. I show that each leg of that condition is a returns ratio measurable from
+observable growth rates, over a historical window in which compute and AI inputs also grew,
+and use that to test whether the conditions for an SIE hold.
+A striking feature of these results is that the likelihood of being in an SIE, 49% of draws,
+is less than the likelihood of either condition holding on its own (56% for efficiency and 85%
+for capability). This highlights the two-legged nature of the condition: an SIE requires both
+margins to improve fast enough at once, so assessing either leg in isolation overstates how
+likely an SIE is. My analysis should therefore be taken as evidence for the plausibility of an
+SIE, while highlighting its fragile nature and reliance on multiple margins of progress.
+Nonetheless, the most important takeaway from this paper is not a precise number for
+the likelihood of an SIE, but a focus on the most important uncertainty behind it: the rate
+of efficiency progress. Efficiency is the lower of the two returns ratios in 80% of draws, and
+learning only the rate of efficiency progress would resolve 45% of the uncertainty about
+whether an SIE occurs, more than all other inputs combined. Thus, whether an SIE happens
+depends mostly on how fast AI is getting cheaper to run at a fixed level of performance.
+Better data on that rate, and on how it responds to research effort, is the most valuable step
+toward understanding the plausibility of an SIE.
+These results also identify where policy could act to manage the possibility of an SIE. For
+a policymaker who wants to pace the frontier and slow AI progress, efficiency is the bottleneck
+target. The efficiency leg is necessary for an SIE, no matter how fast capability improves, and
+it is the leg that is closest to binding at baseline. A cap on efficiency progress that holds the
+efficiency returns at or below one, so that each doubling of cumulative research input yields
+at most one doubling of efficiency, rules out an SIE in the model, however fast capability
+improves. How much efficiency growth such a cap removes depends on how fast efficiency is
+in fact growing. At the baseline estimate, it requires lowering the efficiency returns by about
+6%. The same logic applies to a policymaker who simply wants to control the pace of AI
+progress rather than prevent an SIE. The asymptotic acceleration of AI progress is governed
+by the binding returns r∗= min{rE, rC} (Proposition 2), so any reduction in the efficiency
+returns lowers r∗directly, whereas a reduction in the capability returns changes it only once
+they fall below the efficiency returns. Thus, regulation to slow frontier AI progress could
+prioritize efficiency slowdowns over capability slowdowns.
+21
+
+
+This analysis is considerably more speculative than is standard in economics research,
+so I want to qualify these conclusions with the inherent limitations of my approach. First,
+this model takes a simplified view of compute. Compute enters the AI research process only
+as inference compute that serves AI research labor, with no distinction between the types
+of compute an intelligence explosion would draw on. Critically, experimental compute, one
+of the biggest potential bottlenecks to an SIE, appears nowhere in the model. This paper
+is best understood as a theory of how AI labor can contribute to an SIE, not a complete
+accounting of the role that compute would play in an SIE.
+Second, the data used in this empirical exercise is both individually weak and also
+somewhat cobbled together. For example, the data on efficiency progress are noisy, with
+estimates of the rate of progress varying by an order of magnitude across sources. Furthermore,
+the relevant growth rates are computed over different periods—for example, the growth rate
+of research labor is measured largely since late 2022, while the inference efficiency growth
+rate is measured over April 2024 to November 2025, making a mismatched ratio. These are
+all empirical limitations inherent to the fast-moving setting of AI research, and they could
+influence the conclusions of my analysis.
+Third, capability in this model is the share of tasks that humans can do which AI can
+also do. AI that becomes better than the best human researchers at a task, for instance at
+choosing which research directions to pursue, counts only as an efficiency gain on that task.
+The model therefore leaves out an explosion driven by superhuman research taste, which
+features prominently in other forecasts [AI Futures Project, 2025].
+Finally, this paper is not about the full automation of research. The model keeps a
+positive human-only task share at every technology level, so it is unsuited to analyzing what
+would happen if AI research were fully automated. Some experts expect AI research to be
+close to fully automated within the next few years [AI Futures Project, 2025], and a different
+model would be needed to analyze the effects of AI progress in such a setting.
+References
+Philippe Aghion, Benjamin F. Jones, and Charles I. Jones. Artificial intelligence and economic
+growth. In Ajay Agrawal, Joshua Gans, and Avi Goldfarb, editors, The Economics of
+Artificial Intelligence: An Agenda, pages 237–282. University of Chicago Press, 2019.
+AI Futures Project.
+AI 2027:
+Takeoff forecast.
+https://ai-2027.com/research/
+takeoff-forecast, 2025.
+Joel Becker, Nate Rush, Elizabeth Barnes, and David Rein. Measuring the impact of early-
+22
+
+
+2025 AI on experienced open-source developer productivity. Technical report, METR, 2025.
+arXiv preprint arXiv:2507.09089.
+Nicholas Bloom, Charles I. Jones, John Van Reenen, and Michael Webb. Are ideas getting
+harder to find? American Economic Review, 110(4):1104–1144, 2020.
+Ben Cottier, Ben Snodin, David Owen, and Tom Adamczewski. LLM inference prices have
+fallen rapidly but unequally across tasks. Epoch AI, Data Insights, https://epoch.ai/
+data-insights/llm-inference-price-trends, 2025.
+Tom Cunningham and Manish Shetty. An apple-picking model of AI R&D. Blog post, https:
+//tecunningham.github.io/posts/2026-03-13-apple-picking-ai.html, 2026.
+Tom Cunningham, Lukas Althoff, Basil Halperin, Brian Jabarian, Andrew Koh, Arjun
+Ramani, Philip Trammell, Parker Whitfill, and Cheryl Wu. The economics of recursive
+self-improvement.
+Technical report, Elasticity Institute, 2026.
+https://elasticity.
+institute/rsi-paper.pdf.
+Tom Davidson. What a compute-centric framework says about takeoff speeds. Technical
+report, Open Philanthropy, 2023.
+Tom Davidson and Thomas Houlden. How quick and big would a software intelligence
+explosion be? Technical report, Forethought Research, 2025.
+Tom Davidson, Basil Halperin, Thomas Houlden, and Anton Korinek. When does automating
+AI research produce explosive growth? Feedback loops in innovation networks. Working
+Paper 35155, National Bureau of Economic Research, 2026.
+Ege Erdil and Tamay Besiroglu. Algorithmic progress in computer vision. Technical report,
+arXiv preprint arXiv:2212.05153, 2022.
+Ege Erdil, Tamay Besiroglu, and Anson Ho. Estimating idea production: A methodological
+survey. Technical report, arXiv preprint arXiv:2405.10494, 2024.
+Ege Erdil, Andrei Potlogea, Tamay Besiroglu, et al. GATE: An integrated assessment model
+for AI automation. Technical report, arXiv preprint arXiv:2503.04941, 2025.
+Daniel Eth and Tom Davidson. Will AI R&D automation cause a software intelligence
+explosion? Technical report, Forethought Research, 2025.
+Marina Favaro and Jack Clark. When AI builds itself. Anthropic, 2026.
+23
+
+
+Marina Favaro and Phillie Wright. Measurements for understanding the pace of AI de-
+velopment inside frontier labs. The Anthropic Institute, https://www.anthropic.com/
+institute/measuring-pace-of-ai-development, 2026.
+Hans Gundlach, Alex Fogelson, Jayson Lynch, Ana Trisovic, Jonathan Rosenfeld, Anmol
+Sandhu, and Neil Thompson. On the origin of algorithmic progress in AI. Technical report,
+arXiv preprint arXiv:2511.21622, 2025a.
+Hans Gundlach, Jayson Lynch, Peter Mertens, and Neil Thompson. The price of progress.
+Technical report, arXiv preprint arXiv:2511.23455, 2025b.
+Anson Ho and Parker Whitfill.
+The software intelligence explosion debate needs
+experiments.
+Epoch AI, Gradient Updates, https://epoch.ai/gradient-updates/
+the-software-intelligence-explosion-debate-needs-experiments, 2025.
+Anson Ho, Tamay Besiroglu, Ege Erdil, David Owen, Robi Rahman, Zifan Carl Guo, David
+Atkinson, Neil Thompson, and Jaime Sevilla. Algorithmic progress in language models.
+Technical report, arXiv preprint arXiv:2403.05812, 2024.
+Anson Ho, Jean-Stanislas Denain, David Atanasov, Samuel Albanie, and Rohin Shah. A
+Rosetta Stone for AI benchmarks. Technical report, arXiv preprint arXiv:2512.00193, 2025.
+Jordan Hoffmann, Sebastian Borgeaud, Arthur Mensch, et al. Training compute-optimal
+large language models. Technical report, arXiv preprint arXiv:2203.15556, 2022.
+Charles I. Jones. R&D-based models of economic growth. Journal of Political Economy, 103
+(4):759–784, 1995.
+Charles I. Jones and Christopher Tonetti. Past automation and future A.I.: How weak links
+tame the growth explosion. Technical report, Working paper, v0.5, 2026.
+Anton Korinek and Donghyun Suh. Scenarios for the transition to AGI. Working Paper
+32255, National Bureau of Economic Research, 2024.
+Thomas Kwa, Ben West, Joel Becker, Amy Deng, Katharyn Garcia, Max Hasin, Sami Jawhar,
+Megan Kinniment, Nate Rush, Sydney Von Arx, Ryan Bloom, Thomas Broadley, Haoxing
+Du, Brian Goodrich, Nikola Jurkovic, Luke Harold Miles, Seraphina Nix, Tao Lin, Chris
+Painter, Neev Parikh, David Rein, Lucas Jun Koba Sato, Hjalmar Wijk, Daniel M. Ziegler,
+Elizabeth Barnes, and Lawrence Chan. Measuring AI ability to complete long software
+tasks. Technical report, arXiv preprint arXiv:2503.14499, 2025.
+24
+
+
+Katherine Lee, Daphne Ippolito, Andrew Nystrom, Chiyuan Zhang, Douglas Eck, Chris
+Callison-Burch, and Nicholas Carlini. Deduplicating training data makes language models
+better. In Proceedings of the 60th Annual Meeting of the Association for Computational
+Linguistics, pages 8424–8445, 2022.
+METR.
+Time Horizon 1.1.
+https://metr.org/blog/2026-1-29-time-horizon-1-1/,
+2026.
+OpenAI.
+Research acceleration: A view inside OpenAI.
+https://openai.com/index/
+research-acceleration-view-inside-openai/, 2026.
+Toby Ord. Is there a half-life for the success rates of AI agents? Technical report, arXiv
+preprint arXiv:2505.05115, 2025.
+Tejal Patwardhan et al. GDPval: Evaluating AI model performance on real-world economically
+valuable tasks. Technical report, arXiv preprint arXiv:2510.04374, 2025.
+David Rein, Joel Becker, Amy Deng, et al. HCAST: Human-calibrated autonomy software
+tasks. Technical report, arXiv preprint arXiv:2503.17354, 2025.
+Andrea Saltelli, Paola Annoni, Ivano Azzini, Francesca Campolongo, Marco Ratto, and
+Stefano Tarantola.
+Variance based sensitivity analysis of model output. Design and
+estimator for the total sensitivity index. Computer Physics Communications, 181(2):
+259–270, 2010.
+Jaime
+Sevilla
+and
+Edu
+Rold´an.
+Training
+compute
+of
+frontier
+AI
+mod-
+els
+grows
+by
+4–5x
+per
+year.
+Epoch
+AI,
+https://epoch.ai/blog/
+training-compute-of-frontier-ai-models-grows-by-4-5x-per-year, 2024.
+Ilya M. Sobol’. Global sensitivity indices for nonlinear mathematical models and their Monte
+Carlo estimates. Mathematics and Computers in Simulation, 55(1–3):271–280, 2001.
+Pablo Villalobos and David Atkinson. Trading off compute in training and inference. Epoch AI,
+https://epoch.ai/blog/trading-off-compute-in-training-and-inference, 2023.
+Parker Whitfill and Cheryl Wu. Will compute bottlenecks prevent an intelligence explosion?
+Technical report, arXiv preprint arXiv:2507.23181, 2025.
+Parker Whitfill, Ben Snodin, and Joel Becker. Forecasting AI time horizon under compute
+slowdowns. Technical report, arXiv preprint arXiv:2511.19492, 2025.
+25
+
+
+Hjalmar Wijk, Tao Lin, Joel Becker, et al. RE-Bench: Evaluating frontier AI R&D capabil-
+ities of language model agents against human experts. Technical report, arXiv preprint
+arXiv:2411.15114, 2024.
+A
+Proofs
+Throughout, R∗denotes research capacity (8) and α∗= X/(L + X). The CES exponent
+(σ −1)/σ is negative because 0 < σ < 1. I call the two branches of (8) the corner branch
+(α ≤α∗, where all labor works on human-only tasks) and the flat branch (α ≥α∗). I drop
+time subscripts.
+A.1
+Task allocation
+Proof. Since the exponent (σ −1)/σ is negative, maximizing R is equivalent to minimizing
+Φ ≡
+R 1
+0 r(i)(σ−1)/σ di, and all tasks are staffed at an optimum. Because compute contributes
+nothing on tasks i > α, any optimum sets z(i) = 0 there, so all compute is deployed on the
+automated block.
+Step 1 (Within-Block Equalization). Let ℓA ≡
+R α
+0 ℓbe labor assigned to automated tasks,
+so the automated block has total input X + ℓA and the human-only block has L −ℓA. The
+map u 7→u(σ−1)/σ is strictly convex on (0, ∞): its second derivative is σ−1
+σ · −1
+σ u(σ−1)/σ−2 > 0.
+By Jensen’s inequality, for a block of measure b with total input Y ,
+Z
+block
+r(σ−1)/σ ≥b
+Y
+b
+(σ−1)/σ
+= b1/σ Y (σ−1)/σ,
+with equality iff r is constant on the block; the constant profile is feasible because inputs are
+perfect substitutes within tasks. Hence
+Φ(ℓA) = α1/σ(X + ℓA)(σ−1)/σ + (1 −α)1/σ(L −ℓA)(σ−1)/σ.
+Step 2 (Labor Across Blocks). Write rA = (X + ℓA)/α and rN = (L −ℓA)/(1 −α) for
+per-task inputs. Differentiating,
+Φ′(ℓA) = σ −1
+σ
+
+α1/σ(X + ℓA)−1/σ −(1 −α)1/σ(L −ℓA)−1/σ
+= σ −1
+σ
+h
+r−1/σ
+A
+−r−1/σ
+N
+i
+.
+Since (σ −1)/σ < 0 and u 7→u−1/σ is strictly decreasing, Φ′ < 0 exactly when rA < rN: labor
+flows toward the block with lower per-task input. The interior solution equalizes rA = rN, i.e.
+26
+
+
+ℓA = αL −(1 −α)X, which is nonnegative iff α ≥α∗; then r(i) ≡L + X and R∗= L + X,
+the flat branch. If α < α∗then rA > rN already at ℓA = 0 (as X/α > L/(1 −α) iff α < α∗),
+so Φ′(0) > 0; since Φ(ℓA) is strictly convex (a sum of strictly convex functions of affine maps),
+the first-order condition characterizes the unique minimum, Φ is increasing on [0, L), and the
+corner ℓA = 0 is optimal, giving R∗= Φ(0)σ/(σ−1), the corner branch of (8).
+A.2
+Bottleneck bounds
+Define the human-bottleneck bound as research capacity when effective compute is unlimited,
+R(α) ≡limX→∞R∗(α; L, X).
+Lemma 1 (Bottleneck Bounds). For every α ∈(0, 1), the human-bottleneck bound exists and
+equals
+R(α) =
+L
+(1 −α)1/(1−σ),
+(18)
+and research capacity satisfies
+R∗(α; L, X) ≤min
+
+L + X, R(α)
+	
+.
+(19)
+Proof. Compute-Abundant Limit. Fix α ∈(0, 1). Because α∗= X/(L + X) converges to one,
+the corner branch of (8) applies for all sufficiently large X. Since (σ −1)/σ < 0, X(σ−1)/σ
+converges to zero, and therefore
+lim
+X→∞R∗(α; L, X) =
+
+(1 −α)1/σL(σ−1)/σσ/(σ−1) =
+L
+(1 −α)1/(1−σ).
+Upper Bounds. R∗≤
+R 1
+0 r = L + X is the power-mean inequality: the mean of order
+(σ −1)/σ < 1 is below the arithmetic mean. For the second: for any feasible allocation, the
+human-only block receives only labor, total at most L, so by Jensen (Step 1 of Appendix A.1)
+Φ ≥
+Z 1
+α
+r(σ−1)/σ ≥(1 −α)1/σ
+Z 1
+α
+r
+(σ−1)/σ
+≥(1 −α)1/σL(σ−1)/σ,
+the last step because u 7→u(σ−1)/σ is decreasing and
+R 1
+α r ≤L. Raising to the negative power
+σ/(σ −1) flips the inequality: R∗≤L(1 −α)1/(σ−1) = R(α).
+A.3
+Asymptotic growth
+Proof. Along any path, research output is research capacity at the current capability and
+effective compute, Rt = R∗(α(At); L, X(At)) with X(A) = cZAη by (5) and 1 −α(A) = A−µ
+27
+
+
+by (4), so gA = δ(R∗)λA−β and
+d ln gA
+d ln A = λ d ln R∗
+d ln A −β.
+Let m ≡min{η, µ/(1 −σ)}. Since β(r∗−1) = λm −β, it suffices to show that the elasticity
+of R∗with respect to A converges to m. I also show that R∗/Am converges to a positive
+constant, which the proof of Corollary 1 uses.
+If µ = 0, then α ≡0 and R∗= L: the elasticity is zero and m = 0.
+Suppose µ > 0. On the corner branch, let
+ΦA = α1/σX(σ−1)/σ,
+ΦN = (1 −α)1/σL(σ−1)/σ,
+ωA =
+ΦA
+ΦA + ΦN
+,
+ωN = 1 −ωA,
+so that R∗= (ΦA + ΦN)σ/(σ−1). Using d ln X/ d ln A = η and d ln(1 −α)/ d ln A = −µ,
+d ln R∗
+d ln A =
+σ
+σ −1
+
+ωA
+σ −1
+σ
+η + 1
+σ
+d ln α
+d ln A
+
+−ωN
+µ
+σ
+
+= ωA η+ωN
+µ
+1 −σ −ωA
+1 −σ
+d ln α
+d ln A. (20)
+The last term vanishes as A →∞because α →1. The weights are governed by the ratio
+ΦA
+ΦN
+= α1/σ
+cZ
+L
+(σ−1)/σ
+A(µ−(1−σ)η)/σ,
+which diverges if η < µ/(1−σ), converges to zero if η > µ/(1−σ), and converges to a positive
+constant if the two are equal. In the first case ωA →1 and the elasticity converges to η; in the
+second ωN →1 and it converges to µ/(1 −σ); in the third both terms converge to η. In every
+case the limit is m. For the level: if ωA →1, then R∗/Aη = α1/(σ−1)cZ (1 + ΦN/ΦA)σ/(σ−1) →
+cZ, so R∗/Am →cZ; if ωN →1, then R∗→Φσ/(σ−1)
+N
+= LAµ/(1−σ), so R∗/Am →L; in the tie,
+R∗/Aη converges to the positive constant
+
+(cZ)(σ−1)/σ + L(σ−1)/σσ/(σ−1).
+On the flat branch, R∗= L + cZAη, whose elasticity η cZAη/(L + cZAη) converges to
+η when η > 0 and equals zero when η = 0, and R∗/Aη converges to cZ if η > 0 and equals
+L + cZ if η = 0. The flat branch applies when α ≥α∗, that is, when 1 + cZAη/L ≤Aµ;
+for large A this requires η ≤µ, which implies η ≤µ/(1 −σ), so on the flat branch m = η
+and the limits agree with those above. The sign of Aµ −1 −cZAη/L is eventually constant
+(positive if η < µ, negative if η > µ, and, if η = µ, positive if and only if cZ < L), so exactly
+one branch applies for all large A. On that branch the elasticity of R∗converges to m and
+R∗/Am converges to a positive constant, which proves the first form of (10); dividing by β
+gives the second.
+28
+
+
+A.4
+SIE conditions
+Proof. By Proposition 2, lim infA→∞d ln gA/ d ln A = β(r∗−1), which is positive if and
+only if r∗> 1, that is, if and only if both inequalities in (11) hold.
+If r∗= 1 then
+λm = β, and since R∗/Am converges to a positive constant K (proof of Proposition 2),
+gA = δ(R∗/Am)λAλm−β →δKλ > 0.
+For finite-time divergence, note first that At →∞: since R∗> 0,
+˙A > 0, and if At
+were bounded it would converge to some A∞< ∞with
+˙At →δR∗(A∞)λA1−β
+∞
+> 0, a
+contradiction. So At eventually enters any region A ≥¯A, and the same convergence gives
+constants 0 < c0 < C0 < ∞with c0Am ≤R∗≤C0Am for all sufficiently large A. If λm > β,
+then ˙A ≥δcλ
+0A1+(λm−β), so comparison with a superlinear power law gives divergence in
+finite time. If λm ≤β, then ˙A ≤δCλ
+0 A1+(λm−β) ≤δCλ
+0 A for A ≥1, so At grows at most
+exponentially and cannot diverge in finite time. Finite-time divergence therefore occurs
+exactly when λm > β, that is, when both inequalities in (11) hold.
+A.5
+Capability from time horizons
+Proof. By (b) the tasks automated at level A are exactly those with q ≤h(A), and by (c)
+their measure in the continuum is α(A) = F(h(A)). For h(A) ≥h0, (d) gives 1 −α(A) =
+1−F(h(A)) = ¯F0(h(A)/h0)−k, which is (14). Taking logarithms, ln(1−α) = −k ln h+ln ¯F0 +
+k ln h0; differentiating with respect to ln A gives µ ≡−d ln(1 −α)/ d ln A = k d ln h/ d ln A,
+and differentiating with respect to time gives (15).
+A.6
+Returns ratios
+Proof. From (1), gA = δRλA−β, so ln gA = ln δ + λ ln R −β ln A and d ln gA/ dt = λgR −βgA.
+A constant gA requires βgA = λgR.4 Dividing gν = ηgA and gα = µgA by βgA = λgR gives
+η/β = gν/(λgR) and µ/β = gα/(λgR), so
+rE = λη
+β = gν
+gR
+,
+rC =
+λµ
+(1 −σ)β =
+gα
+(1 −σ)gR
+,
+and Corollary 1 gives (16).
+4With L and Z fixed, a balanced path with constant gA > 0 exists only in the knife-edge case r∗= 1; the
+identification instead uses a historical window in which research labor grew. Over that window AI supplied a
+small share of research input, so R ≈L and gR is the growth rate of research labor (Section 5.3).
+29
+
+
+B
+Calibration Details
+B.1
+Efficiency-leg detail
+Sources.
+The four estimates of efficiency progress are:
+1. Inference prices. The hardware-adjusted algorithmic component of the decline in open-
+weight inference prices at fixed GPQA Diamond performance is 3.22× per year (90%
+confidence interval 1.54 to 6.75×), 1.17 per year [Gundlach et al., 2025b].
+2. Pretraining compute. Ho et al. [2024] estimate, across 231 language models from 2012
+to 2023, that the pretraining compute required to reach a fixed performance halved
+every 8.4 months (95% confidence interval 4.5 to 14.3 months), a rate of 0.99 per year.
+3. Scale-independent component. Gundlach et al. [2025a] retrain historical architectures
+with and without individual innovations and extrapolate the comparisons to frontier
+compute. Of the 6,930× efficiency gain they account for over 2012–2023, 2,700× comes
+from scale-dependent changes, leaving about 2.6× that is independent of scale, 0.09
+per year. Notably, this is much lower than other measures of efficiency progress.
+4. Computer vision. The compute needed to achieve a fixed performance on ImageNet
+classification halves every 9 months (95% confidence interval 4 to 25 months), giving a
+progress rate of 0.92 per year [Erdil and Besiroglu, 2022].
+No single one of these measures the model’s gν exactly. While inference efficiency is the
+ideal measure, Gundlach et al. [2025b] is not an ideal estimate of it, focusing only on two
+benchmarks and identifying the inference decline only from a sliver of open models over a
+short time period. In contrast, the other three measures cover roughly a decade of progress
+from 2012 onward, measure compute directly in FLOPs rather than inferring it from prices,
+and hold performance fixed by design, making them suitable for triangulation. Thus, I assign
+1/2 weight to inference price declines, and 1/6 weight to the three other measures, pooling
+them linearly as described below. The baseline value that comes from averaging the rates
+this way is gν = 0.92.
+Pooling the efficiency estimates.
+Source j reports a rate ˆgj with log standard deviation sj
+and receives weight wj. The baseline is the weighted average of the rates, and gν is log-normal
+around it with a dispersion equal to the weighted average of the sources’ dispersions:
+ˆgν =
+X
+j
+wj ˆgj,
+ln gν ∼N
+
+ln ˆgν,
+  P
+j wjsj
+2
+.
+(21)
+30
+
+
+Each sj comes from its source’s confidence interval; the scale-independent component, for
+which none is reported, carries the dispersion of the pretraining interval. I pool linearly rather
+than log-linearly because a log-linear pool weights each source by its precision as well as by
+wj, and the precision of the scale-independent component is borrowed from the pretraining
+interval rather than reported; a linear pool keeps the weights at those of Section 5.3.
+Computer-vision and inference-price estimates.
+The fixed-performance design applied
+to ImageNet classification gives a halving time of 9 months with a 95% confidence interval of
+4 to 25 months [Erdil and Besiroglu, 2022]. On the inference side, Gundlach et al. [2025b]
+decompose the decline in the price of reaching a fixed score on GPQA Diamond (graduate-level
+science questions), Mock AIME (competition mathematics) and SWE-bench Verified (real
+software-engineering issues from GitHub repositories) into a hardware component, about
+1.3× per year in price-performance, and an algorithmic component, about 3× per year for
+open-weight models (3.22× on GPQA Diamond, the rate used here), with strong dependence
+on the score level. Raw declines in the price of fixed capability are far larger, 9× to 900×
+per year across benchmarks and thresholds [Cottier et al., 2025], because they also reflect
+hardware, pricing, and the conversion of training compute into inference savings through
+distillation and overtraining, which Villalobos and Atkinson [2023] put at roughly one order
+of magnitude of inference compute per one to two orders of magnitude of additional training
+compute. The hardware-adjusted algorithmic component is close to the pretraining rate, so
+the training-side and inference-side measurements of fixed-task efficiency agree, and both
+enter the pool that sets the baseline.
+Denominator alternatives.
+Ho and Whitfill [2025] report that AI companies are almost
+doubling their staff headcounts each year, using OpenAI’s staff counts since November 2022,
+and Davidson et al. [2026] report growth in AI-laboratory headcount of roughly 140% per year
+since ChatGPT, from Epoch AI data. The software-researcher growth rate of 110% per year
+in Davidson et al. [2026] is backed out from their calibration rather than measured. Research
+and engineering staff across the sector grow at about 23% per year. A denominator that treats
+experiment compute as a research input, with a compute share of research spending of about
+two thirds and compute spending growing at 3.7× per year, is 0.67 × 1.3 + 0.33 × 0.85 ≈1.15
+[Ho and Whitfill, 2025]. Experiment compute is not the inference compute Z of the model,
+so the labor rate is the baseline and the augmented rate is the upper end of the range in
+Table 2; the lower end, 0.64 (1.90× per year), mirrors it in logs around the baseline.
+31
+
+
+B.2
+Capability-leg detail
+Task-length sample.
+The baseline source is the task suite on which METR measures
+time horizons, in its Time Horizon 1.1 release [METR, 2026]: 157 software, machine-learning,
+cybersecurity and reasoning tasks from HCAST [Rein et al., 2025], five research-engineering
+environments from RE-Bench [Wijk et al., 2024], and 66 sub-minute software actions. A
+task’s length is the geometric mean of the completion times of the human baseliners who
+succeeded at it. Tasks with no successful baseline carry only a researcher estimate, and I
+drop them: the estimation sample is the 96 HCAST and RE-Bench tasks whose lengths are
+measured rather than estimated. This suite is the baseline for two reasons. First, among the
+datasets with per-task times its measured lengths reach furthest into the tail, where the index
+is fitted, and they are measured under one protocol. Second, the horizon trend is measured
+on it, so both objects in gα = k gh refer to one distribution. Appendix B.3 describes the
+baselining protocol and the two other datasets.
+Two further datasets serve to triangulate:
+1) METR’s early-2025 study of experienced open-source developers [Becker et al., 2025]
+records forecast and actual completion times for 246 issues from the developers’ own
+repositories: real work rather than a designed suite, but developers were asked to
+contribute issues expected to take at most two hours, so the distribution is truncated
+from above.
+2) GDPval [Patwardhan et al., 2025] covers 1,320 tasks across 44 occupations, with
+completion times self-reported by experts and validated by reviewers. Its tasks are far
+from AI research, but it spans a very diverse set of professions, and so it represents an
+outside view of how long tasks are distributed; only its published quantiles are available.
+Estimator.
+Let x1, . . . , xn be the human completion times of the tasks in a dataset. The
+empirical task-length distribution, weighted by task length as in step (c), satisfies
+1 −ˆF(T) =
+P
+i: xi>T xi
+P
+i xi
+,
+(22)
+the share of work-hours in tasks longer than T. If F has the Pareto tail of step (d) above
+h0, the length-weighted (pseudo-)maximum-likelihood estimate of k from the tasks above h0,
+which is consistent for k, is
+ˆk =
+P
+i: xi>h0 xi ln(xi/h0)
+P
+i: xi>h0 xi
+−1
+.
+(23)
+32
+
+
+task length, hours
+share of hours in tasks
+Data
+n
+p25
+p50
+p75
+p90
+max
+> 4 h
+> 8 h
+TH1.1 baselined tasks
+96
+0.1
+0.4
+1.3
+5.5
+18.5
+0.74
+0.37
+Early-2025 RCT, actual
+246
+0.7
+1.2
+2.2
+3.8
+10.0
+0.32
+0.10
+Early-2025 RCT, forecast
+246
+1.0
+1.5
+2.5
+4.0
+6.0
+0.09
+0.00
+GDPval, full set (published) 1320
+2.0
+4.0
+8.0
+—
+605.0
+—
+—
+Table 6: Task-length data (human hours).
+As a check on the functional form, I also report a log-log regression of 1 −ˆF on T between
+h0 and the longest task. The threshold h0 is four hours: above the body of the suite, where
+three quarters of the baselined tasks are shorter than 1.3 hours, and below the eight-hour
+budget that caps the RE-Bench tasks.
+Fits.
+Table 7 reports the fits. The estimate above four hours is k = 1.31, and the log-log
+slope gives 1.29. The developer study gives 1.87 above four hours; its distribution is narrower
+because issues were screened to be completable in a session. GDPval’s quantiles give 1.34
+between the 75th percentile and the maximum; its published quantiles support only a count-
+weighted fit, so the value is not directly comparable to the length-weighted baseline. Thus,
+the baseline is k = 1.31, with a range from the same estimator at a one-hour threshold, 0.52,
+to the developer-study value, 1.87.
+Software share.
+In Whitfill et al. [2025], algorithmic progress of galg = 1.27 per year (95%
+confidence interval 0.67 to 3.61), against frontier training-compute growth of 4.5× per year
+[Sevilla and Rold´an, 2024], gives s = 1.27/(1.27 + ln 4.5) = 0.46, and their confidence interval
+maps to a range of 0.31 to 0.71. Two independent decompositions serve for triangulation:
+the stitched capability index of Ho et al. [2025] attributes 0.30 units per year of capability
+growth to software and 0.27 to compute, a share of 0.52, and the pretraining efficiency rate
+of Ho et al. [2024] in place of galg gives a share of 0.40.
+Substitution elasticity.
+The model’s σ is the substitutability of AI research labor, supplied
+by inference compute, for human researchers across research tasks. No estimate of σ exists.
+Calibrated models of AI-driven growth set the task elasticity at 0.67 [Davidson, 2023], 0.61
+with a range of 0.17 to 0.83 [Erdil et al., 2025], and 0.5 [Korinek and Suh, 2024], drawing
+on aggregate estimates of substitution between capital and labor. Whitfill and Wu [2025]
+estimate the elasticity of substitution between research compute and research labor: 2.58
+(standard error 0.34) treating all research compute as the input, and −0.10 (standard error
+0.18), which is Leontief, treating frontier-scale experiments as the input. Their compute is
+33
+
+
+0.1
+1
+10
+Task length T (human hours)
+1%
+10%
+100%
+METR Time Horizon 1.1, baselined tasks
+Share longer than T
+0.1
+1
+10
+Task length T (human hours)
+METR early-2025 developer study, actual issue times
+Figure 3: Survival of task length by share of hours (solid) and share of tasks (dashed), with
+the Pareto tail fitted above four hours (purple).
+the compute spent on training runs and experiments, which is not the inference compute Z
+of the model, so these estimates bear on σ indirectly, through the complementarity between
+machine and human inputs in research production. By Proposition 1, σ is also the elasticity
+of substitution between effective compute and research labor below the threshold α∗. The
+baseline is the GATE value σ = 0.61, with a range from 0, the Leontief limit (in which the
+results above hold with σ = 0) at the low end of the Whitfill and Wu [2025] evidence, to 0.83,
+the upper bound of the GATE range. At σ ≥1, outside the model’s maintained range, tasks
+are substitutes rather than complements and the capability leg holds trivially.
+B.3
+Task-length data
+METR task suite.
+HCAST [Rein et al., 2025] comprises 189 tasks in 78 families spanning
+machine learning, cybersecurity, software engineering and general reasoning; the time-horizon
+suite of Kwa et al. [2025] used 97 of them, and Time Horizon 1.1 [METR, 2026] raised the
+total suite from 170 to 228 tasks by adding 73 HCAST tasks, removing 15 and updating
+53. Human baseliners are recruited mainly through the professional networks of METR
+staff, must hold a degree from a top-100 university or have more than three years of relevant
+professional experience, and must pass a domain-specific qualification task; their average
+relevant experience is about five years. They are paid $50 to $100 per hour plus $25 to $150
+per hour in performance bonuses, with a success bonus proportional to time spent and a speed
+bonus for completing a task faster than every other baseliner, a structure METR describes
+34
+
+
+as pushing task-time estimates toward a lower bound on human time. Baseliners work in
+the same containerized environment as the agents over SSH with identical instructions, are
+recorded, may use the web, and may not use AI assistants; RE-Bench baseliners were allowed
+AI tools. Most tasks are scored pass or fail; continuously scored tasks are binarized at a
+success threshold shown to the baseliners. A task’s length is the geometric mean of the
+completion times of its successful baseline runs, since baseline times are roughly log-normal; a
+task counts as baselined if at least one run succeeded, and METR notes that conditioning on
+success biases lengths downward. For tasks with no successful baseline the length is a forecast
+by the task’s creator or an author familiar with it. In HCAST, 61% of baseline attempts
+succeeded and 110 of 189 tasks received at least one successful baseline. Tasks are weighted
+by the inverse square root of their family size in the horizon regression. METR rates each
+task on sixteen “messiness” factors; the mean score is 3.2 of 16, no task scores above 8, and
+METR states that the tasks differ systematically from real work in having automatic scoring,
+clearly defined scope and little outside context.
+Three features of this protocol matter for the tail fit. First, RE-Bench environments
+are run under an eight-hour budget, and the long HCAST additions are mostly estimated
+rather than baselined: of the 31 tasks in Time Horizon 1.1 estimated at eight hours or more,
+five have measured lengths. The estimation sample therefore contains no measured length
+above 18.5 hours, and the tail is censored there. Second, the geometric mean over successful
+runs and the speed incentives both shorten measured lengths relative to the time a typical
+human would need, which shifts the distribution left without a clear effect on its slope.
+Third, I exclude the sub-minute software actions because they were baselined by METR
+employees under a different protocol and lie four orders of magnitude below the threshold.
+The estimation sample is the 96 tasks in the Time Horizon 1.1 release whose length comes
+from human baselines and whose source is HCAST or RE-Bench.
+Developer study.
+Becker et al. [2025] recruited 16 experienced developers, typically with
+more than a decade of experience and about five years and 1,500 commits on their repository,
+from mature open-source projects averaging 23,000 stars, 1.1 million lines of code and ten
+years of age. Each developer supplied a list of real issues from their own repository; about half
+were not formally defined on the repository. Before each issue was randomized, the developer
+forecast how long it would take with and without AI assistance. Issues were then assigned by
+coin flip to an AI-allowed or AI-disallowed condition, and developers self-reported the time
+spent before and after pull-request review; screen recordings were collected for compliance
+and for activity labeling of a subset. Developers were paid $150 per hour and were asked to
+contribute issues taking at most two hours or to split longer ones, so the sample is drawn
+35
+
+
+from the short end of the work distribution, and the longest recorded implementation took
+ten hours. I use the initial implementation time across both conditions. METR’s late-2025
+follow-on with 57 developers is larger but, by METR’s own account, subject to selective
+submission of tasks and unreliable time reporting, so I do not use it.
+GDPval.
+Patwardhan et al. [2025] constructed 1,320 tasks across 44 occupations in the nine
+sectors that contribute most to United States GDP, with at least 30 tasks per occupation, and
+a gold subset of 220. Task writers were professionals with at least four years of experience,
+fourteen on average, screened by interview, background check and a qualification quiz.
+Completion times are the writers’ self-reports of the real-world time the task takes, validated
+and corrected by multiple independent occupational reviewers. The paper publishes the mean,
+standard deviation, minimum, quartiles and maximum of these times for the full set and
+the gold subset; the public release contains prompts, reference files and rubrics for the gold
+subset but no times. I fit the full-set quartiles and maximum, count-weighted by necessity.
+count-weighted
+length-weighted
+Data
+Threshold
+Tasks above
+Hill
+Hill
+log-log
+TH1.1 baselined tasks (n = 96)
+1 h
+27
+0.76
+0.52
+0.67
+2 h
+19
+0.96
+0.73
+0.97
+4 h
+15
+1.74
+1.31
+1.29
+Early-2025 RCT issues (n = 246)
+1 h
+148
+1.33
+0.86
+1.15
+2 h
+68
+1.72
+1.25
+1.51
+4 h
+21
+2.13
+1.87
+2.29
+GDPval quantiles (n = 1320)
+8 h
+330
+1.34
+—
+—
+Table 7: Tail index estimates for task length: count-weighted and length-weighted Hill
+estimates, and the log-log slope of 1 −ˆF between the threshold and the longest task.
+B.4
+Monte Carlo
+Table 8 gives the source of every input in Table 2. The Monte Carlo draws gν from the linear
+pool (21) of the rates 1.17, 0.09, 0.99 and 0.92, with weights 1/2 on the first and 1/6 on each
+of the others: a log-normal distribution with median 0.92, the baseline, and log standard
+deviation 0.40, the weighted average of the sources’ log standard deviations, each implied
+by its source’s confidence interval, with the scale-independent component, for which none is
+reported, taking that of Ho et al. [2024]; gh from a log-normal distribution with median at the
+baseline and dispersion set by its confidence interval; gR and k from log-uniform distributions
+36
+
+
+on their ranges; and s and σ from uniform distributions on their ranges. Inputs are drawn
+independently of one another, and each draw’s gR enters both ratios.
+Input
+Source
+gν
+Linear pool of four fixed-task rates: the baseline is their weighted average and the log standard
+deviation is the weighted average of their log standard deviations, each from its source interval.
+Sources: the hardware-adjusted algorithmic component of inference-price declines of Gundlach
+et al. [2025b], 3.22×/yr on GPQA Diamond for open-weight models (90% CI 1.54–6.75) (weight
+1/2); the scale-independent component of Gundlach et al. [2025a], 2.6× over 2012–2023, no
+interval reported, pretraining dispersion (1/6); Ho et al. [2024], compute to fixed perplexity
+halves every 8.4 months (95% CI 4.5–14.3) (1/6); the ImageNet rate of Erdil and Besiroglu
+[2022], 9 months (95% CI 4–25) (1/6)
+gR
+Frontier-lab staff growth since late 2022: OpenAI staff 0.85/yr [Ho and Whitfill, 2025], Epoch
+AI lab headcount ≈140%/yr [Davidson et al., 2026]; baseline is their mean in logs; high end
+is the experiment-compute-augmented denominator of Ho and Whitfill [2025], low end mirrors
+it in logs around the baseline
+gh
+METR [2026]: doubling every 131 days since 2023 (95% CI 107–161); the 2019–2025 doubling
+time is 196 days (162–223)
+s
+Whitfill et al. [2025]: horizon growth proportional to effective-compute growth gC + galg, with
+algorithmic progress galg = 1.27/yr (95% CI 0.67–3.61) and training compute growth 4.5×/yr
+[Sevilla and Rold´an, 2024]; the capability-index decomposition of Ho et al. [2025] gives 0.52
+k
+Length-weighted Pareto fit above four hours to the human-baselined tasks of METR’s Time
+Horizon 1.1 suite [METR, 2026, Rein et al., 2025]; low end: the same fit above one hour;
+high end: the same fit to the real open-source issues of Becker et al. [2025]; GDPval quantiles
+[Patwardhan et al., 2025] give a count-weighted 1.34
+σ
+Whitfill and Wu [2025]: −0.10 (SE 0.18) with frontier-experiment compute, 2.58 (SE 0.34)
+with total research compute; Davidson [2023]: 0.67; Erdil et al. [2025]: 0.61 (0.17–0.83);
+Korinek and Suh [2024]: 0.5
+Table 8: Sources for the calibration inputs.
+37
