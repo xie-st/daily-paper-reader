@@ -1,0 +1,508 @@
+Title: On-Policy Self-Distillation with Teacher Evolution
+
+URL Source: https://arxiv.org/pdf/2610.38637v1
+
+Published Time: Fri, 30 Oct 2026 01:40:08 GMT
+
+Number of Pages: 16
+
+Markdown Content:
+# On-Policy Self-Distillation with Teacher Evolution 
+
+Shufan Shen 1,2 Zhongni Hou 3,† Chao Bi 1 Yufei Zhang 3
+
+Guojun Yin 3 Shuhui Wang 1,†  
+
+> 1
+
+State Key Lab. of AI Safety, Institute of Computing Technology, Chinese Academy of Sciences  
+
+> 2
+
+University of Chinese Academy of Sciences 3 Meituan 
+
+shenshufan22z@ict.ac.cn 
+
+Abstract 
+
+On-Policy Self-Distillation (OPSD), which aligns a student model’s token-level distribu-tion with that of its self-teacher prompted by privileged context, has emerged as a promis-ing direction to mitigate reward sparsity in sequence-level post-training paradigms. How-ever, OPSD often fails to achieve continuous performance gains during training. In this paper, we find that the model’s limited self-teaching capability underlies this phenomenon by generating unreliable guidance on certain samples. To address this problem, we propose Teacher-Evolution Self-Distillation (TESD), which enables the self-teacher to generate roll-outs and receive environmental feedback based on task correctness and context independence. First, using these rewards as training objectives, we perform teacher-oriented optimization to continuously enhance the model’s self-teaching capability during distillation. Second, by esti-mating teacher guidance reliability from these rewards, we apply adaptive student-oriented op-timization to down-weight samples with unre-liable guidance. Extensive experiments across multiple datasets and model scales show that TESD consistently outperforms representative token-level and sequence-level methods, high-lighting the necessity of improving supervision quality in OPSD. 
+
+1 Introduction 
+
+Post-training has emerged as a crucial stage for en-hancing the reasoning abilities of large language models (LLMs) (Achiam et al., 2023; Kumar et al., 2025; Zheng et al., 2025; Shen et al., 2026a). Among various post-training techniques, reinforce-ment learning with verifiable rewards (RLVR) has proven to be a practical paradigm in domains where model outcomes can be automatically veri-fied (Shao et al., 2024). Despite achieving strong performance, representative RLVR methods assign 
+
+> †
+
+Corresponding authors. context & rollout adaptively guide reward rollout 
+
+> (a) On-Policy Self-Distillation (OPSD) (b) Teacher-Evolution Self-Distillation (Ours) (c) Training Accuracy
+> context & rollout indiscriminately guide
+> act as
+
+student self-teacher 
+
+student self-teacher environment 
+
+> LLM act as
+
+Figure 1: (a) In OPSD, the self-teacher provides guid-ance indiscriminately across all samples without improv-ing its own capabilities, thereby degrading the quality of supervision delivered to the student. (b) TESD im-proves the self-teacher using the environmental rewards of its rollouts while delivering adaptive guidance by down-weighting samples with unreliable supervision. (c) TESD achieves more continuous performance im-provement than current OPSD methods. 
+
+the same reward to all tokens within a response. This sparse sequence-level scheme overlooks the varying significance of individual tokens, hinder-ing the model’s ability to focus on important tokens during optimization (Li et al., 2026). To address this limitation, On-Policy Self-Distillation (OPSD) offers dense supervision by in-troducing a self-teacher as shown in Figure 1 (Zhao et al., 2026b; Shenfeld et al., 2026). The self-teacher is constructed by prompting the student with a self-generated privileged context, which usually consists of a correct solution to the input query. By computing the per-token logits of the self-teacher on the student’s rollouts, OPSD deliv-ers token-level supervision while preserving the on-1arXiv:2610.38637v1 [cs.LG] 28 Oct 2026 policy property. Therefore, it can maintain align-ment between the dense supervision signal and the model’s current behavior (Hübotter et al., 2026). However, existing OPSD methods fail to contin-uously improve performance during training (Yang et al., 2026; Li et al., 2026), leading to suboptimal results as shown in Figure 1(c). This phenomenon is correlated with their reliance on the assumption of the model’s strong self-teaching ability, i.e. , the self-teacher can always correctly guide diverse stu-dent rollouts based on the limited privileged con-text. First , this assumption deviates from practi-cal implementations. The self-teacher only has the additional privileged context compared to the student, without any improvements in model capa-bility. Thus, the self-teacher may fail to associate the limited privileged context with diverse student rollouts (Yu et al., 2026), leading to unreliable guid-ance. This insufficient self-teaching capability also struggles to improve during training, as the cur-rent OPSD paradigm optimizes the model solely as a student. Second , relying on this unrealistic as-sumption, current methods overlook the teacher’s potential to deliver unreliable guidance on certain samples. Consequently, the student is forced to follow the teacher’s guidance across all samples indiscriminately (Hübotter et al., 2026), thereby injecting misleading signals into its optimization process. These two problems limit the quality of supervision received by the student, making it diffi-cult for OPSD to achieve continuous performance improvement during the distillation process. In this paper, we propose the Teacher-Evolution Self-Distillation (TESD) framework to enhance the supervision quality of OPSD. As shown in Figure 1(b), rather than generating rollouts only through the student, TESD enables the self-teacher to generate rollouts and receive rewards. Based on these rewards, TESD introduces two complemen-tary mechanisms to address the aforementioned problems: teacher-oriented optimization to im-prove the model’s self-teaching ability, and adap-tive student-oriented optimization to mitigate the impact of unreliable teacher guidance. Specifically, for the reward function, we design it with both task-correctness and context-independence to esti-mate the model’s self-teaching ability. For teacher-oriented optimization, these rewards serve directly as training objectives for the self-teacher. This ob-jective encourages the self-teacher to generate cor-rect and distinct solutions from privileged contexts, thereby improving its ability to associate the priv-ileged context with diverse student rollouts. For adaptive student-oriented optimization, these re-wards reflect the reliability of teacher guidance across different samples and serve as sample-wise weights that adaptively scale the student’s loss val-ues. By suppressing gradient updates from samples with unreliable guidance, their negative impact on student optimization can be mitigated. In experiments, we evaluate the effectiveness of TESD on pre-trained LLMs (Yang et al., 2025; Olmo et al., 2025) with different parameter sizes and multiple downstream tasks (Feng et al., 2024; Tang et al., 2023; Jain et al., 2025). The evaluation results show that TESD consistently outperforms current representative OPSD (Hübotter et al., 2026) and sequence-level RLVR (Shao et al., 2024) meth-ods. The superior performance of TESD demon-strates the significance of improving supervision quality during the self-distillation process. Our contributions are summarized as follows: • We introduce TESD, an OPSD framework that allows the self-teacher to generate rollouts and receive rewards regarding task correctness and context independence. • With the rewards from teacher rollouts, we enhance OPSD’s supervision quality through teacher-oriented and adaptive student-oriented optimization, explicitly improving the model across its dual roles as teacher and student. • Extensive experiments demonstrate the supe-rior performance of TESD, which reflects the importance of enhancing the supervision qual-ity in the OPSD paradigm. 
+
+2 Related Work 
+
+2.1 RL with Verifiable Rewards 
+
+RL with verifiable rewards (RLVR) has been widely used to improve the reasoning ability of pre-trained LLMs (Guo et al., 2025). As a rep-resentative RLVR method, GRPO (Shao et al., 2024) estimates group-relative advantages from sampled responses and removes the need for a sep-arate critic model. Subsequent studies further im-prove the GRPO by modifying the objective (Chu et al., 2025), normalization (Yu et al., 2025a), and clipping (Zhao et al., 2026b). Despite differ-ences in training strategies and loss formulations, these methods uniformly utilize sequence-level re-wards to optimize the model as a student, which 2is prompted solely by input queries. In contrast, we design a reward function incorporating task-correctness and context-independence terms to op-timize the model as a self-teacher, which receives both the input query and privileged context. By optimizing the self-teacher with this reward, we leverage sequence-level feedback to enhance the supervision quality of the token-level OPSD. 
+
+2.2 On-Policy Self-Distillation 
+
+Unlike classical knowledge distillation, which forces the student to strictly fit the teacher’s out-put trajectory (Gu et al., 2024), on-policy distil-lation (OPD) enables the teacher to provide guid-ance based on the student’s trajectory (Agarwal et al., 2024; Lu and Lab, 2025). This approach can transfer the teacher’s token-level knowledge while preserving the distribution of the student, mak-ing it widely adopted in LLM post-training (Yang et al., 2025; Zeng et al., 2026). Building upon this, the on-policy self-distillation (OPSD) paradigm guides the student using a self-teacher, which is built by prompting the student with privileged con-texts, thereby achieving OPD without the exter-nal teacher (Hübotter et al., 2026; Zhao et al., 2026a; Shenfeld et al., 2026). However, the OPSD paradigm fails to achieve performance improve-ment continuously during training. To tackle this problem, current studies suggest incorporating more privileged context (Yu et al., 2026), degrad-ing OPSD as a weighted module of GRPO (Yang et al., 2026), and implementing an entropy-based routing update strategy (Jin et al., 2026). Differ-ent from these studies relying solely on student-generated rollouts, we empower the self-teacher to generate rollouts and obtain rewards from the environment. Using these rewards, we optimize the self-teacher and adaptively adjust the intensity of its sample-wise supervision, thereby achieving more consistent performance gains over existing methods through enhanced supervision quality. 
+
+3 Method 
+
+3.1 Preliminaries: On-Policy Self-Distillation 
+
+Given an input query x, a privileged context c, and a student rollout ys sampled from the current policy 
+
+πθ(·| x), the OPSD loss function is formulated as: 
+
+LS(θ, x, y s) = 1
+
+|ys|
+
+> |ys|
+
+X
+
+> t=1
+
+D
+
+
+
+πθ(· | x, y s<t )
+
+∥ stopgrad πθ(· | x, c, y s<t )
+
+,
+
+(1)     
+
+> Figure 2: Top: We plot the task correctness and teacher confidence (measured by mean token probability) of each student rollout, with the color representing its edit distance to the privileged context. Bottom: The evolu-tion of the model’s teaching ability during the training process, which is estimated by the mean spearman cor-relation between teacher confidence and actual rewards. Experiments are conducted on the Physics subset of Sci-KnowEval using Qwen3-8B.
+
+where stopgrad [·] denotes the stop-gradient opera-tor and |ys| is the length of the rollout in tokens. 
+
+D represents an arbitrary divergence metric ( e.g. ,KL-divergence or JS-divergence), which measures the distribution gap between the student and the self-teacher. By computing a per-token distribution gap between the self-teacher and the student along the student’s own sampled rollouts, OPSD yields dense, token-level supervision in an on-policy man-ner. In practice, the self-teacher is usually updated as an exponential moving average (EMA) of the student during training (Hübotter et al., 2026). 
+
+3.2 Teaching Ability Investigation 
+
+Given that all supervision signals in the training ob-jective of Equation 1 are exclusively generated by the self-teacher πθ(· | x, c, y s<t ), its teaching abil-ity is crucial to the success of the OPSD paradigm. At the top of Figure 2, we investigate this abil-ity via the correlation between the self-teacher’s confidence in student rollouts and their verifiable rewards. This correlation reveals whether the self-teacher can assign high confidence to correct roll-outs and low confidence to incorrect ones. More-over, we visualize the similarity between each roll-out and its privileged context. The normalized edit distance is selected as the similarity metric follow-ing previous studies (Zheng et al., 2023). First, we find that the self-teacher struggles to distinguish 3Input Query x
+
+…
+
+> privileged context
+
+Self-teacher 
+
+𝜋 !(⋅ |𝑥) 𝑦 "#
+
+𝑦 $#
+
+𝑦 %#
+
+𝜋 !(⋅ |𝑥, 𝑐) 
+
+Environment 
+
+> Correctness
+> ℛ!"#$ (𝑥, 𝑦)
+> Independence
+> −ℛ %&'! (𝑐, 𝑦)
+
+𝑟 "
+
+𝑟 $
+
+𝑟 % ℒ! 𝜃, 𝑥 
+
+> 𝜋 ((⋅ |𝑥, 𝑦 )* )
+> Student
+> 𝜋 ((⋅ |𝑥, 𝑐, 𝑦 )* )
+> Self-teacher
+
+Self-distillation 
+
+> divergence
+
+𝑠 "
+
+> average
+
+𝑤 "  
+
+> ℒ+𝜃, 𝑥, 𝑦 ,-
+> softmax scaling
+
+𝑤 " ⋅ ℒ # 𝜃, 𝑥  
+
+> ℒ+𝜃, 𝑥, 𝑦 .-
+
+…
+
+Student 
+
+> advantage
+
+Distillation Loss 
+
+> rollout rollout
+> Teacher-oriented Optimization
+> Student-oriented Optimization
+
+…
+
+𝑦 "&
+
+𝑦 $&
+
+𝑦 %&
+
+…
+
+𝐴 "
+
+𝐴 $
+
+𝐴 %
+
+…
+
+> reward
+
+Figure 3: Overall framework of TESD. Given an input query, the student first generates rollouts, which provide the privileged context for the self-teacher. Then, TESD optimizes the student and the self-teacher, respectively. For the self-teacher, it interacts with the environment and learns from the obtained rewards of correctness and independence. For the student, it is supervised by the logits of the self-teacher. The loss value is adaptively weighted by the teacher’s mean reward of the corresponding input query, which estimates the quality of teacher guidance. 
+
+the correctness of student rollouts, as it assigns low confidence (0.0 ∼0.5) to certain correct roll-outs, while giving high confidence (0.5 ∼0.8) to a substantial number of incorrect ones. Second, the self-teacher tends to assign higher confidence to rollouts that resemble the privileged context. This confidence-resemblance bias is supported by the observation that high-confidence rollouts tend to have smaller edit distances from the privileged con-text, while a large number of correct yet context-dissimilar rollouts are assigned low confidence. Furthermore, we track the evolution of self-teaching ability during the training process at the bottom of Figure 2. Rather than improving as the training progresses, the self-teacher’s ability exhibits a downward trend coupled with signifi-cant instability. The results demonstrate that only student-oriented optimization in Equation 1 is in-sufficient for improving the model’s teaching abil-ity. This stagnant or declining teaching ability acts as a bottleneck, preventing the OPSD from obtain-ing continuous performance improvements. According to the above analysis, the self-teacher faces a challenge in providing reliable guidance on student rollouts, and this challenge does not di-minish as training progresses. This phenomenon emphasizes the importance of improving the qual-ity of supervision received by the student. 
+
+3.3 Teacher-Oriented Optimization 
+
+To improve the quality of guidance generated by the self-teacher, we enable it to interact with the environment. The rewards obtained from the en-vironment are directly utilized to optimize the self-teacher, thereby continuously enhancing its teaching ability during the self-distillation process. Given a input query x and a privileged context 
+
+c, the self-teacher πθ(·| x, c ) samples a set of N
+
+teacher rollouts {yt
+
+> 1
+
+, y t
+
+> 2
+
+, . . . , y tN }. Based on the in-sights into the confidence-resemblance bias shown at the top of Figure 2, the reward function r is defined as a combination of a verifiable task cor-rectness and an edit-distance term: 
+
+ri = r(x, c, y ti ) = Rtask (x, y ti ) + λedit Redit (c, y ti ),
+
+(2) where Rtask ∈ {0, 1} is the task correctness. 
+
+Redit ∈ [0 , 1] measures the normalized edit dis-tance between the rollout and the privileged con-text, and λedit is a balancing hyperparameter. As formulated in Equation 2, the edit-distance reward encourages the self-teacher to generate rollouts distinct from the privileged context, thereby sim-ulating scenarios where the teacher must gener-ate responses conditioned on diverse student roll-outs under a fixed context. Concurrently, the task-correctness reward encourages the teacher to pro-vide token-level guidance that steers these trajecto-ries toward correct solutions. With this reward, we compute the group-wise advantage Ai = ri−mean (r) 
+
+> std (r)
+
+following GRPO (Shao et al., 2024). The self-teacher is then optimized via the following objective: 
+
+LT(θ, x ) = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+min ( ρiAi, clip (ρi, 1 ± ϵ) Ai) ,
+
+(3) where ρi = πθ (yti |x,c )  
+
+> πold (yti|x,c )
+
+is the importance sampling 4ratio, πold represents the previous policy before the current training step. ϵ defines the clipping thresh-old to restrict policy updates. This teacher-oriented optimization promotes rollouts that are correct and dissimilar to privileged contexts, while penalizing those that are incorrect or overly similar to privi-leged contexts. As a result, the self-teacher learns to assign high and low confidence to these two cat-egories of student rollouts, respectively. Moreover, continuously optimizing the self-teacher during the self-distillation process mitigates the degradation of teaching ability in the bottom of Figure 2. 
+
+3.4 Adaptive Student-Oriented Optimization 
+
+With the proposed teacher-oriented optimization, we can gradually improve the ability of the self-teacher during the training process. However, it remains insufficient to alleviate the impact of un-reliable teacher guidance on students during the early stages of training, when the self-teacher is still weak. To mitigate this problem, we propose an adaptive mechanism to identify queries with un-reliable guidance and reduce their impact on the student-oriented optimization. Specifically, given an input query x from the sampled batch B, we compute the mean reward of the corresponding teacher rollouts to estimate the quality of teacher guidance: 
+
+sx = 1
+
+N
+
+> N
+
+X
+
+> i=1
+
+r(x, c, y ti ). (4) Based on this score, we can adjust the impact of different input queries on the model’s update by weighting their loss values. Unlike hard-dropping methods that lead to insufficient training (Yuan et al., 2023), we utilize a softmax normalization over the batch to compute the weights wx. The normalized weights are scaled by the batch size |B| 
+
+to preserve the overall scale of loss values. 
+
+wx = |B| · exp( sx)
+
+P 
+
+> x′∈B
+
+exp( sx′ ) , (5) During optimization, the distillation losses of dif-ferent queries are adaptively weighted: 
+
+LS(θ, x ) = wx · 1
+
+N ·
+
+> N
+
+X
+
+> i=1
+
+LS(θ, x, y si ), (6) where LS(θ, x, y si ) denotes the on-policy self-distillation loss in Equation 1, N represents the number of student rollouts. Overall, the training objective of TESD on batch B is formulated as: 
+
+L(θ) = 1
+
+|B| 
+
+X
+
+> x∈B
+
+
+
+LS(θ, x ) + LT(θ, x )
+
+
+
+(7) By integrating the teacher-oriented (Equation 3) and adaptive student-oriented optimization (Equa-tion 6), TESD improves the self-teacher while miti-gating the impact of unreliable guidance on the stu-dent. This joint formulation encourages the OPSD to achieve continuous performance gains. 
+
+4 Experiments 
+
+4.1 Experimental Setup Models and Datasets . Qwen3-1.7B/4B/8B (Yang et al., 2025) and Olmo3-7B-Instruct (Olmo et al., 2025) are selected as the base models. For datasets, we train models separately on six datasets follow-ing the prior work (Hübotter et al., 2026). The first four datasets are question-answering bench-marks from the reasoning subset (L3) of SciKnow-Eval (Feng et al., 2024), which cover scientific reasoning in Chemistry, Physics, Biology, and Materials Science. Moreover, we use a tool-use dataset from ToolAlpaca (Tang et al., 2023), where the model is required to map a tool-API spec-ification and a user request to the correct tool call. Additionally, we adopt the v6 subset of Live-CodeBench (Jain et al., 2025), a set of coding problems ranging from simple to competition-level. Each dataset is split into a training set and a test set. Furthermore, we evaluate the model across several holdout tasks to measure the ability of TESD to mitigate catastrophic forgetting (Zhou et al., 2023; Verschueren et al., 2018; Lin et al., 2022; Cobbe et al., 2021; Hendrycks et al., 2021; Clark et al., 2018; Chen et al., 2021; Li et al., 2023). 
+
+Baselines . We compare TESD with two base-lines using the standard RLVR setting (Hübotter et al., 2026). First, we adopt a strengthened im-plementation of GRPO in accordance with recent best practices (Khatri et al., 2025). This imple-mentation integrates recent refinements to GRPO, such as asymmetric clipping (Yu et al., 2025b), unbiased normalization (Liu et al., 2025), and off-policy correction for efficient inference-based roll-out generation (Yao et al., 2025). Second, we uti-lize SDPO (Hübotter et al., 2026), a representative OPSD method that functions in the same verifier-only RLVR setting as our method. SDPO provides the self-teacher with successful rollouts sampled by 5Model Method Chemistry Physics Biology Material Tooluse Mean Qwen3-4B SDPO 80.92 71.48 56.63 73.07 66.18 69.66 GRPO 81.52 78.83 60.87 82.11 63.69 73.40 SDPO+GRPO 79.58 75.37 54.62 81.85 62.87 70.86 TESD (Ours) 80.30 77.50 63.50 83.31 67.00 74.32                                                 
+
+> Qwen3-8B SDPO 77.83 67.73 62.63 79.99 62.87 70.21 GRPO 80.71 80.47 63.13 82.11 68.29 74.94 SDPO+GRPO 77.62 76.80 60.25 79.32 67.37 72.27 TESD (Ours) 81.55 80.55 64.13 81.78 70.02 75.61
+> Olmo3-7B SDPO 79.73 56.25 61.37 73.27 63.60 66.84 GRPO 78.42 67.27 55.37 76.99 65.60 68.42 SDPO+GRPO 78.69 66.02 52.50 75.47 62.32 67.00 TESD (Ours) 80.30 73.98 54.50 77.39 62.59 69.75
+
+Table 1: Performance comparisons on SciKnowEval and Tooluse benchmarks. All methods are trained to conver-gence, and scores are reported as the maximum mean@16 accuracy (%) achieved during training.                  
+
+> Method Qwen3-1.7B Qwen3-4B Qwen3-8B Mean SDPO 45.35 56.97 62.38 54.90 GRPO 44.96 56.12 60.85 53.98 SDPO+GRPO 46.38 59.88 61.95 56.07 TESD (Ours) 45.98 60.07 63.31 56.45
+
+Table 2: Performance comparisons on LCBv6 bench-mark using different base models. 
+
+the current policy as the privileged context to offer token-level guidance. We do not incorporate other OPSD methods, like SDFT (Shenfeld et al., 2026), due to their reliance on human-labeled solutions. 
+
+Implementation Details . For fair comparisons, the number of generated rollouts is fixed at 16 across all methods. TESD allocates 8 rollouts each to the teacher and the student, whereas other methods generate all 16 rollouts using the student. For eval-uation, we use 16 sampled responses per problem and report the mean accuracy (mean@16). Addi-tional training and evaluation details are provided in the supplementary materials. 
+
+4.2 Performance on Downstream Tasks Learning without rich feedback . In Table 1, we evaluate the effectiveness of TESD on tasks without rich feedback, i.e. , only one correct student rollout is selected as the privileged context. First, we ob-serve that although SDPO is claimed to achieve faster convergence through the token-level super-vision (Hübotter et al., 2026), a substantial per-formance gap remains compared to the sequence-level GRPO upon full convergence ( e.g. , 69.66% vs. 73.40% on Qwen3-4B). Second, when SDPO and GRPO are directly combined, the resulting per-formance lies between that of the two individual methods ( e.g. , 72.27% vs. 74.94% on Qwen3-8B). This phenomenon indicates that a naive summation at the loss level fails to promote mutual enhance-ment. Finally, TESD outperforms all aforemen-tioned baselines across different base models. 
+
+Learning with rich feedback . In Table 2, we present the performance of TESD and other base-lines on the task with rich feedback, i.e. , the priv-ileged context including a correct student rollout and other code execution results such as runtime errors and failed unit tests. First, SDPO can out-perform GRPO with rich feedback, reflecting the importance of the information density within the privileged context for OPSD. Second, combin-ing SDPO and GRPO achieves the best perfor-mance on Qwen3-1.7B, yet lags behind TESD on larger model scales (Qwen3-4B/8B). This discrep-ancy stems from the limited capability of Qwen3-1.7B, where direct supervision of the student effec-tively accelerates its convergence. In contrast, for stronger models, integrating the self-teacher into the optimization framework improves the quality of supervision signals and then achieves better per-formance. Finally, TESD consistently outperforms SDPO and GRPO across different base models, indicating that the effectiveness of TESD is com-patible with the expansion of privileged context. 
+
+Performance on Holdout Tasks . We evaluate the catastrophic forgetting of the model on other tasks after being trained with different methods on a specific task. As Table 3 shows, TESD learns the new task while mitigating the degradation of initial capabilities, achieving a better performance-forgetting tradeoff than SDPO and GRPO. 
+
+4.3 Ablation Studies Teacher-Oriented Optimization . We provide ablations of the teacher-oriented optimization on three datasets of the SciKnowEval benchmark us-6Task Holdout Tasks Method Physics IFEval MMLU-Pro TruthfulQA GSM8K Math500 ARC-Challenge HumanEval HaluEval Mean Base 58.44 87.05 73.70 86.05 91.89 82.13 90.53 64.02 75.93 81.41 SDPO 65.08 86.33 68.70 87.64 87.19 74.60 89.33 65.85 75.68 79.42 GRPO 78.75 87.65 71.70 85.68 91.28 79.20 89.16 64.63 76.01 80.66 TESD 79.24 86.21 72.70 88.98 91.51 80.40 90.36 67.68 76.31 81.77 
+
+Table 3: Performance on avoiding catastrophic forgetting. We compare the base model (Qwen3-8B) and the final checkpoint of GRPO, SDPO and TESD on the training task (Physics) and holdout tasks.                     
+
+> Method Physics Biology Material Mean Baseline 71.48 56.63 73.07 67.06 +Seq-level Loss 75.37 54.62 81.85 70.61 +Priv-Context 73.20 51.88 82.98 69.35 +Edit-Reward 76.48 63.75 81.65 73.96
+
+Table 4: Ablations of the teacher-oriented optimiza-tion. Based on SDPO, we sequentially incorporating sequence-level loss (+Seq-level Loss), optimizing the self-teacher with privileged context (+Priv-Context), and adopting an edit-distance reward (+Edit-Reward).                     
+
+> Method Physics Biology Material Mean Baseline 77.66 62.50 81.12 73.76 +Mean Reward 74.84 55.37 78.39 69.53 +Softmax 73.67 58.75 79.26 70.56 +Scaling 80.55 64.13 81.78 75.49
+
+Table 5: Ablations of the adaptive weighting mechanism. We evaluate the impact of weighting the query losses based on the mean reward of teacher rollouts (+Mean Reward), normalizing these rewards via softmax (+Soft-max), and scaling the normalized results (+Scaling). 
+
+ing Qwen3-4B in Table 4. First, applying sequence-level optimization to the student can improve the performance of OPSD (67.06% vs. 70.61%), high-lighting the necessity of leveraging environment feedback. Second, optimizing the self-teacher us-ing sequence loss achieves performance improve-ments over OPSD (67.06% vs. 69.35%), yet fails to outperform optimizing the student (70.61% vs. 69.35%). This is because training only with a cor-rectness reward encourages the teacher to copy the privileged context as the answer, thereby undermin-ing its ability to guide diverse student rollouts. By introducing a reward term based on edit distance in Equation 2, this copying behavior can be effec-tively mitigated, thereby enhancing the teacher’s ability and resulting in enhanced performance. 
+
+Adaptive Loss Weighting . As shown in Table 5, we investigate the effectiveness of the proposed weighting mechanism on three datasets of the Sci-KnowEval benchmark using Qwen3-8B. We ob-serve that directly weighting the distillation loss of input queries using the mean reward in Equa-tion 2 leads to a performance degradation (69.53% vs. 73.76%). Introducing softmax normalization alleviates this issue, yet the performance remains worse than the unweighted baseline with teacher-oriented optimization (70.56% vs. 73.76%). After incorporating scaling and clipping, a significant per-formance boost is achieved (75.49% vs. 70.56%). This result not only validates the effectiveness of the proposed weighting mechanism but also reveals the importance of maintaining the overall scale of loss values during the weighting process. Additional ablations of the rollout numbers and 
+
+λedit are provided in the supplementary materials. 
+
+4.4 Analysis Model Uncertainty . We explore the impact of TESD on the model’s uncertainty through the accu-racy standard deviation and response length of the model. Experiments are conducted on the Physics subset of SciKnowEval using Qwen3-8B. First, as Figure 4(a) shows, both GRPO and TESD maintain a higher accuracy standard deviation compared to SDPO. Second, for response length in Figure 4(b), GRPO exhibits an increasing trend as training pro-gresses, while SDPO shows a rapid decline in the early training stages before stabilizing. TESD falls between these two trajectories, presenting a grad-ual decrease in both metrics. These results indicate that, compared to SDPO, TESD tends to maintain more uncertainty in model outputs and prevents the over-confidence phenomenon during training. Meanwhile, TESD preserves a key characteristic of the OPSD paradigm: it attempts to generate shorter responses rather than relying on extended reasoning paths to boost performance like GRPO. 
+
+Teaching Ability . For the teaching ability, we adopt the same metric as in Figure 2. As shown in Figure 4(c), integrating the self-teacher into the optimization framework can gradually enhance its ability during training. Moreover, we find that the teaching ability in TESD exhibits greater stabil-7(a) (b) (c) (d) Figure 4: We report the evolution of the standard deviation of accuracy across 16 evaluations (a), the model’s average response length (b), teaching ability (c), and the distillation loss (d) across the training process. 
+
+> Figure 5: Token-level teacher credit heatmaps of SDPO and TESD with Qwen3-8B on the Physics dataset.
+
+ity (as reflected by smaller local variance), while SDPO suffers from severe fluctuations. Addition-ally, we present the distillation loss in Figure 4(d). Compared to SDPO, TESD shows higher losses during the middle and late stages of training. By optimizing the self-teacher, it can continuously pro-vide significant guidance during training. As a re-sult, the student is prevented from overfitting to an unoptimized self-teacher in the early stages, a pit-fall that typically leads to performance stagnation in later phases. Furthermore, we provide qualitative analysis in Figure 5. In contrast to SDPO, which strongly supervises almost every token, TESD ex-hibits a sparser pattern. It diminishes the focus on common words like "a", "the", and "of", allowing the model to focus primarily on query-relevant key-words such as "ionization", "gas", and "E_{Ar}". 
+
+Evolution of Adaptive Weights . In Figure 6, we investigate the distribution of the mean teacher re-ward (Equation 4) and the corresponding adaptive weight (Equation 5) within the input batch during training. In the early stages of training, due to the weak ability of the self-teacher, the adaptive mech-anism decreases the loss of samples with unreliable teacher guidance to around 0.5. As teacher-oriented optimization improves the self-teacher over time, the teacher reward rises with the adaptive weights shifting toward 1.0. These results demonstrate the complementary relationship between the teacher-
+
+> Figure 6: Distributions of the mean reward (top) and the adaptive weight (bottom) of the input batch.
+
+oriented and the adaptive student-oriented opti-mization throughout the training process. Additional case studies and training time analy-sis are provided in the supplementary materials. 
+
+5 Conclusion 
+
+In this paper, we propose a method called Teacher-Evolution Self-Distillation (TESD) to achieve on-policy self-distillation with continuous perfor-mance improvements by enhancing the quality of the self-teacher’s supervision. First, we design a reward function considering both correctness and independence to evaluate the self-teacher’s ability to guide diverse student rollouts. Then, using this reward, we perform teacher-oriented optimization to improve the model’s self-teaching capability dur-ing training. Finally, we utilize this reward for adaptive student-oriented optimization, which sup-presses updates on queries with potentially unre-liable teacher supervision. Extensive experiments indicate the stronger performance of TESD com-pared to representative OPSD methods, indicating the importance of enhancing the supervision qual-ity. In future, we will investigate the optimization geometry of TESD and apply it to other domains such as multimodal reasoning (Shen et al., 2026b). 8References 
+
+Josh Achiam, Steven Adler, Sandhini Agarwal, Lama Ahmad, Ilge Akkaya, Florencia Leoni Aleman, Diogo Almeida, Janko Altenschmidt, Sam Altman, Shyamal Anadkat, et al. 2023. Gpt-4 technical report. 
+
+Preprint , arXiv:2303.08774. Rishabh Agarwal, Nino Vieillard, Yongchao Zhou, Pi-otr Stanczyk, Sabela Ramos Garea, Matthieu Geist, and Olivier Bachem. 2024. On-policy distillation of language models: Learning from self-generated mistakes. In The Twelfth International Conference on Learning Representations, ICLR 2024, Vienna, Austria, May 7-11, 2024 . OpenReview.net. Mark Chen, Jerry Tworek, Heewoo Jun, Qiming Yuan, Henrique Pondé, Jared Kaplan, Harrison Ed-wards, Yura Burda, Nicholas Joseph, Greg Brockman, Alex Ray, Raul Puri, Gretchen Krueger, Michael Petrov, Heidy Khlaaf, Girish Sastry, Pamela Mishkin, Brooke Chan, Scott Gray, and 34 others. 2021. Evaluating large language models trained on code. 
+
+Preprint , arXiv:2107.03374. Xiangxiang Chu, Hailang Huang, Xiao Zhang, Fei Wei, and Yong Wang. 2025. Gpg: A simple and strong reinforcement learning baseline for model reasoning. 
+
+Preprint , arXiv:2504.02546. Peter Clark, Isaac Cowhey, Oren Etzioni, Tushar Khot, Ashish Sabharwal, Carissa Schoenick, and Oyvind Tafjord. 2018. Think you have solved question answering? try arc, the ai2 reasoning challenge. 
+
+Preprint , arXiv:1803.05457. Karl Cobbe, Vineet Kosaraju, Mo Bavarian, Mark Chen, Heewoo Jun, Lukasz Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano, Christo-pher Hesse, and John Schulman. 2021. Training verifiers to solve math word problems. Preprint ,arXiv:2110.14168. Kehua Feng, Xinyi Shen, Weijie Wang, Xiang Zhuang, Yuqi Tang, Qiang Zhang, and Keyan Ding. 2024. Sciknoweval: Evaluating multi-level scien-tific knowledge of large language models. Preprint ,arXiv:2406.09098. Leo Gao, Jonathan Tow, Baber Abbasi, Stella Bider-man, Sid Black, Anthony DiPofi, Charles Foster, Laurence Golding, Jeffrey Hsu, Alain Le Noac’h, Haonan Li, Kyle McDonell, Niklas Muennighoff, Chris Ociepa, Jason Phang, Laria Reynolds, Hailey Schoelkopf, Aviya Skowron, Lintang Sutawika, and 5 others. 2024. The language model evaluation har-ness. Yuxian Gu, Li Dong, Furu Wei, and Minlie Huang. 2024. Minillm: Knowledge distillation of large language models. In The Twelfth International Conference on Learning Representations, ICLR 2024, Vienna, Austria, May 7-11, 2024 . OpenReview.net. Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Ruoyu Zhang, Runxin Xu, Qihao Zhu, Shirong Ma, Peiyi Wang, Xiao Bi, et al. 2025. Deepseek-r1: In-centivizing reasoning capability in llms via reinforce-ment learning. Preprint , arXiv:2501.12948. Dan Hendrycks, Collin Burns, Saurav Kadavath, Akul Arora, Steven Basart, Eric Tang, D. Song, and J. Steinhardt. 2021. Measuring mathematical problem solving with the math dataset. ArXiv ,abs/2103.03874. Jonas Hübotter, Frederike Lübeck, Lejs Behric, An-ton Baumann, Marco Bagatella, Daniel Marta, Ido Hakimi, Idan Shenfeld, Thomas Kleine Buening, Car-los Guestrin, et al. 2026. Reinforcement learning via self-distillation. Preprint , arXiv:2601.20802. Naman Jain, King Han, Alex Gu, Wen-Ding Li, Fanjia Yan, Tianjun Zhang, Sida Wang, Armando Solar-Lezama, Koushik Sen, and Ion Stoica. 2025. Live-codebench: Holistic and contamination free evalua-tion of large language models for code. In The Thir-teenth International Conference on Learning Repre-sentations, ICLR 2025, Singapore, April 24-28, 2025 .OpenReview.net. Woogyeol Jin, Taywon Min, Yongjin Yang, Swanand Ravindra Kadhe, Yi Zhou, Dennis Wei, Nathalie Baracaldo, and Kimin Lee. 2026. Entropy-aware on-policy distillation of language models. Preprint , arXiv:2603.07079. Devvrit Khatri, Lovish Madaan, Rishabh Tiwari, Rachit Bansal, Sai Surya Duvvuri, Manzil Zaheer, Inderjit S Dhillon, David Brandfonbrener, and Rishabh Agar-wal. 2025. The art of scaling reinforcement learning compute for llms. Preprint , arXiv:2510.13786. Komal Kumar, Tajamul Ashraf, Omkar Thawakar, Rao Muhammad Anwer, Hisham Cholakkal, Mubarak Shah, Ming-Hsuan Yang, Phillip HS Torr, Fahad Shahbaz Khan, and Salman Khan. 2025. Llm post-training: A deep dive into reasoning large lan-guage models. Preprint , arXiv:2502.21321. Junyi Li, Xiaoxue Cheng, Xin Zhao, Jian-Yun Nie, and Ji-Rong Wen. 2023. HaluEval: A large-scale hal-lucination evaluation benchmark for large language models. In Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing ,pages 6449–6464, Singapore. Association for Com-putational Linguistics. Yaxuan Li, Yuxin Zuo, Bingxiang He, Jinqian Zhang, Chaojun Xiao, Cheng Qian, Tianyu Yu, Huan-ang Gao, Wenkai Yang, Zhiyuan Liu, et al. 2026. Re-thinking on-policy distillation of large language models: Phenomenology, mechanism, and recipe. 
+
+Preprint , arXiv:2604.13016. Stephanie Lin, Jacob Hilton, and Owain Evans. 2022. TruthfulQA: Measuring how models mimic human falsehoods. In Proceedings of the 60th Annual Meet-ing of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 3214–3252, Dublin, Ireland. Association for Computational Linguistics. 
+
+9Zichen Liu, Changyu Chen, Wenjun Li, Penghui Qi, Tianyu Pang, Chao Du, Wee Sun Lee, and Min Lin. 2025. Understanding r1-zero-like training: A critical perspective. Preprint , arXiv:2503.20783. Kevin Lu and Thinking Machines Lab. 2025. On-policy distillation. Thinking Machines Lab: Con-nectionism . Https://thinkingmachines.ai/blog/on-policy-distillation. Team Olmo, Allyson Ettinger, Amanda Bertsch, Bailey Kuehl, David Graham, David Heineman, Dirk Groeneveld, Faeze Brahman, Finbarr Timbers, Hamish Ivison, et al. 2025. Olmo 3. Preprint ,arXiv:2512.13961. Leyi Pan, Shuchang Tao, Yunpeng Zhai, Lingzhe Zhang, Zhaoyang Liu, Bolin Ding, Aiwei Liu, and Lijie Wen. 2026. Rlcsd: Reinforcement learning with contrastive on-policy self-distillation. Preprint ,arXiv:2606.11709. Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei Zhang, Mingchuan Zhang, YK Li, Yang Wu, et al. 2024. Deepseekmath: Pushing the limits of mathematical reasoning in open language models. Preprint , arXiv:2402.03300. Shufan Shen, Zhongni Hou, Junshu Sun, Yufei Zhang, Wei Lin, Guojun Yin, Qingming Huang, and Shuhui Wang. 2026a. On-policy parameter update direc-tion underlies generalization in llm post-training. 
+
+Preprint , arXiv:2609.36659. Shufan Shen, Junshu Sun, Qingming Huang, and Shuhui Wang. 2026b. Vl-sae: Interpreting and enhancing vision-language alignment with a unified concept set. 
+
+Advances in Neural Information Processing Systems ,38:45235–45265. Shufan Shen, Junshu Sun, Xiangyang Ji, Qingming Huang, and Shuhui Wang. 2024. Expanding sparse tuning for low memory usage. Advances in Neural Information Processing Systems , 37:76616–76642. Shufan Shen, Junshu Sun, Shuhui Wang, and Qingming Huang. 2026c. Kernelized sparse fine-tuning with bi-level parameter competition for vision models. IEEE Transactions on Pattern Analysis and Machine Intel-ligence .Idan Shenfeld, Mehul Damani, Jonas Hübotter, and Pulkit Agrawal. 2026. Self-distillation enables con-tinual learning. Preprint , arXiv:2601.19897. Guangming Sheng, Chi Zhang, Zilingfeng Ye, Xibin Wu, Wang Zhang, Ru Zhang, Yanghua Peng, Haibin Lin, and Chuan Wu. 2024. Hybridflow: A flexible and efficient rlhf framework. Preprint ,arXiv:2409.19256. Qiaoyu Tang, Ziliang Deng, Hongyu Lin, Xianpei Han, Qiao Liang, Boxi Cao, and Le Sun. 2023. Toolalpaca: Generalized tool learning for language models with 3000 simulated cases. Preprint , arXiv:2306.05301. Sarah Verschueren, J. van Aalst, A. Bangels, J. Toelen, K. Allegaert, C. Buffel, and G. Vander Stichele. 2018. (preprint). An Yang, Anfeng Li, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo Zheng, Bowen Yu, Chang Gao, Chengen Huang, Chenxu Lv, et al. 2025. Qwen3 technical report. Preprint , arXiv:2505.09388. Chenxu Yang, Chuanyu Qin, Qingyi Si, Minghui Chen, Naibin Gu, Dingyu Yao, Zheng Lin, Weiping Wang, Jiaqi Wang, and Nan Duan. 2026. Self-distilled rlvr. 
+
+Preprint , arXiv:2604.03128. Feng Yao, Liyuan Liu, Dinghuai Zhang, Chengyu Dong, Jingbo Shang, and Jianfeng Gao. 2025. Your efficient rl framework secretly brings you off-policy rl training, august 2025. URL https://fengyao. notion. site/off-policy-rl .Qiying Yu, Zheng Zhang, Ruofei Zhu, Yufeng Yuan, Xi-aochen Zuo, Yu Yue, Weinan Dai, Tiantian Fan, Gao-hong Liu, Juncai Liu, Lingjun Liu, Xin Liu, Haibin Lin, Zhiqi Lin, Bole Ma, Guangming Sheng, Yuxuan Tong, Chi Zhang, Mofan Zhang, and 17 others. 2025a. DAPO: an open-source LLM reinforcement learning system at scale. In Advances in Neural Information Processing Systems 38: Annual Conference on Neu-ral Information Processing Systems 2025, NeurIPS 2025, San Diego, CA, USA, December 2-7, 2025 / Mexico City, Mexico, November 30 - December 5, 2025 .Qiying Yu, Zheng Zhang, Ruofei Zhu, Yufeng Yuan, Xi-aochen Zuo, Yu Yue, Weinan Dai, Tiantian Fan, Gao-hong Liu, Juncai Liu, Lingjun Liu, Xin Liu, Haibin Lin, Zhiqi Lin, Bole Ma, Guangming Sheng, Yux-uan Tong, Chi Zhang, Mofan Zhang, and 17 others. 2025b. DAPO: an open-source LLM reinforcement learning system at scale. In Advances in Neural Information Processing Systems 38: Annual Con-ference on Neural Information Processing Systems 2025, NeurIPS 2025, San Diego, CA, USA, Decem-ber 2-7, 2025 / Mexico City, Mexico, November 30 -December 5, 2025 .Weichen Yu, Xiaomin Li, Yizhou Zhao, Xiaoze Liu, Ruowang Zhang, Haixin Wang, Yinyi Luo, Chen Henry Wu, Gaurav Mittal, Matt Fredrik-son, et al. 2026. Multi-rollout on-policy distil-lation via peer successes and failures. Preprint ,arXiv:2605.12652. Zheng Yuan, Hongyi Yuan, Chengpeng Li, Guanting Dong, Keming Lu, Chuanqi Tan, Chang Zhou, and Jingren Zhou. 2023. Scaling relationship on learning mathematical reasoning with large language models. 
+
+Preprint , arXiv:2308.01825. Aohan Zeng, Xin Lv, Zhenyu Hou, Zhengxiao Du, Qinkai Zheng, Bin Chen, Da Yin, Chendi Ge, Chenghua Huang, Chengxing Xie, et al. 2026. Glm-5: from vibe coding to agentic engineering. Preprint ,arXiv:2602.15763. 
+
+10 Siyan Zhao, Zhihui Xie, Mengchen Liu, Jing Huang, Guan Pang, Feiyu Chen, and Aditya Grover. 2026a. Self-distilled reasoner: On-policy self-distillation for large language models. Preprint , arXiv:2601.18734. Ziqi Zhao, Zhaochun Ren, Jiahong Zou, Liu Yang, Zhi-wei Xu, Xuri Ge, Zhumin Chen, Xinyu Ma, Dait-ing Shi, Shuaiqiang Wang, Dawei Yin, and Xin Xin. 2026b. Reinforced efficient reasoning via seman-tically diverse exploration. In Proceedings of the 64th Annual Meeting of the Association for Compu-tational Linguistics (Volume 1: Long Papers) , pages 47994–48007, San Diego, California, United States. Association for Computational Linguistics. Chujie Zheng, Shixuan Liu, Mingze Li, Xiong-Hui Chen, Bowen Yu, Chang Gao, Kai Dang, Yuqiong Liu, Rui Men, An Yang, et al. 2025. Group sequence policy optimization. Preprint , arXiv:2507.18071. Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, Siyuan Zhuang, Zhanghao Wu, Yonghao Zhuang, Zi Lin, Zhuohan Li, Dacheng Li, Eric P. Xing, Hao Zhang, Joseph E. Gonzalez, and Ion Stoica. 2023. Judging llm-as-a-judge with mt-bench and chatbot arena. In 
+
+Advances in Neural Information Processing Systems 36: Annual Conference on Neural Information Pro-cessing Systems 2023, NeurIPS 2023, New Orleans, LA, USA, December 10 - 16, 2023 .Jeffrey Zhou, Tianjian Lu, Swaroop Mishra, Siddhartha Brahma, Sujoy Basu, Yi Luan, Denny Zhou, and Le Hou. 2023. Instruction-following evaluation for large language models. Preprint , arXiv:2311.07911. 
+
+11 Given a question and four options, please select the right answer. Respond in the following format: <reasoning> ... </reasoning> <answer> ... </answer> For the answer, only output the letter corresponding to the correct option (A, B, C, or D), and nothing else. Do not restate the answer text. For example, if the answer is “A”, just output: <answer> A</answer> Figure 7: System prompt for ScienceQA. [User] {question} Please reason step by step 
+
+Figure 8: User prompt for ScienceQA. 
+
+A Supplement Material 
+
+A.1 Implementation Details A.1.1 Training Strategies 
+
+All methods are implemented on top of the verl framework (Sheng et al., 2024) and trained with FSDP on a single 8 ×H20 node. All training rollouts use temperature T =1 .0, top-p=1 .0, top-
+
+k=−1 with sampling enabled. The thinking mode of the Qwen3 family is disabled. Inputs and responses are bounded by 2048 and 8192 tokens, respectively. All methods use AdamW (β1=0 .9, β 2=0 .999 ) with weight decay 0.01 , gra-dient clipping at 1.0, a constant learning-rate sched-ule with 10 warmup steps, and 1 PPO epoch per iteration. The training batch size is 32 prompts per step. Checkpoint and validation frequency are set to every 200 and 10 training steps, respectively. We train the model for 30 epochs on both the science question-answering tasks and for 15 epochs on the ToolUse task. For LCBv6, we train the model for 40 steps across all methods. For GRPO, we sample 16 rollouts per prompt with a mini-batch size of 8. The policy-gradient loss adopts asymmetric PPO clipping with 
+
+ϵlow =0 .2, ϵhigh =0 .28 and a dual-clip lower bound 
+
+c=3 .0. To support efficient inference-based roll-out generation, we apply token-level truncated importance-sampling (IS) correction with a thresh-old of 2.0. No KL penalty is used. The learning rate is selected from 1e-5 and 1e-6 based on valida-tion performance. For SDPO, we adopt its official implementa-[User] Your task is to answer the user’s question using available tools. You have access to the following tools: Name: {tool_name} Description: {tool_description} Documentation: {function_name}: {function_description} Parameters: {parameter_schema} Output: {output_description} - Format: {output_format} - Structure: {output_structure} Use the following format: Thought: think about what to do Action: the action to take; use one tool name. Action Input: the input in JSON format. Begin! Question: {question} 
+
+Figure 9: User prompt for ToolUse. [System] {original system prompt} [User] {original user prompt} Correct solution: {successful_previous_attempt} The following is feedback from your unsuccessful earlier attempt: {feedback_raw} Correctly solve the original question. 
+
+Figure 10: Teacher input template. 
+
+tions (Hübotter et al., 2026). The self-teacher is maintained as an exponential moving aver-age (EMA) of the student with an update rate of 
+
+0.05 . The distillation loss is the generalized Jensen– Shannon divergence over the full logit distribution, approximated by the top-100 logits with an explicit tail bucket. The distillation importance-sampling ratio is clipped at 2.0. The same asymmetric clip-ping and token-level IS correction as in the GRPO baseline are applied to the student policy. Success-ful student rollouts are selected as the privileged context, with the self-success exclusion enabled and thinking traces removed from the demonstra-tion. For TESD, it samples 8 student rollouts and 
+
+8 teacher rollouts. The teacher reward follows Eq. (2): task correctness Rtask ∈ { 0, 1} minus an independence reward λedit Redit . Redit ∈ [0 , 1] is the token-level normalized edit distance computed using the SequenceMatcher of difflib package in Python. λedit is set as 1.0 across all experiments. The EMA teacher update rate is reduced to 0.01 
+
+for stabilizing the training process. For the adap-tive student-oriented optimization (Eq. 5–7), the weight wx is computed with temperature τ =1 .0,then clipped to [0 .05 , 5.0] . Table 6 summarizes the method-specific hyperparameters. 
+
+A.1.2 Evaluation Strategies 
+
+For in-distribution evaluation, we evaluate the model on the test split of each task every 10 train-12 Hyperparameter GRPO SDPO TESD 
+
+Rollouts / prompt (total) 16 16 16 student rollouts — 16 8teacher rollouts — 0 8PPO mini-batch size 8 32 32 Advantage estimator GRPO GRPO GRPO Policy loss student PG KL-Div KL-Div + teacher PG Clip ϵlow /ϵ high 0.2 / 0.28 
+
+Dual-clip c 3.0
+
+IS correction (token, thr.) token, 2.0
+
+Distillation α (JSD) — 0.5 0.5 Distillation top-k — 100 100 Distillation IS clip — 2.0 2.0 Teacher regularization — EMA EMA EMA update rate τ — 0.05 0.01 Edit Reward λedit — 0 1.0 Gate strategy — — reward_mean Gate normalization — — softmax 
+
+> Table 6: Hyperparameter settings of different methods.
+
+ing steps. For each test problem, we sample 16 
+
+responses with a temperature of 0.6 and top-p =0.95 , and report the mean accuracy (mean@16), 
+
+i.e. , the fraction of correct responses averaged over the 16 samples. The final reported metric is the maximum mean@16 observed across the training trajectory, ensuring a fair comparison of conver-gence upper bounds. The task correctness reward 
+
+Rtask is rule-based and task-specific: • SciKnowEval (multiple-choice questions): The model is prompted to output the option letter inside the <answer>...</answer> tags via a system instruction. We extract the letter inside the tags and set Rtask = 1 if it matches the ground-truth option, and 0 otherwise. • ToolUse : Given a tool-API specification and a user request, the model generates a Thought-Action-Action_Input trace. We set Rtask = 1 
+
+if the model prediction matches the ground-truth tool call, and 0 otherwise. • LCBv6 (coding problems): The model out-puts a Python program in a fenced code block. We set Rtask = 1 if the program passes all hidden test cases within the time limit in a sandbox environment, and 0 otherwise. For hold-out task evaluation in Table 3 of the main paper, we evaluate the final converged checkpoint of each method on eight hold-out tasks. For IFEval, MMLU-Pro, TruthfulQA, ARC-Challenge, HumanEval, and HaluEval, we utilize the lm-evaluation-harness (Gao et al., 2024) framework with a generation budget of 32768 to-kens and greedy decoding. We apply the model’s default settings for the chat template, except for HumanEval, where generation is performed in the raw completion format. ARC-Challenge is evalu-ated in the multiple-choice setting. Regarding the evaluation metrics, IFEval reports strict instruction-following accuracy, MMLU-Pro and TruthfulQA report exact-match accuracy, HumanEval reports 
+
+pass@1 , and HaluEval reports exact-match accu-racy for hallucination avoidance on the dialogue subset. For mathematical reasoning tasks (MATH-500 and GSM8K), we evaluate using a temperature of 0.6 and top-p = 1 .0, reporting pass@1 . Answers are extracted and normalized before comparison with the ground truth. 
+
+A.1.3 Prompt Templates 
+
+Following SDPO (Hübotter et al., 2026), we use the same dataset prompts for student rollout and evalu-ation. For Qwen models, we disable the thinking-mode chat-template option during prompt construc-tion. The concrete ScienceQA and ToolUse prompt templates are shown in Figures 7, 8, and 9. The prompt used as input to the self-teacher is shown 13 GRPO (5419 tokens) 
+
+To determine the density of the plasma, we need to compute the mass density, which is… But wait, the number density of ions is same as that of electrons if fully ionized. But here, we are given the number density of electrons as 2.9 ×10¹⁹ m⁻³… Wait, perhaps the question just asks for the total mass density of plasma, which is the sum of the mass of electrons and ions (protons). If the plasma is fully ionized, then the total mass is… Wait, maybe I made a mistake in calculation? Let me check again:… Wait perhaps the question asks for the total mass density, but there is an error. Let me check again:… Wait maybe the number density is 2.9 ×10¹⁹ m⁻³ is for electrons, and ions is same. Total mass is electrons + ions. But maybe the problem gives the neutral hydrogen atom density? Or is there a misunderstanding… Wait, let me check the exponent again. Are the numbers correct… The correct density calculation leads to ~4.85 ×10⁻⁸ kg/m³, but none of the options match. Assuming a possible typo in the question, option A (4.85 ×10⁻²⁷) might correspond to correct calculation if the density was meant to be 2.9 ×10⁻¹⁹ m⁻³. But given available options and calculation, if I have to choose, I'll go for A assuming typo. 
+
+SDPO (421 tokens) 
+
+The calculation of the mass density involves multiplying the electron number density by the hydrogen atom mass… This comparison is the same as in the original and verified solution, and it demonstrates that only option A matches the required value exactly. The findings are identical to the original explanation, confirming option A as the correct answer. This is a precise and unambiguous match to the original solution, reinforcing the accuracy and validity of the result. The conclusion is the same as in all prior analyses, further validating option A as the sole correct answer. The logical and scientific reasoning presented consistently leads to the same conclusion as the original, verified, and accepted solution: option A is the only correct and accurate choice. This reaffirms the same conclusion as the original problem's solution, demonstrating its correctness and consistency in both content and outcome. Therefore, the correct answer, as logically and scientifically derived, is option A. 
+
+TESD (453 tokens) 
+
+The correct approach is to calculate the mass density using the given electron number density and the mass of a hydrogen atom: $$\rho = n_e \cdot m_h = 2.9 \times 10^{19} \cdot 1.673 \times 10^{-27} = 4.8517 \times 10^{-8} \, \text{kg/m}^3$$ This result has an exponent of $10^{-8}$, which is not present in any of the given options. However, we are instructed to select the option that is closest in magnitude and order of magnitude among the choices… All options have an exponent of $10^{-27}$, which is significantly different from the actual result. This indicates that the question requires us to select the option that has the same **numerical coefficient** as the correct calculation, even though the exponent is wrong. The correct result is $4.8517$, and the only option with that coefficient is Option A. Even though the exponent is incorrect, the numerical value aligns with the one in the reference solution, which is the strongest justification for choosing Option A. Therefore, the best choice based on the available options and the reasoning in the question is still Option A. Figure 11: Case studies of different methods on the Physics subset of the SciKnowEval benchmark using Qwen3-8B. 
+
+Dataset Train Test 
+
+SciKnowEval-Biology 450 50 SciKnowEval-Physics 720 80 SciKnowEval-Chemistry 1890 210 SciKnowEval-Materials 841 94 ToolUse (ToolAlpaca) 4046 68 LCBv6 (LiveCodeBench) 131 131 
+
+Table 7: Train/test sizes of the six tasks. 
+
+in Figure 10. 
+
+A.1.4 Normalized Edit Distance 
+
+For each teacher rollout y and its associated privileged-context solution c, we first decode the rollout while removing special tokens. We then lowercase both strings and split them on whitespace, obtaining token sequences ˜y and 
+
+˜c. We compute their similarity using Python’s 
+
+difflib.SequenceMatcher.ratio() with its de-fault settings. Let M (˜ y, ˜c) be the total number of tokens in the matching blocks identified by 
+
+SequenceMatcher . The normalized similarity and 
+
+Methods N = 16 N = 32 N = 48 
+
+SDPO 54.62 55.25 55.12 TESD 54.87 56.63 59.62 
+
+Table 8: Performance comparison of SDPO and TESD across different numbers of rollouts N . The experi-ments are conducted on the Biology subset of the Sci-KnowEval benchmark using Qwen3-4B over 10 training epochs. 
+
+its complementary distance are 
+
+Sedit (y, c ) = 2M (˜ y, ˜c)
+
+|˜y| + |˜c| ,Dedit (y, c ) = 1 − Sedit (y, c ).
+
+Thus, identical token sequences have Sedit = 1 and 
+
+Dedit = 0 , whereas sequences with no matching tokens have Sedit = 0 and Dedit = 1 .
+
+A.2 Additional Experiments A.2.1 Scaling of Rollouts 
+
+In Table 8, we evaluate the efficiency of SDPO and TESD in leveraging scaling rollouts to achieve performance improvements. The performance of 14 λedit Biology Material Physics Mean 0.1 51.88 78.99 76.48 69.12 0.3 53.75 79.45 76.25 69.82 0.5 54.00 79.92 75.23 69.72 0.7 50.88 82.78 73.05 68.90 1.0 54.87 81.65 75.37 70.63  
+
+> Table 9: Ablation studies on the hyperparameter λedit .Experiments are conducted on SciKnowEval benchmark using Qwen3-4B over 10 training epochs.
+
+SDPO does not improve significantly with the in-creasing number of rollouts ( e.g. , when N increases from 32 to 48, the performance drops from 55.25% to 55.12%). In contrast, the performance of TESD improves consistently as the number of rollouts grows. This demonstrates that, by allocating partial rollout computation to the self-teacher, TESD can more effectively leverage increased training time to yield consistent performance gains. 
+
+A.2.2 Qualitative Results 
+
+In Figure 11, we present the responses generated by models trained with different methods. First, com-pared to OPSD methods, GRPO generates signifi-cantly longer responses that contain a large amount of redundant reasoning (such as repetitive "wait" tokens), leading to wasted computations. Second, while SDPO produces shorter answers, it lacks gen-uine reasoning depth, dedicating numerous tokens to excessive self-affirmations. This phenomenon highlights the overconfidence issue inherent in ex-isting OPSD paradigms (Li et al., 2026). Finally, in contrast to both methods, TESD successfully solves the problems with concise responses domi-nated almost entirely by effective, substance-driven reasoning. 
+
+A.2.3 Effects of λedit 
+
+In Table 9, we investigate the impact of the hyper-parameter λedit in Equation 2 on the performance of TESD. First, we observe that different subsets require different optimal values for λedit . For in-stance, the optimal λedit is 1.0 for the biology sub-set and 0.7 for the materials subset. Second, set-ting λedit = 1 .0 achieves the highest average per-formance across all three subsets. Therefore, to avoid dataset-specific hyperparameter tuning, we fix λedit = 1 .0 for all main experiments. 
+
+> Figure 12: The time cost of different methods during the training process. Experiments are conducted on the LCBv6 benchmark using Qwen3-8B.
+
+A.2.4 Training Efficiency 
+
+In Figure 12, we compare the time cost of different methods on the LCBv6 benchmark. We observe that as training progresses, TESD requires increas-ingly less time compared to GRPO and SDPO. This efficiency gain arises because a substantial portion of the training time in coding tasks is con-sumed by code execution and sandbox evaluation. Since TESD better enhances the model’s capabil-ities throughout the training process, it generates programs that are more structured and efficient to execute, thereby accelerating training speed. 
+
+A.3 Discussion A.3.1 Relation with Methods improving Privileged Context 
+
+Recently, several concurrent studies have improved OPSD from the perspective of privileged context by increasing its volume (Yu et al., 2026) or strength-ening it through contrastive exemplars (Pan et al., 2026). In this section, we discuss the similarities and differences between them. • Similarity . Both TESD and these concurrent methods identify the quality of teacher guid-ance as the primary bottleneck that constrains the performance of the OPSD paradigm, and actively seek to improve it. • Difference . While these concurrent methods focus heavily on the quality of the context pro-vided to the self-teacher, TESD focuses on the self-teacher’s inherent capability to leverage this context to effectively guide diverse stu-dent rollouts. These two paradigms stabilize the performance gains of OPSD from com-plementary angles, suggesting a promising potential for integration. 15 A.3.2 Relation with Methods integrating GRPO and SDPO 
+
+Several concurrent studies have explored com-bining token-level OPSD with sequence-level GRPO (Yang et al., 2026; Pan et al., 2026). In this section, we discuss both the similarities and differences between TESD and these approaches. • Similarity . Both TESD and these methods in-tegrate supervision at both the sequence level and token level. • Difference . (i) For the motivation, these concurrent studies degrade OPSD to an advantage-weighting component within GRPO. Conversely, TESD leverages GRPO to empower the self-teacher for improving OPSD’s supervision quality. (ii) For the loss formulation, these studies adopt the standard GRPO objective, while TESD preserves the divergence-based loss of OPSD for the student model. (iii) For the optimization framework, these studies apply the GRPO and OPSD to a single student model. In contrast, TESD differentiates the model’s dual roles, utilizing GRPO with specifically designed rewards for the self-teacher and OPSD with proposed adaptive weighting mechanism for the student, offering a principled framework rather than a naive objective blend. 
+
+A.4 Ethical Considerations 
+
+This work aims to improve the reasoning capabil-ities of large language models. We acknowledge that enhanced reasoning capabilities could also be misused for harmful purposes. Therefore, we em-phasize the importance of deploying such models with robust safety alignment mechanisms to miti-gate potential risks. All datasets used in our experi-ments are publicly available open-source resources. We adhere to their respective licenses and use them in accordance with their intended purposes. 
+
+A.4.1 Limitations 
+
+Despite outperforming representative token-level and sequence-level methods, TESD introduces ad-ditional hyperparameters, such as λedit , due to the inclusion of extra training objectives and rewards. Furthermore, TESD remains constrained by the teacher updating mechanism of the current OPSD paradigm (Hübotter et al., 2026), which maintains a separate set of weights for the teacher and updates it via an exponential moving average to ensure train-ing stability. This mechanism inherently smooths out the improvement of the teacher’s capabilities, thereby limiting the speed at which the teacher evolves. In the future, to address these limitations, we will attempt to develop an adaptive indepen-dence term for the teacher reward and investigate the internal mechanism of the relationship between teacher updates and training stability. Moreover, investigating whether TESD exhibits sparse update patterns (Shen et al., 2024, 2026c) offers an in-teresting direction for further understanding the student–teacher co-evolution framework. 16

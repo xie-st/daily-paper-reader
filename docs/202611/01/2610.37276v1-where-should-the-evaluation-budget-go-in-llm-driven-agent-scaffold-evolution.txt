@@ -1,0 +1,506 @@
+Title: Where Should the Evaluation Budget Go in LLM-Driven Agent Scaffold Evolution?
+
+URL Source: https://arxiv.org/pdf/2610.37276v1
+
+Published Time: Wed, 28 Oct 2026 01:28:04 GMT
+
+Number of Pages: 9
+
+Markdown Content:
+# Where Should the Evaluation Budget Go in LLM-Driven Agent Scaffold Evolution? 
+
+## Sichun Luo 1, Yi Huang 2, Mukai Li 1, Haochen Luo 1, Guanzhi Deng 3, Haibo Wang 4
+
+## Jian Xu 5, Zefa Hu 2, Junlan Feng 2, Qi Liu 11The University of Hong Kong 2JIUTIAN Research, China Mobile 
+
+3City University of Hong Kong 4Carnegie Mellon University 5Tsinghua University 
+
+Abstract 
+
+Large language model (LLM)-driven agent scaffold evolution im-proves agent workflows through iterative candidate generation and evaluation. Evaluation both guides subsequent search and deter-mines the final scaffold, but evaluating every candidate on the full task set incurs substantial execution costs. We investigate how eval-uation budgets can be allocated across these two roles. Our experi-ments show that sparse feedback can sustain productive evolution, while additional targeted evaluation improves final selection. Re-play analyses further show that shared informative items and a com-mon scoring reference support comparisons among closely matched candidates. Motivated by these findings, we propose EvalAlloc ,an evaluation allocation framework that combines sparse search-time feedback with targeted final confirmation. A short fully evalu-ated warm-up establishes a shared informative core and calibrates a response model whose item parameters remain fixed during search. After search, EvalAlloc refits the model and applies paired succes-sive halving, reusing accumulated observations and executing only missing evaluations. Across four benchmarks and two evolution frameworks, EvalAlloc achieves higher mean performance than full evaluation in most settings while using approximately half as many evaluation cells. 
+
+1 Introduction 
+
+A scaffold for a large language model (LLM) agent is an executable program that defines how an agent coordinates LLM calls, maintains intermediate state, and interacts with tools and external informa-tion sources [13, 26, 31]. For Web-facing agents, scaffolds govern how agents acquire and use information through Web searches, document retrieval, and interactions with online services [22, 36]. While these scaffolds have traditionally been designed and refined manually, recent advances have enabled their automated optimiza-tion [2, 13, 34]. For example, ShinkaEvolve [17] iteratively proposes scaffold modifications and uses evaluation feedback to guide subse-quent evolution. However, evaluating candidate scaffolds can incur substantial execution costs. A single task instance may involve multiple LLM calls, retrieval steps, and tool interactions [21, 32], making full evaluation across many candidates expensive. Although parallel evaluation and asynchronous program generation can overlap com-putation [28], feedback-dependent search decisions still require evaluation results. Existing approaches reduce evaluation costs through sparse score estimation and evaluation cascades [8, 9], treating evaluation primarily as a fitness-estimation problem. In scaffold evolution, however, evaluation supports two distinct de-cisions: it provides fitness feedback that shapes archive updates and subsequent proposals [33], and it determines which scaffold is ultimately returned. These decisions impose different requirements: search benefits from inexpensive yet comparable feedback, whereas final selection requires reliable discrimination among competitive candidates. This raises a central question: How should a limited evaluation budget be allocated across these two decisions to improve the quality of the ultimately selected scaffold? 
+
+To answer this question, we investigate how evaluation alloca-tion affects evolutionary search and final scaffold selection. Our investigation yields three findings. First, sparse evaluation feedback can sustain productive evolution, whereas removing feedback sub-stantially degrades search quality. Second, shared informative items improve comparisons between closely matched candidates, while maintaining a common scoring reference helps preserve compara-bility across evolutionary iterations. Third, search improvements are concentrated in early iterations, whereas final selection remains sensitive to uncertainty among top candidates. These findings sug-gest that evaluation should provide inexpensive yet comparable feedback during search, while reserving additional observations for final selection. Motivated by these findings, we propose EvalAlloc , an evalu-ation allocation framework that separates sparse search-time feed-back from targeted final selection. During search, a short fully evaluated warm-up identifies a shared informative core and cali-brates a response model. Subsequent candidates are evaluated on sparse item sets centered on this core, while the model’s item pa-rameters remain fixed to maintain a common scoring reference for archive updates and parent selection. After search, EvalAlloc applies warm-started paired successive halving (SH), reusing accu-mulated observations and performing only missing evaluations. A refitted response model further supports comparisons during later selection rounds. We evaluate EvalAlloc on four benchmarks and two evolution frameworks, with three independent runs per setting. Compared with full evaluation, EvalAlloc uses approximately half as many evaluation cells while achieving competitive or higher mean performance across the evaluated settings. Ablation studies further show that informative item allocation and final selection are the main contributors to its effectiveness. These results demon-strate the benefits of separating sparse search-time feedback from targeted final evaluation. Our main contributions are summarized as follows: 
+
+• We investigate evaluation allocation as a decision-dependent problem in LLM-driven scaffold evolution, demonstrating that search-time feedback and final scaffold selection impose distinct requirements on evaluation resources. 
+
+• We propose EvalAlloc, an evaluation allocation framework that combines a shared informative core, a fixed search-time arXiv:2610.37276v1 [cs.LG] 27 Oct 2026 , , 
+
+response model, and warm-started paired successive halving to allocate evaluation effort across evolutionary search and final selection. 
+
+• We evaluate EvalAlloc across four benchmarks and two evolu-tion frameworks, complemented by controlled replay analyses, demonstrating competitive final performance with substantially fewer evaluation cells. 
+
+2 Related Work 
+
+LLM-Driven Agent and Program Evolution. Recent work has explored the automated design and optimization of agent scaffolds and executable workflows using LLMs [23]. ADAS [13] uses a meta-agent to generate agent programs based on previous discoveries, while AFlow [34] employs Monte Carlo Tree Search to optimize code-represented workflows. Other approaches, including ShinkaE-volve [17] and AdaEvolve [4], iteratively generate, evaluate, and refine programs using evaluation feedback to guide subsequent search. These approaches primarily focus on improving candidate generation and evolutionary optimization. Our work instead exam-ines the evaluation process underlying this feedback-driven search, studying how limited evaluation resources can support both evolu-tionary decisions and final scaffold selection. 
+
+Efficient LLM Evaluation. Reducing the cost of evaluating LLMs has received growing attention. Methods such as tinyBench-marks [24] use carefully selected examples and statistical estimation to approximate full-benchmark performance, while SparseEval [35] optimizes representative items for efficient score estimation and ranking. CollabEval [8] exploits shared information across evalua-tions through matrix completion to improve statistical efficiency. Growing Pains [12] uses fixed item-response calibration and anchor items to maintain score comparability across evaluation periods. These studies demonstrate the effectiveness of sparse observations and response modeling. However, in scaffold evolution, evaluation estimates also influence archive updates and subsequent candidate generation. Therefore, we examine not only estimation accuracy, but also how shared informative observations and stable scoring references support reliable evolutionary decisions. 
+
+Evaluation Allocation and Candidate Selection. Evaluation allocation is closely related to sequential resource allocation and best-arm identification. Successive halving [14] and Hyperband [18] progressively concentrate evaluation resources on promising can-didates, while racing-based methods such as irace [20] eliminate weaker configurations through sequential comparisons. Common random numbers [10] provide a classical motivation for evaluat-ing alternatives under shared conditions to reduce the variance of pairwise comparisons. Recent analyses of code evolution [9] also highlight the importance of reliable candidate evaluation and selec-tion. Building on these ideas, our work studies evaluation allocation across two distinct stages: providing inexpensive yet comparable feedback during evolution and reusing accumulated observations for reliable final scaffold selection. 
+
+3 Problem Formulation 
+
+Agent Scaffold Evaluation. Let 𝑐 denote an executable agent scaf-fold and Ds = {𝑥 𝑖 }𝑁 𝑖 =1 a set of evaluation tasks. Executing 𝑐 on 𝑥 𝑖 
+
+Table 1: Benchmark splits. SEARCH is used by the evaluators during evolution and selection, DEV only for the audit, and TEST only to score the selected programs.                
+
+> Benchmark SEARCH DEV TEST HotpotQA 300 150 300 HoVer 300 150 300 DROP 300 150 300 IFBench 300 150 294
+
+produces a score 𝑌 (𝑟 ) 
+
+> 𝑐𝑖
+
+∈ [ 0, 1], where 𝑟 indexes repeated execu-tions. Each scaffold–item execution constitutes an evaluation cell .The expected fitness of a scaffold is 𝐹 (𝑐 ) = 1
+
+> 𝑁
+
+Í𝑁 𝑖 =1 E[𝑌 (𝑟 ) 
+
+> 𝑐𝑖
+
+]. Eval-uating each item once yields the full-set reference score 𝐹 ref (𝑐 ) =
+
+> 1
+> 𝑁
+
+Í𝑁 𝑖 =1 𝑌 (1) 
+
+> 𝑐𝑖
+
+.
+
+LLM-Driven Agent Scaffold Evolution. At iteration 𝑡 , an evo-lution framework proposes a candidate scaffold 𝑐 𝑡 based on its cur-rent archive A𝑡 . An evaluator selects an item subset 𝑆 𝑡 ⊆ { 1, . . . , 𝑁 }
+
+and returns an estimated fitness b𝐹 𝑡 (𝑐 𝑡 ) using the available obser-vations. This feedback informs archive updates and subsequent candidate generation. Evaluation allocation therefore influences the search trajectory and the resulting candidate pool. After search, a final selector returns a scaffold 𝑐 pick from the generated candidates, potentially collecting additional observations. We distinguish two evaluation stages: search-time evaluation , which provides fitness feedback for continued evolution, and final selection , which iden-tifies the scaffold to return. Observations collected during search can be reused during final selection. 
+
+Cost–Performance Objective. Let 𝜋 denote an evaluation allo-cation policy governing observations collected during both stages and the final scaffold selection. The total cost 𝐶 𝜋  
+
+> eval
+
+counts executed evaluation cells during search and final selection. Given an evalua-tion budget 𝐵 , our objective is max  
+
+> 𝜋
+
+E
+
+h
+
+𝐹 (𝑐 𝜋 
+
+> pick
+
+)
+
+i
+
+s.t. E[𝐶 𝜋 
+
+> eval
+
+] ≤ 𝐵, (1) where 𝑐 𝜋  
+
+> pick
+
+is the scaffold returned under policy 𝜋 , and the expecta-tion accounts for randomness in candidate generation, evaluation, and allocation. 
+
+4 Investigation 4.1 Setup 
+
+We study four benchmarks: HotpotQA [30], HoVer [15], DROP [7], and IFBench [25]. Each benchmark is divided into SEARCH (300 items), DEV (150 items), and TEST (300 items, except 294 for IF-Bench), as shown in Table 1. SEARCH is used for evolution and final selection, DEV for auxiliary audits, and TEST exclusively for evaluating the selected scaffolds. We use two evolution frameworks: ShinkaEvolve [17] and AdaEvolve [4], the latter implemented using SkyDiscover [19]. Each run makes 80 proposals from the same ini-tial program, with three seeds per setting. We use Qwen3.5-9B [27] as the executor, with temperature zero, thinking disabled, and at most 16,384 output tokens, and DeepSeek-V4-Flash-0731 [29] as the proposer. Both models are served locally with vLLM [16] on a single node with eight NVIDIA H20 GPUs. Where Should the Evaluation Budget Go in LLM-Driven Agent Scaffold Evolution? , , 0 20 40 60 80 Generation (10-generation windows) 0.55 0.60 0.65 0.70 0.75 0.80 0.85 Mean candidate score         
+
+> Skip Eval Random Full
+> DROP
+> Skip Eval Random Full
+> 020 40 60 80 Generation (10-generation windows) 0.3 0.4 0.5 0.6 0.7
+> Skip Eval Full Random
+> HotpotQA
+> Skip Eval Random Full
+
+Figure 1: Evolution trajectories under different evaluation strategies on DROP and HotpotQA. Curves show mean candidate scores on a shared audit set over successive 10-generation windows. Skip Eval (+22% Cost) Random (+11% Cost) Full (+0% Cost) 
+
+> 0.750 0.775 0.800 0.825 0.850 0.875 Score
+> DROP
+> Native rule SH Skip Eval (+22% Cost) Random (+11% Cost) Full (+0% Cost)
+> 0.2 0.4 0.6 0.8
+> HotpotQA
+> Native rule SH
+
+Figure 2: Effect of search-time feedback and final selection on DROP and HotpotQA. We compare the native selection rule with successive halving (SH) across three search strategies. Percentages indicate the additional evaluation cost of SH relative to the full-evaluation budget. 
+
+Most analyses in this section replay evaluators on the 24 Full runs (four benchmarks, two frameworks, three seeds), in which every candidate is evaluated on all SEARCH items, so the full-SEARCH mean of each candidate is known. A replay keeps the candidate sequence fixed and varies only which cells the evaluator observes. We measure two search-time quantities. Close-pair agreement is the share of candidate pairs whose full-SEARCH means differ by at most .03 that the evaluator orders correctly; these are the com-parisons that archive updates face. Archive regret is, averaged over the run, the gap between the mean full-SEARCH score of the ten best candidates generated so far and that of the ten candidates the evaluator ranks highest. 
+
+4.2 Search Needs Feedback, but Not Full Evaluation 
+
+Evaluation feedback plays an important role in guiding evolution-ary search. Figure 1 compares the evolution trajectories under three evaluation strategies on DROP and HotpotQA, using a shared audit set. Without evaluation feedback, candidate quality remains rela-tively low and shows limited improvement. In contrast, random partial evaluation maintains candidate quality close to Full, sug-gesting that effective evolution does not require evaluating every candidate on the entire SEARCH set. Search improvements are also concentrated in early iterations. Although this does not establish the optimal temporal allocation, it motivates investing in early calibration and using sparse feedback for subsequent candidates. 
+
+Takeaway 1. Evolutionary search requires evaluation feedback, but sparse evaluation can sustain candidate improvement without the cost of full evaluation. 
+
+4.3 Comparability Depends on Shared Informative Observations 
+
+We conduct offline replays on 24 Full evolution trajectories (four benchmarks, two frameworks, and three seeds), with three replays per trajectory. Each replay fixes the generated candidate sequence and varies only the evaluation cells observed by the evaluator. The first 𝑊 = 10 candidates are fully evaluated, while subsequent candidates are evaluated on 60 of the 300 SEARCH items. All policies use the same evaluation budget, with full-SEARCH scores serving as the reference. We assess three metrics: Spearman correlation with full-SEARCH scores, close-pair agreement for candidates whose reference scores differ by at most .03, and archive regret, defined as the average fitness gap between the true and estimated top-10 archives. These metrics capture both score estimation quality and the evolutionary decisions supported by limited feedback. 
+
+Informativeness and sharing. Table 2 shows that shared infor-mative items yield more reliable close-candidate comparisons than random or unshared items. For the unshared informative policy, each candidate samples 60 items from the 120 most informative ones, rather than using a common item set. Despite drawing from informative items, this policy produces lower close-pair agreement and higher archive regret. Pairing provides an explanation for the benefit of sharing. For 
+
+𝑘 items drawn independently from the task distribution, the vari-ance of the score difference between two candidates evaluated on shared items is Var (bΔ𝑐𝑐 ′ ) = 𝜎 2   
+
+> 𝑐 +𝜎 2
+> 𝑐 ′−2𝜎 𝑐𝑐 ′
+> 𝑘
+
+, where 𝜎 𝑐𝑐 ′ denotes their response covariance. With independently sampled item sets, the covariance term vanishes. Because evolved candidates often ex-hibit correlated responses, shared items can reduce the variance of pairwise comparisons. 
+
+Score comparability. Accurate individual rankings do not nec-essarily translate into reliable archive decisions. Although raw means achieve similar Spearman correlation to model-completed scores, they produce substantially higher archive regret. This is be-cause sparse candidates are evaluated on informative items, whereas warm-up candidates are evaluated on the full SEARCH set. The fixed response model places both on a common full-SEARCH scale, avoiding inconsistent archive comparisons and repeated rescoring during evolution. 
+
+Takeaway 2. Reliable evolutionary decisions require informative, shared observations and comparable fitness scores, rather than accu-rate individual estimates alone. , , 
+
+Table 2: Offline comparison of item policies and fitness esti-mators under matched evaluation budgets. Results are aver-aged over 24 Full trajectories, with three replays per trajec-tory.                       
+
+> Item policy Estimator Spearman Close-pair agreement Archive regret Shared informative Model .862 .732 .0043 Shared informative Raw .865 .698 .0102 Unshared informative Model .795 .674 .0056 Shared random Model .750 .649 .0071 Independent random Model .717 .626 .0078
+
+4.4 Final Selection Needs Confirmation 
+
+Final scaffold selection requires more reliable comparisons than those needed to guide evolutionary search. Figure 2 compares the native selection rule with successive halving (SH) on the same candidate pools under different search-time evaluation strategies. SH substantially improves final performance when search feedback is absent, recovering strong candidates that the native selection rule may overlook. With random partial evaluation, the gains are smaller and less consistent, while full evaluation leaves little room for further improvement. These results highlight the importance of final confirmation when search-time evaluation is limited.  
+
+> Takeaway 3. Final selection requires reliable comparisons beyond search-time fitness estimates, particularly when evaluation feedback is sparse or absent.
+
+5 Method 
+
+Figure 3 illustrates EvalAlloc, an evaluation allocation framework that distributes evaluation effort across three stages: Core Calibra-tion , Shared-Core Evolution , and Warm-Started Selection . EvalAl-loc decouples the two roles of evaluation: search-time feedback only needs to be cheap and comparable enough to guide evolu-tion, whereas the final choice needs precise comparisons among the strongest candidates. It therefore splits one evaluation bud-get into a sparse search stage and a separate selection stage that reuses every observation collected during search. The key idea is to invest a small evaluation budget upfront to establish a reusable reference, use shared informative items to provide comparable feedback throughout evolution, and concentrate additional evalua-tions on final scaffold selection. EvalAlloc operates as a drop-in evaluator, leaving the native framework’s proposal, archive, and parent-selection policies unchanged. 
+
+5.1 Core Calibration 
+
+EvalAlloc begins by fully evaluating the first 𝑊 valid candidates on all 𝑁 SEARCH items. This upfront investment serves two pur-poses: identifying informative items for subsequent evaluation and calibrating a response model for estimating full-set fitness from sparse observations. The warm-up candidates receive their directly observed full-set scores, while their item-level outcomes form a dense response matrix for calibration. 
+
+Identifying informative items. We estimate item informa-tiveness from accumulated evaluation outcomes. Let 𝑎 𝑖 denote the number of full-credit outcomes and 𝑛 𝑖 the number of observed outcomes for item 𝑖 . Using a Beta posterior for its full-credit proba-bility, 
+
+𝑝 𝑖 ∼ Beta (𝑎 𝑖 + 1, 𝑛 𝑖 − 𝑎 𝑖 + 1), (2) we define a conservative informativeness estimate: 
+
+𝐼 𝑖 = 4
+
+
+
+E[𝑋 𝑖 ] − 𝑧 √︁ Var (𝑋 𝑖 )
+
+
+
+, 𝑋 𝑖 = 𝑝 𝑖 (1 − 𝑝 𝑖 ). (3) The variance term favors items whose outcomes vary across can-didates, while the uncertainty penalty discourages selecting items with insufficient evidence. Fractional outcomes below full credit count as failures for these acquisition statistics. The posterior mo-ments are available in closed form. 
+
+Response model. We fit a low-rank logistic response model following a multidimensional item response theory (MIRT) formu-lation: 
+
+𝑞 𝑐𝑖 = 𝜎  𝜇 + 𝜂 𝑖 + 𝑏 𝑐 + 𝑢 ⊤ 
+
+> 𝑖
+
+𝑣 𝑐 
+
+ , 𝑢 𝑖 , 𝑣 𝑐 ∈ R𝑑 , (4) where 𝜇 is a global intercept, (𝜂 𝑖 , 𝑢 𝑖 ) represent item-specific param-eters, and (𝑏 𝑐 , 𝑣 𝑐 ) capture candidate-specific response characteris-tics. The model is fitted on the fully evaluated warm-up candidates by minimizing regularized fractional cross-entropy. Their fitted candidate parameters also define a Gaussian prior for subsequent candidates. During evolution, the global intercept, item parameters, and can-didate prior remain fixed. For each new candidate, only (𝑏 𝑐 , 𝑣 𝑐 ) are inferred from its sparse observations by MAP estimation under this prior. This maintains a common scoring reference across candi-dates without repeatedly refitting the model or rescoring archived candidates. 
+
+5.2 Shared-Core Evolution 
+
+After calibration, each new candidate is evaluated on a small subset of 𝑘 SEARCH items ( 𝑘 = 60, i.e., 20% of 𝑁 = 300). Rather than inde-pendently selecting items for each candidate, EvalAlloc combines a fixed informative core with a small adaptive component. 
+
+Shared informative core. Using the warm-up informativeness estimates, we select the top 𝑘 0 items to form a fixed core 𝑆 0. Every subsequent candidate is evaluated on this same core, creating a common basis for cross-candidate comparisons. This design fol-lows the intuition of common random numbers (CRN): exposing candidates to shared evaluation conditions helps reduce variation arising from differences in the evaluated item sets. To retain limited adaptability, the remaining 𝑘 − 𝑘 0 items are candidate-specific. For each candidate 𝑐 , we sample a set 𝐴 𝑐 from outside the core, using Gumbel-top-𝑘 sampling with logits 𝐼 𝑖 /𝜏 
+
+computed from the current informativeness scores. With a small temperature, this amounts to taking the currently most informative items with random tie-breaking. The resulting evaluation set is 
+
+𝑆 𝑐 = 𝑆 0 ∪ 𝐴 𝑐 , |𝑆 0 | = 𝑘 0, |𝑆 𝑐 | = 𝑘. (5) The shared core remains unchanged, whereas the acquisition sta-tistics are updated after each candidate using newly observed out-comes. This allows the adaptive component to respond to changes in the evolving candidate population without sacrificing the com-mon comparison basis. Concretely, for two candidates scored on the same 𝑘 0 items, the variance of their score difference is Var ( ¯𝑌 𝑎 − ¯𝑌 𝑏 ) =  𝜎 2 
+
+> 𝑎
+
++Where Should the Evaluation Budget Go in LLM-Driven Agent Scaffold Evolution? , , Solution 
+
+> Selector
+> Evaluator
+> Solution
+> Generator
+> Context
+> Builder
+
+Stage 2: 
+
+Shared -Core Evolution 
+
+Sparse observations            
+
+> Completed responses
+> c1
+> c1
+> c2
+> c2
+> c3
+> c3
+> c†
+> c†
+> Shared core
+> Trained Response
+> model
+> Observed outcomes
+> Observed + predicted
+> i1i2i3i6i7iN
+> i1i2i3i6i7iN
+> Adaptive items
+> Evolutionary
+> Search
+> Estimated
+> score
+
+Stage 1: 
+
+Core calibration 
+
+Full warm -up evaluation       
+
+> c1
+> c2
+> …
+> cW
+> First  W candidates
+> Fit Response model
+> 𝑞 𝑐𝑖 = 𝜎(𝜇 + 𝜂 𝑖 + 𝑏 𝑐 + 𝑢 𝑖 ᵀ𝑣 𝑐 )
+> Estimate item
+> informativeness
+> 𝐼 𝑖 = 4(𝐸[𝑋 𝑖 ] − 𝑧 · 𝑠𝑑[𝑋 𝑖 ])
+
+Select shared informative core          
+
+> Item i: mixed outcomes Item j: all correct
+> Select Skip
+> All N items
+> i1i2i3i4i5i6…iN
+
+Stage 3: 
+
+Warm -Started Selection 
+
+All generated candidates 
+
+…
+
+Eval  𝑷 𝟏  items 
+
+Eval  𝑷 𝟐  items 
+
+Eval N items   
+
+> Refit Response model
+> Prediction
+> Failure Success
+> Unobserved
+> Selected
+
+…
+
+> Cached cells New cells
+
+Figure 3: Overview of EvalAlloc. The framework consists of three stages: (1) core calibration using fully evaluated warm-up candidates, (2) sparse search-time evaluation with a shared informative core and fixed response model, and (3) warm-started successive halving that reuses accumulated observations for final scaffold selection. 
+
+𝜎 2 
+
+> 𝑏
+
+− 2 Cov (𝑌 𝑎 , 𝑌 𝑏 )/𝑘 0, whereas independently drawn item sets remove the covariance term. Because evolved scaffolds are strongly correlated—competitive candidates agree on most items—a shared core makes pairwise comparisons less noisy at the same budget. 
+
+Comparable fitness feedback. After evaluating candidate 𝑐 
+
+on 𝑆 𝑐 , we infer its candidate-specific response parameters under the fixed warm-up model. The fitted model then predicts responses on unobserved items, producing a completed estimate of full-set fitness: 
+
+b𝐹 (𝑐 ) = 1
+
+𝑁  ∑︁ 𝑖 ∈𝑆 𝑐 
+
+𝑌 𝑐𝑖 +∑︁ 
+
+> 𝑖 ∉𝑆 𝑐
+
+𝑞 𝑐𝑖 
+
+!
+
+. (6) Here, 𝑌 𝑐𝑖 denotes the observed outcome and 𝑞 𝑐𝑖 the model prediction using the inferred parameters of candidate 𝑐 .Combining observed and predicted outcomes places sparse eval-uations on the full-SEARCH fitness scale expected by the native evolution framework, which also contains the fully evaluated warm-up candidates. Keeping the response model fixed also avoids retro-spectively changing the scoring reference for archived candidates. The resulting fitness estimates are returned directly to the frame-work for its existing archive updates and subsequent proposals. All observed outcomes are cached for reuse during final selection. 
+
+5.3 Warm-Started Selection 
+
+Search-time evaluation aims to provide inexpensive feedback for continued evolution, whereas final selection requires distinguishing the strongest candidates. After search, EvalAlloc therefore runs successive halving (SH) over all valid candidates, using additional observed outcomes rather than relying on search-time fitness es-timates. Candidates with identical code (the same abstract syntax tree after removing docstrings) are merged first. We construct a shared random permutation of the SEARCH items and define increasingly large cumulative prefixes 𝑃 1 ⊂ 𝑃 2 ⊂· · · ⊂ 𝑃 𝑅 with 𝑃 𝑅 = Ds.In each round, surviving candidates are evaluated on the cur-rent prefix, and the top candidates are retained according to their round scores. The evaluation budget thus becomes increasingly concentrated on competitive candidates. 
+
+Warm-starting from search observations. Rather than dis-carding evaluations collected during evolution, we reuse all avail-able outcomes. Let 𝑂 𝑐 denote the items already observed for can-didate 𝑐 during search, and let 𝑈 𝑟 𝑐 = 𝑂 𝑐 ∪ 𝑃 𝑟 . Only the missing observations in 𝑈 𝑟 𝑐 are executed; cached outcomes are reused with-out additional cost. In the first round, the score is the observed mean over this union: 
+
+e𝐹 1 (𝑐 ) = 1
+
+|𝑈 1 
+
+> 𝑐
+
+|∑︁ 𝑖 ∈𝑈 1
+
+> 𝑐
+
+𝑌 𝑐𝑖 . (7) 
+
+Regression-adjusted scores. Because 𝑂 𝑐 contains informative and partly candidate-specific items, union means of different can-didates are computed on item sets of different difficulty. From the second round on, EvalAlloc corrects this with a regression (differ-ence) estimator [3, 6]: 
+
+e𝐹 𝑟 (𝑐 ) = 1
+
+|𝑈 𝑟 𝑐 |∑︁ 𝑖 ∈𝑈 𝑟 𝑐 
+
+𝑌 𝑐𝑖 + 𝜆 𝑟 ©«
+
+1
+
+𝑁 
+
+> 𝑁
+
+∑︁ 
+
+> 𝑖 =1
+
+˜𝑞 𝑐𝑖 − 1
+
+|𝑈 𝑟 𝑐 |∑︁ 𝑖 ∈𝑈 𝑟 𝑐 
+
+˜𝑞 𝑐𝑖 ª®¬
+
+, (8) , , 
+
+Table 3: Test performance of the program selected under each evaluation strategy. For each benchmark, Score reports the TEST mean over three seeds, with standard deviation shown as a subscript. Cost (%) is the evaluation spent during search and final selection, as a share of evaluating every proposal on all 300 search items ( 80 × 300 cells for ShinkaEvolve, 81 × 300 for AdaEvolve); programs that fail to load or error on every evaluated item cost nothing. Average reports the unweighted mean over the four benchmarks. The highest Score per benchmark and on average within each framework is bold. 
+
+Framework Method DROP HotpotQA HoVer IFBench Average Score ↑ Cost ↓ Score ↑ Cost ↓ Score ↑ Cost ↓ Score ↑ Cost ↓ Score ↑ Cost ↓
+
+ShinkaEvolve Skip Eval 0.7674 ±0.1046 0.0 0.4633 ±0.4014 0.0 0.3933 ±0.0961 0.0 0.3917 ±0.0741 0.0 0.5039 0.0 Successive Halving 0.8738 ±0.0248 22.1 0.7089 ±0.0139 22.0 0.6844 ±0.0948 22.5 0.4433 ±0.0098 21.2 0.6776 22.0 Random 0.8629 ±0.0083 42.5 0.7244 ±0.0158 45.6 0.7156 ±0.0443 43.8 0.4603 ±0.0332 37.7 0.6908 42.4 Cascade 0.8643 ±0.0139 39.6 0.7178 ±0.0135 53.3 0.7289 ±0.0375 54.8 0.4683 ±0.0214 38.5 0.6948 46.6 Full 0.8832 ±0.0155 77.1 0.7133 ±0.0067 92.5 0.7267 ±0.0176 92.5 0.4660 ±0.0290 75.4 0.6973 84.4 EvalAlloc 0.8907 ±0.0164 43.3 0.7411 ±0.0234 46.0 0.7278 ±0.0847 46.9 0.4739 ±0.0246 39.2 0.7084 43.8 AdaEvolve Skip Eval 0.7720 ±0.0833 0.0 0.6678 ±0.0287 0.0 0.4933 ±0.1389 0.0 0.4303 ±0.0398 0.0 0.5908 0.0 Successive Halving 0.8559 ±0.0480 22.8 0.6922 ±0.0402 23.2 0.5622 ±0.1155 23.1 0.4478 ±0.0354 23.1 0.6395 23.1 Random 0.8759 ±0.0098 49.2 0.7167 ±0.0384 49.8 0.7178 ±0.0877 49.6 0.4473 ±0.0173 48.6 0.6894 49.3 Cascade 0.8204 ±0.0398 58.6 0.7378 ±0.0356 53.8 0.7922 ±0.1091 60.3 0.4518 ±0.0221 51.4 0.7006 56.0 Full 0.8840 ±0.0155 100.0 0.7267 ±0.0296 98.8 0.7733 ±0.0899 100.0 0.4524 ±0.0123 97.9 0.7091 99.2 EvalAlloc 0.8881 ±0.0087 46.3 0.7456 ±0.0310 46.9 0.7844 ±0.0619 47.3 0.4722 ±0.0513 45.3 0.7226 46.4 
+
+where ˜ 𝑞 𝑐𝑖 is the prediction of a refitted response model. The second term adds the predicted difference between the full SEARCH set and the observed items, so 𝜆 𝑟 = 0 recovers the union mean and 
+
+𝜆 𝑟 = 1 the classical difference estimator. We estimate 𝜆 𝑟 from the data as the pooled within-candidate regression slope of observed outcomes on predictions over the surviving candidates C𝑟 ,
+
+𝜆 𝑟 =
+
+Í𝑐 ∈ C 𝑟 
+
+Í𝑖 ∈𝑈 𝑟 𝑐 (𝑌 𝑐𝑖 − ¯𝑌 𝑐 )( ˜𝑞 𝑐𝑖 − ¯˜𝑞 𝑐 )
+
+Í𝑐 ∈ C 𝑟 
+
+Í𝑖 ∈𝑈 𝑟 𝑐 ( ˜𝑞 𝑐𝑖 − ¯˜𝑞 𝑐 )2 , (9) with means taken over 𝑈 𝑟 𝑐 and the result clipped to [0, 1.5]. This slope approximates the variance-minimizing coefficient of the dif-ference estimator and automatically shrinks the correction when predictions track the observed outcomes poorly. 
+
+Cross-fitted refit. After the first round, we refit the response model on all search-time and round-1 observations. To avoid fitting the item parameters that correct a candidate on that candidate’s own observations, we use two-fold cross-fitting [5]: the sparse (non-warm-up) candidates are randomly split into two folds, and each fold is scored by a model fitted on the warm-up candidates and the other fold. Warm-up candidates are fully observed, so their correction term is zero. Likewise, once the last round observes all 
+
+𝑁 items, 𝑈 𝑅 𝑐 = Ds and Eq. (8) reduces to the observed full-SEARCH mean, so the final pick is always decided by observed outcomes. 
+
+Evaluation cost. For 𝑀 valid candidates, the total evaluator cost in executed cells is 
+
+𝐶 eval = 𝑊 𝑁 + ( 𝑀 − 𝑊 )𝑘 + 𝐶 SH ,new , (10) where the first two terms account for calibration and sparse search, and 𝐶 SH ,new counts only additional executions required by suc-cessive halving. With 80 valid proposals, the search stage costs 
+
+(𝑊 𝑁 + 70 𝑘 )/( 80 𝑁 ) = 30% of full evaluation. Thus, EvalAlloc reuses evaluation effort across stages: dense observations establish the scoring reference, shared sparse observations guide evolution, and cached evaluations reduce the incremental cost of final confir-mation. 
+
+6 Experiments 6.1 Setup 
+
+Baselines. We compare EvalAlloc against five evaluation strate-gies with different budget allocations. Skip Eval performs no eval-uation during either search or final selection, and select the last valid evolved program. Successive Halving (SH) [14] provides no evaluation feedback during search and applies successive halving to the generated candidate pool for final selection. Random evalu-ates each candidate on a randomly sampled 50% subset of SEARCH items. Cascade [2, 23] first evaluates candidates on 20% of SEARCH items and promotes candidates meeting a top-25% threshold to full evaluation, while allocating no additional evaluations to the re-maining candidates. Full evaluates every candidate on all SEARCH items. 
+
+Implementation Details. We use the same benchmarks, evolu-tion frameworks, and model configurations as in Section 4.1. Unless otherwise specified, EvalAlloc allocates 30% of the full-evaluation budget to search, with the first 𝑊 = 10 valid candidates fully eval-uated and each subsequent candidate evaluated on 𝑘 = 60 items (20% of SEARCH). The shared informative core contains 𝑘 0 = 54 items (90% of 𝑘 ), and the Gumbel sampling temperature is 𝜏 = 0.001. For final selection, we use 𝑅 = 4 successive-halving rounds with cumulative item prefixes of 30, 60, 120, and 300, retaining 30, 15, 8, and 1 candidates, respectively. For the response model, we set the latent dimension to 𝑑 = 2, the regularization coefficient to 𝜌 = 1, and the informativeness uncertainty penalty to 𝑧 = 2. 
+
+6.2 Main Results 
+
+Table 3 compares the TEST performance and evaluation cost of different strategies. Across both evolution frameworks and all four benchmarks, EvalAlloc matches or slightly exceeds the mean Where Should the Evaluation Budget Go in LLM-Driven Agent Scaffold Evolution? , , 
+
+Table 4: Ablation of EvalAlloc on ShinkaEvolve. For each benchmark, we report the score over three runs, with standard deviation shown as a subscript. Each variant removes one component and keeps the rest unchanged. Δ is the change in the four-benchmark average relative to EvalAlloc. Cost (%) is the evaluation spent during search and final selection. Best value per column is bold.                                       
+
+> Variant DROP HotpotQA HoVer IFBench Avg. ΔCost EvalAlloc 0.8907 ±0.0164 0.7411 ±0.0234 0.7278 ±0.0847 0.4739 ±0.0246 0.7084 –43.8%
+> w/o selection 0.8755 ±0.0157 0.7278 ±0.0139 0.6922 ±0.0683 0.4688 ±0.0363 0.6911 −0.0173 27.4%
+> w/o response model 0.8946 ±0.0113 0.7222 ±0.0139 0.6800 ±0.0361 0.4892 ±0.0513 0.6965 −0.0119 44.2%
+> w/o informative items 0.8866 ±0.0028 0.6967 ±0.0260 0.6689 ±0.0369 0.4649 ±0.0326 0.6793 −0.0291 43.4%
+
+TEST score of Full while using approximately half as many eval-uation cells. It also outperforms Random and Cascade in cross-benchmark average performance at comparable or lower evalu-ation cost. These results demonstrate that allocating evaluations selectively can provide a better cost–performance tradeoff than uniformly evaluating candidates. The evaluation costs differ be-tween the two frameworks partly due to their handling of invalid proposals. AdaEvolve retries program generation when a proposal is invalid, whereas ShinkaEvolve discards invalid proposals with-out replacement. Since invalid programs incur no evaluation cost, ShinkaEvolve evaluates fewer valid candidates, resulting in lower realized evaluation costs, particularly under Full evaluation. The no-evaluation baselines further highlight the complemen-tary roles of search feedback and final selection. Applying SH to candidates generated without evaluation feedback substantially improves final performance, but still falls short of EvalAlloc. This suggests that final selection can recover promising candidates even from unguided search, while informative feedback during evolu-tion provides additional benefits. These findings support combining sparse search-time evaluation with targeted final confirmation. 
+
+6.3 Ablation Study 
+
+We ablate three components of EvalAlloc on ShinkaEvolve across all four benchmarks. W/o selection skips final confirmation and selects the candidate with the highest refitted response-model es-timate from the same search runs. W/o response model uses raw observed means for search feedback and raw union means for final selection. W/o informative items replaces informative item selec-tion with random sampling while preserving the shared core and evaluation budget. The latter two variants require new evolution runs because they change the search-time feedback. Table 4 shows that removing final confirmation consistently re-duces TEST performance, highlighting the importance of additional evaluation for selecting among competitive candidates. Replacing informative items with random ones produces the largest aver-age degradation, suggesting that sharing evaluation items alone is insufficient without considering their informativeness. Removing the response model has a smaller and less consistent effect, as the shared core already provides substantial comparability among can-didates. The response model therefore primarily serves to calibrate sparse feedback onto a common scoring scale. Overall, these results identify informative item selection and final confirmation as the main contributors to EvalAlloc. 
+
+6.4 Analysis 
+
+Budget Allocation in Warm-up Stage. Figure 4 examines the effect of warm-up length 𝑊 on DROP with ShinkaEvolve under a fixed search-stage budget. A longer warm-up provides more ob-servations for calibration but leaves fewer evaluation items for subsequent candidates. The default 𝑊 = 10 achieves the highest mean performance, although the differences are within seed-to-seed variation. All three configurations outperform Random at comparable evaluation cost. Offline replays further show that an excessively long warm-up reduces search-time ranking accuracy as later evaluations become too sparse. These results highlight the trade-off between upfront calibration and informative feedback during subsequent evolution. 
+
+Budget Allocation in Search Stage. Figure 5 examines the effect of search-time evaluation budget on DROP with ShinkaEvolve. We fix the warm-up at ten fully evaluated candidates and vary the target search budget from 20% to 40%. The default 30% allocation achieves the highest observed mean TEST performance, while the 20% configuration offers comparable performance at lower cost. Increasing the search-time budget does not consistently improve final performance in this setting, suggesting that sparse feedback can be sufficient to guide productive evolution. 
+
+Budget Allocation in Selection Stage. Figure 6 examines the effect of final confirmation budget while reusing the same search runs. Compared with direct selection based on search-stage esti-mates, successive halving (SH) improves TEST performance across all four benchmarks. Applying SH to the top 30 candidates captures most of the improvement at lower cost, while considering all can-didates provides a modest additional gain. These results highlight the value of targeted final confirmation and the trade-off between selection cost and final scaffold quality. 
+
+Evaluation cost. Table 5 compares evaluation-cell and executor-token costs relative to Full. EvalAlloc reduces token consumption across all benchmark–framework settings, although token savings are not always proportional to cell savings. On ShinkaEvolve, it uses 52.13% of Full’s cells but 64.76% of its tokens, whereas its token share on AdaEvolve is 45.47%. The latter average is influenced by an unusually token-intensive HoVer Full run. To examine this discrepancy without confounding differences in search trajectories, we analyze the fully evaluated candidate pools from the Full runs. Higher-scoring candidates tend to consume more tokens per item, with average within-run Spearman correlations of 0.25 and 0.36 for ShinkaEvolve and AdaEvolve, respectively. Like-wise, the 60 items with the highest response variability consume , , W = 5 (k = 76) W = 10 (k = 60) W = 20 (k = 20)           
+
+> Warm-up generations 010 20 30 40 50
+> Evaluation cost (% of full budget)
+> 4.0
+> 41.9% 43.3% 45.6%
+> Evaluation Budget Allocation
+> 6.3 12.5 25.0 19.8 14.6 15.8 16.2 16.6
+> Warm-up Sparse search Selection
+> W = 5 W = 10 W = 20
+> Warm-up generations 0.84 0.86 0.88 0.90 0.92 Score
+> DROP
+> 0.876 0.891 0.875
+> Full (77% cost) Random (43% cost)
+
+Figure 4: Effect of warm-up length on DROP with ShinkaE-volve under a fixed search-stage budget. Left: evaluation cost breakdown for different numbers of fully evaluated warm-up candidates. Right: corresponding performance, with Full and Random shown as references. 20% (k = 26) 30% (k = 60) 40% (k = 94)           
+
+> Search budget 010 20 30 40 50 60
+> Evaluation cost (% of full budget)
+> 35.9% 43.3% 49.6%
+> Evaluation Budget Allocation
+> 12.5 12.5 12.5 6.0 14.6 23.4 17.4 16.2 13.7
+> Warm-up Sparse search Selection
+> 20 30 40 50 60 70 80 Total evaluation cost (% of full budget) 0.84 0.86 0.88 0.90 0.92 Score  20% 30% 40% Skip Eval + SH Cascade Random Full
+> DROP
+> EvalAlloc
+
+Figure 5: Effect of search-time evaluation budget on DROP with ShinkaEvolve. Left: evaluation cost breakdown across warm-up, sparse search, and final selection. Right: Perfor-mance versus total evaluation cost under different search budgets. 25 50 75 100 0.86 0.88 0.90                
+
+> Score
+> DROP
+> 25 50 75 100 0.72 0.74 0.76
+> HotpotQA
+> 25 50 75 100 0.65 0.70 0.75 0.80
+> HoVer
+> 25 50 75 100 0.44 0.46 0.48 0.50
+> IFBench
+> 25 50 75 100 0.68 0.70 0.72
+> Average
+> Total Evaluation Cost (% of Full Budget)
+> No SH SH over top 30 SH over all (default) Full
+
+Figure 6: Effect of final selection strategies on TEST perfor-mance and evaluation cost across four benchmarks and their average. We compare selection without SH, SH over the top 30 candidates, and SH over all candidates, using the same search runs. Full evaluation is shown as a reference. 
+
+1.08 and 1.13 times the average tokens per item. These patterns suggest that concentrating evaluations on informative items and competitive candidates can favor more expensive execution cells. Thus, evaluation-cell counts measure the number of executions, while token counts additionally reflect heterogeneity in execution cost. 
+
+Other Proposers and Executor. We further evaluate alterna-tive model configurations on ShinkaEvolve in Figure 7. We replace the proposer with gpt-oss-120b [1] on IFBench, or the executor with 
+
+Table 5: Evaluation-cell and executor-token (prompt and completion) costs of search and final selection, relative to Full (100%). Each entry averages the per-benchmark shares over the four benchmarks; programs that fail to load or error on every evaluated item cost nothing. 
+
+Method ShinkaEvolve AdaEvolve Cells Tokens Cells Tokens Full 100.00% 100.00% 100.00% 100.00% Successive Halving 26.26% 27.50% 23.26% 15.10% Random 50.44% 55.18% 49.69% 43.66% Cascade 54.83% 66.32% 56.47% 54.50% EvalAlloc 52.13% 64.76% 46.83% 45.47% Skip Eval (0% Cost) SH (20.8% Cost) Random (37.1% Cost) Cascade (40.6% Cost) Full (83.3% Cost) EvalAlloc (39.4% Cost)       
+
+> 0.15 0.20 0.25 0.30 0.35 0.40 0.45 0.50 Score 0.315 0.437 0.451 0.453 0.435 0.454
+> IFBench, GPT-OSS proposer / Qwen executor
+> Skip Eval (0% Cost) SH (21.5% Cost) Random (40.8% Cost) Cascade (52.8% Cost) Full (85.8% Cost) EvalAlloc (43.9% Cost)
+> 0.5 0.6 0.7 0.8 0.9 Score 0.578 0.779 0.783 0.780 0.767 0.786
+> DROP, DeepSeek proposer / Llama executor
+
+Figure 7: Performance with alternative proposer and execu-tor models on ShinkaEvolve. Left: IFBench with a gpt-oss-120b proposer. Right: DROP with a Llama-3.1-8B-Instruct executor. Bars show the mean over three seeds, with stan-dard deviation as error bars. Percentages indicate evaluation cost relative to the nominal full budget. 
+
+Llama-3.1-8B-Instruct [11] on DROP. In both settings, EvalAlloc achieves competitive TEST performance with substantially fewer evaluation cells than Full. The relative performance of evaluation strategies varies across model configurations, suggesting that the benefits of evaluation allocation can depend on the underlying models. 
+
+7 Conclusion 
+
+Evaluation influences both evolutionary search and final scaffold selection. Our investigation shows that sparse informative feedback can guide evolution, while shared evaluation items and a stable scor-ing reference support comparable decisions across candidates. Mo-tivated by these findings, we propose EvalAlloc, which combines sparse search-time feedback with warm-started final confirmation. Across four benchmarks and two evolution frameworks, EvalAl-loc achieves competitive performance while using approximately half as many evaluation cells as Full. These results highlight the importance of allocating evaluation effort according to its distinct roles in search and final selection. 
+
+References 
+
+[1] Sandhini Agarwal, Lama Ahmad, Jason Ai, Sam Altman, Andy Applebaum, Edwin Arbus, Rahul K Arora, Yu Bai, Bowen Baker, Haiming Bao, et al. gpt-oss-120b & gpt-oss-20b model card. arXiv preprint arXiv:2508.10925 , 2025. [2] Lakshya A Agrawal, Shangyin Tan, Dilara Soylu, Noah Ziems, Rishi Khare, Krista Opsahl-Ong, Arnav Singhvi, Herumb Shandilya, Michael J Ryan, Meng Jiang, et al. Gepa: Reflective prompt evolution can outperform reinforcement learning. In International Conference on Learning Representations , volume 2026, pages 8479– 8565, 2026. Where Should the Evaluation Budget Go in LLM-Driven Agent Scaffold Evolution? , , 
+
+[3] Anastasios N Angelopoulos, John C Duchi, and Tijana Zrnic. Ppi++: Efficient prediction-powered inference. The Annals of Applied Statistics , 20(3):2235–2252, 2026. [4] Mert Cemri, Shubham Agrawal, Akshat Gupta, Shu Liu, Audrey Cheng, Qi-uyang Mang, Ashwin Naren, Lutfi Eren Erdogan, Koushik Sen, Matei Zaharia, et al. Adaevolve: Adaptive llm driven zeroth-order optimization. arXiv preprint arXiv:2602.20133 , 2026. [5] Victor Chernozhukov, Denis Chetverikov, Mert Demirer, Esther Duflo, Christian Hansen, Whitney Newey, and James Robins. Double/debiased machine learning for treatment and structural parameters, 2018. [6] William Gemmell Cochran and William G Cochran. Sampling techniques , vol-ume 3. wiley, New York, 1977. [7] Dheeru Dua, Yizhong Wang, Pradeep Dasigi, Gabriel Stanovsky, Sameer Singh, and Matt Gardner. Drop: A reading comprehension benchmark requiring dis-crete reasoning over paragraphs. In Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers) , pages 2368–2378, 2019. [8] Adam Fisch, Daniel Deutsch, Joshua Maynez, Alekh Agarwal, Jonathan Berant, William Cohen, Amir Globerson, and Jacob Eisenstein. Collabeval: Statistically efficient collaborative model evaluation via matrix completion. arXiv preprint arXiv:2607.05046 , 2026. [9] Yonatan Gideoni, Sebastian Risi, and Yarin Gal. Simple baselines are competitive with code evolution. arXiv preprint arXiv:2602.16805 , 2026. [10] Paul Glasserman and David D Yao. Some guidelines and guarantees for common random numbers. Management Science , 38(6):884–908, 1992. [11] Aaron Grattafiori, Abhimanyu Dubey, Abhinav Jauhri, Abhinav Pandey, Abhishek Kadian, Ahmad Al-Dahle, Aiesha Letman, Akhil Mathur, Alan Schelten, Alex Vaughan, et al. The llama 3 herd of models. arXiv preprint arXiv:2407.21783 , 2024. [12] Eliya Habba, Itay Itzhak, Asaf Yehudai, Yotam Perlitz, Elron Bandel, Michal Shmueli-Scheuer, Leshem Choshen, and Gabriel Stanovsky. Growing pains: Extensible and efficient llm benchmarking via fixed parameter calibration. arXiv preprint arXiv:2604.12843 , 2026. [13] Shengran Hu, Cong Lu, and Jeff Clune. Automated design of agentic systems. In 
+
+International Conference on Learning Representations , volume 2025, pages 21344– 21377, 2025. [14] Kevin Jamieson and Ameet Talwalkar. Non-stochastic best arm identification and hyperparameter optimization. In Artificial intelligence and statistics , pages 240–248. PMLR, 2016. [15] Yichen Jiang, Shikha Bordia, Zheng Zhong, Charles Dognin, Maneesh Singh, and Mohit Bansal. Hover: A dataset for many-hop fact extraction and claim verification. In Findings of the Association for Computational Linguistics: EMNLP 2020 , pages 3441–3460, 2020. [16] Woosuk Kwon, Zhuohan Li, Siyuan Zhuang, Ying Sheng, Lianmin Zheng, Cody Hao Yu, Joseph Gonzalez, Hao Zhang, and Ion Stoica. Efficient mem-ory management for large language model serving with pagedattention. In 
+
+Proceedings of the 29th symposium on operating systems principles , pages 611–626, 2023. [17] Robert Lange, Yuki Imajuku, and Edoardo Cetin. Shinkaevolve: Towards open-ended and sample-efficient program evolution. In International Conference on Learning Representations , volume 2026, pages 74026–74078, 2026. [18] Lisha Li, Kevin Jamieson, Giulia DeSalvo, Afshin Rostamizadeh, and Ameet Talwalkar. Hyperband: A novel bandit-based approach to hyperparameter opti-mization. Journal of machine learning research , 18(185):1–52, 2018. [19] Shu Liu, Mert Cemri, Shubham Agarwal, Alexander Krentsel, Ashwin Naren, Qiuyang Mang, Zhifei Li, Akshat Gupta, Monishwaran Maheswaran, Audrey Cheng, et al. Skydiscover: A flexible, adaptive framework for ai-driven scientific and algorithmic discovery. In Proceedings of the ACM Conference on AI and Agentic Systems , pages 1223–1227, 2026. [20] Manuel López-Ibáñez, Jérémie Dubois-Lacoste, Leslie Pérez Cáceres, Mauro Bi-rattari, and Thomas Stützle. The irace package: Iterated racing for automatic algorithm configuration. Operations Research Perspectives , 3:43–58, 2016. [21] Grégoire Mialon, Clémentine Fourrier, Thomas Wolf, Yann LeCun, and Thomas Scialom. Gaia: a benchmark for general ai assistants. In International Conference on Learning Representations , volume 2024, pages 9025–9049, 2024. [22] Reiichiro Nakano, Jacob Hilton, Suchir Balaji, Jeff Wu, Long Ouyang, Christina Kim, Christopher Hesse, Shantanu Jain, Vineet Kosaraju, William Saunders, et al. Webgpt: Browser-assisted question-answering with human feedback. arXiv preprint arXiv:2112.09332 , 2021. [23] Alexander Novikov, Ngân V ˜ u, Marvin Eisenberger, Emilien Dupont, Po-Sen Huang, Adam Zsolt Wagner, Sergey Shirobokov, Borislav Kozlovskii, Francisco JR Ruiz, Abbas Mehrabian, et al. Alphaevolve: A coding agent for scientific and algorithmic discovery. arXiv preprint arXiv:2506.13131 , 2025. [24] Felipe Maia Polo, Lucas Weber, Leshem Choshen, Yuekai Sun, Gongjun Xu, and Mikhail Yurochkin. tinybenchmarks: evaluating LLMs with fewer examples. In Forty-first International Conference on Machine Learning , 2024. URL https: //openreview.net/forum?id=qAml3FpfhG. [25] Valentina Pyatkin, Saumya Malik, Victoria Graf, Hamish Ivison, Shengyi Huang, Pradeep Dasigi, Nathan Lambert, and Hanna Hajishirzi. Generalizing verifiable instruction following. Advances in Neural Information Processing Systems , 38, 2026. [26] Yujia Qin, Shihao Liang, Yining Ye, Kunlun Zhu, Lan Yan, Yaxi Lu, Yankai Lin, Xin Cong, Xiangru Tang, Bill Qian, et al. Toolllm: Facilitating large language models to master 16000+ real-world apis. In International Conference on Learning Representations , volume 2024, pages 9695–9717, 2024. [27] Qwen Team. Qwen3.5: Towards native multimodal agents, February 2026. URL https://qwen.ai/blog?id=qwen3.5. [28] Bernardino Romera-Paredes, Mohammadamin Barekatain, Alexander Novikov, Matej Balog, M Pawan Kumar, Emilien Dupont, Francisco JR Ruiz, Jordan S Ellenberg, Pengming Wang, Omar Fawzi, et al. Mathematical discoveries from program search with large language models. Nature , 625(7995):468–475, 2024. [29] Anyi Xu, Bangcai Lin, Bing Xue, Bingxuan Wang, Bingzheng Xu, Bochao Wu, Bowei Zhang, Chaofan Lin, Chen Dong, Chenchen Ling, et al. Deepseek-v4: Towards highly efficient million-token context intelligence. arXiv preprint arXiv:2606.19348 , 2026. [30] Zhilin Yang, Peng Qi, Saizheng Zhang, Yoshua Bengio, William Cohen, Ruslan Salakhutdinov, and Christopher D Manning. Hotpotqa: A dataset for diverse, explainable multi-hop question answering. In Proceedings of the 2018 conference on empirical methods in natural language processing , pages 2369–2380, 2018. [31] Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik R Narasimhan, and Yuan Cao. React: Synergizing reasoning and acting in language models. In 
+
+The Eleventh International Conference on Learning Representations , 2023. URL https://openreview.net/forum?id=WE_vluYUL-X. [32] Shunyu Yao, Noah Shinn, Pedram Razavi, and Karthik Narasimhan. $\tau$-bench: A benchmark for tool-agent-user interaction in real-world domains. In 
+
+International Conference on Learning Representations , volume 2025, pages 9965– 10017, 2025. [33] Jenny Zhang, Shengran Hu, Cong Lu, Robert Lange, and Jeff Clune. Darwin gödel machine: Open-ended evolution of self-improving agents. In International Conference on Learning Representations , volume 2026, pages 104223–104294, 2026. [34] Jiayi Zhang, Jinyu Xiang, Zhaoyang Yu, Fengwei Teng, Xionghui Chen, Jiaqi Chen, Mingchen Zhuge, Xin Cheng, Sirui Hong, Jinlin Wang, et al. Aflow: Automating agentic workflow generation. In International Conference on Learning Representations , volume 2025, pages 34040–34077, 2025. [35] Taolin Zhang, Hang Guo, Wang Lu, Tao Dai, Shu-Tao Xia, and Jindong Wang. Sparseeval: Efficient evaluation of large language models by sparse optimization. In The Fourteenth International Conference on Learning Representations , 2026. URL https://openreview.net/forum?id=CZAzAedGSV. [36] Shuyan Zhou, Frank F Xu, Hao Zhu, Xuhui Zhou, Robert Lo, Abishek Sridhar, Xianyi Cheng, Tianyue Ou, Yonatan Bisk, Daniel Fried, et al. Webarena: A realistic web environment for building autonomous agents. In International Conference on Learning Representations , volume 2024, pages 15585–15606, 2024.

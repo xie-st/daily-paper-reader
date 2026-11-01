@@ -1,0 +1,313 @@
+{
+  "date": "20261101",
+  "date_label": "",
+  "generated_at": "2026-11-01 22:27:09 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2610.35579v1",
+      "route": "202611/01/2610.35579v1-infinity-machine-a-self-improving-ai-agent-for-research",
+      "title": "Infinity Machine: a self-improving AI agent for research",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 10.0,
+      "evidence": "自我改进研究智能体通过门控检查与自主验证编辑执行框架",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.38266v1",
+      "route": "202611/01/2610.38266v1-recursive-self-improvement-in-physical-ai-mechanisms-evidence-and-evaluation",
+      "title": "Recursive Self-Improvement in Physical AI: Mechanisms, Evidence, and Evaluation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 10.0,
+      "evidence": "物理AI中递归自我改进的机制、证据与评估综述",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.36660v1",
+      "route": "202611/01/2610.36660v1-the-view-from-nowhere-population-centered-agent-evolution",
+      "title": "The View from Nowhere: Population-Centered Agent Evolution",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "以种群为中心的自我改进智能体演化",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.36826v1",
+      "route": "202611/01/2610.36826v1-when-the-critic-falls-behind-co-evolving-rubrics-and-harnesses-for-continual-agent-self-improvement",
+      "title": "When the Critic Falls Behind: Co-Evolving Rubrics and Harnesses for Continual Agent Self-Improvement",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "协同演化评分规则与执行框架以促进智能体持续自我改进",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.38568v1",
+      "route": "202611/01/2610.38568v1-a-rsi-adaptive-task-refresh-for-zero-data-multimodal-self-improvement",
+      "title": "A-RSI: Adaptive Task Refresh for Zero-Data Multimodal Self-Improvement",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "面向零数据自改进的自适应任务池刷新，即自主生成新数据",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.38882v1",
+      "route": "202611/01/2610.38882v1-aligning-autoresearch-co-improvement-between-agents-and-humans",
+      "title": "Aligning Autoresearch: Co-Improvement between Agents and Humans",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "自动研究智能体端到端开展长周期AI研究",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.39352v1",
+      "route": "202611/01/2610.39352v1-try-before-you-evolve-ranking-scored-trials-for-recursive-self-improvement-of-recommender-systems",
+      "title": "Try Before You Evolve: Ranking-Scored Trials for Recursive Self-Improvement of Recommender Systems",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "LLM改写训练配方实现推荐系统递归自我改进",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.39714v1",
+      "route": "202611/01/2610.39714v1-molrsi-a-recursive-self-improving-ai-agent-for-molecular-discovery",
+      "title": "MoLRSI: A Recursive Self-Improving AI agent for Molecular Discovery",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 9.0,
+      "evidence": "递归自我改进智能体优化工作流与搜索策略",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.33684v1",
+      "route": "202611/01/2610.33684v1-more-mode-optimized-reasoning-with-self-adaptive-effort-for-self-evolving-agents",
+      "title": "More: Mode-Optimized Reasoning with Self-Adaptive Effort for Self-Evolving Agents",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "按任务自适应选择推理模式与计算投入的自进化训练",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.33826v1",
+      "route": "202611/01/2610.33826v1-reactive-optimizers",
+      "title": "Reactive Optimizers",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "语言模型智能体在训练中重写优化器代码以自动化机器学习工程",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.35051v1",
+      "route": "202611/01/2610.35051v1-vista-active-exploration-for-self-improvement-in-embodied-agents",
+      "title": "VISTA: Active Exploration for Self-Improvement in Embodied Agents",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "把事后回合反思转化为主动自我探索以改进具身执行框架",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.35316v1",
+      "route": "202611/01/2610.35316v1-rsiv-harness-a-recursive-self-improvement-harness-framework-for-open-domain-conversational-text-to-visualization",
+      "title": "RSIV-Harness: A Recursive Self-Improvement Harness Framework for Open-Domain Conversational Text-to-Visualization",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "面向智能体的递归自我改进框架",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.35604v1",
+      "route": "202611/01/2610.35604v1-robodoctor-training-free-recursive-self-improvement-for-robot-policies",
+      "title": "RoboDoctor: Training-Free Recursive Self-Improvement for Robot Policies",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "机器人策略的免训练递归自我改进",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.33487v1",
+      "route": "202611/01/2610.33487v1-resight-task-driven-self-improving-memory-for-embodied-agents",
+      "title": "ReSight: Task-Driven Self-Improving Memory for Embodied Agents",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "随任务需求扩展能力的自我改进记忆",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.33861v1",
+      "route": "202611/01/2610.33861v1-rege-stronger-agents-through-experience-synthesis",
+      "title": "ReGE: Stronger Agents through Experience Synthesis",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "智能体通过经验合成在无参数更新下自我提升",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.37175v1",
+      "route": "202611/01/2610.37175v1-mle-world-predicting-machine-learning-experiment-outcomes-with-a-learned-world-model",
+      "title": "MLE-World: Predicting Machine Learning Experiment Outcomes with a Learned World Model",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "用世界模型预测机器学习实验结果以加速AI研究智能体",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.37276v1",
+      "route": "202611/01/2610.37276v1-where-should-the-evaluation-budget-go-in-llm-driven-agent-scaffold-evolution",
+      "title": "Where Should the Evaluation Budget Go in LLM-Driven Agent Scaffold Evolution?",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 7.0,
+      "evidence": "智能体脚手架演化中的评估预算分配",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.36589v1",
+      "route": "202611/01/2610.36589v1-infradev-can-coding-agents-develop-ai-infrastructure-and-how-can-we-tell",
+      "title": "InfraDev: Can Coding Agents Develop AI Infrastructure, and How Can We Tell?",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "编码智能体自动化AI基础设施工程",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    },
+    {
+      "paper_id": "2610.38637v1",
+      "route": "202611/01/2610.38637v1-on-policy-self-distillation-with-teacher-evolution",
+      "title": "On-Policy Self-Distillation with Teacher Evolution",
+      "section": "quick",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 6.0,
+      "evidence": "自教师演化提升模型自蒸馏性能",
+      "first_seen_at": "2026-11-01 22:27:09 UTC",
+      "updated_at": "2026-11-01 22:27:09 UTC"
+    }
+  ]
+}

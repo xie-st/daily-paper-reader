@@ -1,0 +1,817 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-11-01T22:21:44.402355+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 1,
+    "deep_divecandidates": 16,
+    "deep_cap": 6,
+    "deep_selected": 8,
+    "quick_candidates": 15,
+    "quick_skim_target": 11,
+    "quick_selected": 11
+  },
+  "deep_dive": [
+    {
+      "id": "2610.35579v1",
+      "source": "arxiv",
+      "title": "Infinity Machine: a self-improving AI agent for research",
+      "abstract": "We present the Infinity Machine, a self-improving AI agent that we use for research on problems whose answers aprogram or data can check. Each candidate solution is produced by a full tool-using agent that works for up to an hour in a fresh sandbox; proposers see only a public score, and a private split decides what counts. The harness itself(prompts, tools, skills, playbook, meta agent) is an editable genome, changed only through a kernel-enforced gate with held-out and cost checks. An autonomous mode goes from a plain-text goal to a verified report with no human step: an agent picks an open problem and writes its verifier, the kernel calibrates it, an adversarial agent audits it, and an agent that never sees the verifier re-checks the result. Across fourteen problems in six days, for about $180 of model usage, the system produced four results beyond the published state of the art on catalogued open problems in quantum information: a certified depolarizing-channel threshold point p = 0.064966, a qutrit positivity frontier of 0.2910672, a 44-gate depth-6 Golay state preparation, and a stabilizer-rank bound chi(T^7) <= 10. It also cut SABRE qubit-routing overhead from 68,559 to 12,087 added gates. In hardware, it cut the energy per MAC of an open 8x8 INT8 systolic tile by 77.7% through a full open RTL-to-GDS flow, bit-exact. Three fully autonomous runs ended in honestties with public records; one audit caught a stale record, and one agent-written score pointing the wrong way went unnoticed. We report the failures as carefully: the one self-derived harness generation was rejected on cost, proposers gamed lenient scorers four times, and operator changes were decisive for several results.",
+      "authors": [
+        "Harish Santhanalakshmi Ganesan"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-26T15:11:26+00:00",
+      "link": "https://arxiv.org/pdf/2610.35579v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "Self-improving research agent edits its harness through gated checks and autonomous verification",
+      "llm_evidence_cn": "自我改进研究智能体通过门控检查与自主验证编辑执行框架",
+      "llm_evidence": "自我改进研究智能体通过门控检查与自主验证编辑执行框架",
+      "canonical_evidence": "自我改进研究智能体通过门控检查与自主验证编辑执行框架",
+      "llm_tldr_en": "Presents Infinity Machine, a self-improving research agent whose prompts, tools, skills, and meta-agent form an editable genome; kernel-enforced gates and autonomous verification enable closed-loop research on checkable problems.",
+      "llm_tldr_cn": "该文提出无限机器，一个面向可验证问题的自我改进研究智能体。系统把提示、工具、技能、操作手册和元智能体组成可编辑基因组，仅通过内核强制门控并配合留出集与成本检查来修改。其自主模式可从纯文本目标出发，自动选择开放问题、编写验证器、接受对抗审计并完成独立复核。跨十四个问题的实验展示端到端自主研究流程，为自动化科研与递归自我改进提供了可审计的工程范式。",
+      "llm_tldr": "该文提出无限机器，一个面向可验证问题的自我改进研究智能体。系统把提示、工具、技能、操作手册和元智能体组成可编辑基因组，仅通过内核强制门控并配合留出集与成本检查来修改。其自主模式可从纯文本目标出发，自动选择开放问题、编写验证器、接受对抗审计并完成独立复核。跨十四个问题的实验展示端到端自主研究流程，为自动化科研与递归自我改进提供了可审计的工程范式。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "automating machine learning research and engineering with AI systems",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.38266v1",
+      "source": "arxiv",
+      "title": "Recursive Self-Improvement in Physical AI: Mechanisms, Evidence, and Evaluation",
+      "abstract": "Embodied systems can update policies, world models, skills, and executable programs from deployment experience, allowing one interaction to benefit later tasks. When a system also revises and reuses its data-acquisition, feedback, or learning procedures, experience changes the process that produces capability, introducing recursive self-improvement. This paper surveys research in physical AI through the connection between persistent capability and its improvement process. We first explain the functional distinction between learner updates and improvers, then compare policy learning, imagined experience, memory and skill accumulation, and executable harnesses. These approaches connect to revisions of curricula, rewards, and research programs in different ways. Contact validity, recovery, retention, and resource costs determine whether the resulting gains accumulate during continued deployment. An L0-L3 rubric distinguishes task-local adaptation, persistent capability gain, inherited process revision, and verified improver gain. Representative benchmarks and within-study contrasts relate these distinctions to existing results. We further propose common-data and interactive comparisons that evaluate reference and revised improvers from shared learner starts, separating the use of experience from its acquisition. This perspective connects the diverse methods, physical operating conditions, and evaluation evidence, underpinning embodied RSI. A comprehensive list of studies in this survey is available at https://github.com/nkd-lkz/physical-ai-rsi-survey.",
+      "authors": [
+        "Xiaofeng Han",
+        "Kaize Luo",
+        "Zenghuang Fu",
+        "Zichong Zhu",
+        "Zhe Feng",
+        "Changwei Wang",
+        "Rongtao Xu",
+        "Weiliang Meng",
+        "Xiaopeng Zhang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-10-28T04:34:16+00:00",
+      "link": "https://arxiv.org/pdf/2610.38266v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 10.0,
+      "llm_evidence_en": "survey of recursive self-improvement mechanisms, evidence and evaluation in physical AI",
+      "llm_evidence_cn": "物理AI中递归自我改进的机制、证据与评估综述",
+      "llm_evidence": "物理AI中递归自我改进的机制、证据与评估综述",
+      "canonical_evidence": "物理AI中递归自我改进的机制、证据与评估综述",
+      "llm_tldr_en": "A survey of recursive self-improvement in physical AI distinguishing learner updates from improvers and comparing policy learning, imagined experience, memory, skill accumulation and executable harnesses, with evaluation perspectives.",
+      "llm_tldr_cn": "论文针对具身系统能否实现递归自我改进的问题，区分学习器更新与改进器，并系统综述物理人工智能中的策略学习、想象经验、记忆技能积累与可执行程序框架。文章进一步讨论课程、奖励与研究计划的修订，并给出评估视角。该综述为理解和度量递归自我改进提供了机制、证据与评估框架。",
+      "llm_tldr": "论文针对具身系统能否实现递归自我改进的问题，区分学习器更新与改进器，并系统综述物理人工智能中的策略学习、想象经验、记忆技能积累与可执行程序框架。文章进一步讨论课程、奖励与研究计划的修订，并给出评估视角。该综述为理解和度量递归自我改进提供了机制、证据与评估框架。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.36660v1",
+      "source": "arxiv",
+      "title": "The View from Nowhere: Population-Centered Agent Evolution",
+      "abstract": "Self-improving AI systems can revise the designs that govern their own behavior. Yet existing approaches center improvement on selected parent agents and their evolutionary experience, leaving the broader population largely underused. We identify a substantial gap between population coverage (i.e., the tasks solved by at least one evolved variant) and the performance of the best individual agent. This gap shows that useful capabilities and diagnostic evidence emerge across the population without being consolidated into its leading agents.   These observations motivate the view from nowhere, a principle for agent evolution: an agent should be improved by interpreting its behavior through population-wide patterns of success, failure, and prior self-modification. We instantiate this principle as Population-Centered Evolution (PCE). PCE distils task records and modification histories from the population into a population block, which captures recurring failures, complementary successes, and the effects of previously attempted modifications to guide improvements to a selected parent's harness.   Under matched models, initial harnesses, and evolution schedules, PCE achieves 72.1% success on SWE-bench Verified and 96.7% on Polyglot, improving over a strong group-evolution baseline by 3.2 and 5.9 percentage points. In our evaluation, PCE reduces the gap between population coverage and best-agent performance by one-third on SWE-bench and closes it on Polyglot. These results suggest that treating the population as evidence--not merely as candidates for selection--provides a complementary principle for agent evolution.",
+      "authors": [
+        "Shuo Yan",
+        "Ningning Hou",
+        "Haoyu He",
+        "Haochen Pei",
+        "Shang Gao"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-27T05:24:34+00:00",
+      "link": "https://arxiv.org/pdf/2610.36660v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "population-centered evolution of self-improving agents",
+      "llm_evidence_cn": "以种群为中心的自我改进智能体演化",
+      "llm_evidence": "以种群为中心的自我改进智能体演化",
+      "canonical_evidence": "以种群为中心的自我改进智能体演化",
+      "llm_tldr_en": "Self-improving agents often evolve from selected parents, missing capabilities spread across the population. The paper proposes a population-centered view that interprets agents through population-wide success, failure, and self-modification patterns to consolidate useful capabilities into leading agents.",
+      "llm_tldr_cn": "现有自我改进智能体多围绕选定的父代及其演化经验进行优化，忽视了种群中分散出现的有用能力与诊断证据。本文提出“无处之见”的种群中心演化原则，通过种群范围的成败模式与既往自我修改记录来解释并改进个体智能体。研究揭示种群覆盖与最佳个体表现之间存在显著差距，并说明该方法有助于将分散能力整合进领先智能体，为自我改进智能体演化提供了新视角。",
+      "llm_tldr": "现有自我改进智能体多围绕选定的父代及其演化经验进行优化，忽视了种群中分散出现的有用能力与诊断证据。本文提出“无处之见”的种群中心演化原则，通过种群范围的成败模式与既往自我修改记录来解释并改进个体智能体。研究揭示种群覆盖与最佳个体表现之间存在显著差距，并说明该方法有助于将分散能力整合进领先智能体，为自我改进智能体演化提供了新视角。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "autonomous agents that improve their own capabilities over time",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.36826v1",
+      "source": "arxiv",
+      "title": "When the Critic Falls Behind: Co-Evolving Rubrics and Harnesses for Continual Agent Self-Improvement",
+      "abstract": "Autonomous agents increasingly depend on harnesses that govern interaction, memory, tools, and execution around large language models (LLMs). While recent work has begun to evolve these harnesses from execution experience, the supervision used to guide evolution often remains relatively static, making it difficult to track changing behavioral weaknesses across rounds and potentially limiting generalization to unseen tasks. To address this issue, we propose RuHarness, a rubric--harness co-evolution framework for continual agent self-improvement. RuHarness continually discovers and reassesses behavioral criteria from execution trajectories, prioritizes the most relevant unresolved weaknesses, and uses them to guide targeted harness updates while keeping the task objective fixed. Extensive experiments across diverse agent tasks and backbone models show that RuHarness outperforms strong harness-evolution baselines, particularly on unseen held-out tasks. Further analyses show that adaptive rubric prioritization tracks shifting weaknesses and supports more sustained improvement and stable generalization across evolution rounds.",
+      "authors": [
+        "Hao Chen",
+        "Yukun Yan",
+        "Ziyu Han",
+        "Ye He",
+        "Chuanzhe Guo",
+        "Shangzhan Li",
+        "Qi Shi",
+        "Qingfu Zhu",
+        "Maosong Sun",
+        "Wanxiang Che"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-27T08:24:44+00:00",
+      "link": "https://arxiv.org/pdf/2610.36826v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Co-evolves rubrics and harnesses for continual agent self-improvement",
+      "llm_evidence_cn": "协同演化评分规则与执行框架以促进智能体持续自我改进",
+      "llm_evidence": "协同演化评分规则与执行框架以促进智能体持续自我改进",
+      "canonical_evidence": "协同演化评分规则与执行框架以促进智能体持续自我改进",
+      "llm_tldr_en": "Addresses static supervision in evolving LLM agent harnesses by co-evolving rubrics and harnesses, continually discovering behavioral weaknesses and using them to guide targeted self-improvement across rounds.",
+      "llm_tldr_cn": "该文针对智能体执行框架演化时监督信号过于静态、难以跟踪行为弱点变化的问题，提出RuHarness协同演化框架。方法从执行轨迹中持续发现并重估行为准则，优先处理未解决的弱点，再据此指导执行框架的定向更新。该框架面向多轮持续自我改进，旨在提升对未见任务的泛化能力。其贡献在于把评分规则本身纳入演化循环，为智能体长期自我改进提供动态监督机制。",
+      "llm_tldr": "该文针对智能体执行框架演化时监督信号过于静态、难以跟踪行为弱点变化的问题，提出RuHarness协同演化框架。方法从执行轨迹中持续发现并重估行为准则，优先处理未解决的弱点，再据此指导执行框架的定向更新。该框架面向多轮持续自我改进，旨在提升对未见任务的泛化能力。其贡献在于把评分规则本身纳入演化循环，为智能体长期自我改进提供动态监督机制。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "autonomous agents that improve their own capabilities over time",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.38568v1",
+      "source": "arxiv",
+      "title": "A-RSI: Adaptive Task Refresh for Zero-Data Multimodal Self-Improvement",
+      "abstract": "Recursive self-improvement requires models not only to acquire useful training experience, but also to decide when their current experience has ceased to be useful. Existing methods often focus on what experience to generate next, while paying less attention to when fresh experience should be introduced. Many also construct training targets through self-consistency or majority voting, making supervision depend on the model's own uncertain predictions. We address these two questions separately: training dynamics determine when to acquire new experience, while the answers to new tasks remain independently checkable. A-RSI monitors reward variation and accuracy in training logs to refresh a task pool when its learning signal declines, without consulting validation or test scores. A static library of model-authored programs produces multimodal questions and derives their reference answers; we specify the task-generation contract, automatically verify chosen properties of the reward and refresh rules, and separately audit the generated answers. The training loop uses no external training examples or human-written answer labels. On the primary eleven-benchmark suite, A-RSI raises the performance average from 57.77 to 61.05 with 800 fresh tasks.",
+      "authors": [
+        "Yu Liu",
+        "Youxing Li",
+        "Yuedong Tan",
+        "Zhiwei Yang",
+        "Zihan Su",
+        "Hanqi Feng",
+        "Shaojie Zhang",
+        "Libin Liao",
+        "Zihao Wan",
+        "Chenxu Wu",
+        "Cong Cao",
+        "Fangfang Yuan",
+        "Yanbing Liu",
+        "Ziheng Chen",
+        "Pei Fu",
+        "Radu Timofte",
+        "Zongwei Wu",
+        "Nicu Sebe",
+        "Barnabas Poczos",
+        "Jian Luan"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-28T10:03:42+00:00",
+      "link": "https://arxiv.org/pdf/2610.38568v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "adaptive task pool refresh for zero-data self-improvement, i.e. autonomous new data generation",
+      "llm_evidence_cn": "面向零数据自改进的自适应任务池刷新，即自主生成新数据",
+      "llm_evidence": "面向零数据自改进的自适应任务池刷新，即自主生成新数据",
+      "canonical_evidence": "面向零数据自改进的自适应任务池刷新，即自主生成新数据",
+      "llm_tldr_en": "A-RSI decouples when to acquire new training experience from what to generate, refreshing a task pool when reward variation and accuracy decline, with independently checkable answers as supervision.",
+      "llm_tldr_cn": "递归自我改进不仅要求模型获取有用的训练经验，还要判断何时现有经验已失效。现有方法多关注生成什么经验，却较少考虑何时引入新经验，且常以自一致性或多数投票构造监督，使标签依赖模型自身不确定的预测。A-RSI将两个问题分离：由训练动态决定何时获取新经验，并以可独立校验的答案作为新任务监督，通过监控奖励变化与准确率在学习信号衰退时刷新任务池。该机制为持续自改进提供了可控的数据调度方式。",
+      "llm_tldr": "递归自我改进不仅要求模型获取有用的训练经验，还要判断何时现有经验已失效。现有方法多关注生成什么经验，却较少考虑何时引入新经验，且常以自一致性或多数投票构造监督，使标签依赖模型自身不确定的预测。A-RSI将两个问题分离：由训练动态决定何时获取新经验，并以可独立校验的答案作为新任务监督，通过监控奖励变化与准确率在学习信号衰退时刷新任务池。该机制为持续自改进提供了可控的数据调度方式。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "What are the contributions of self improving AI systems to autonomous novel data generation, as well as the modification and engineering of their own learning and training environments?",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.38882v1",
+      "source": "arxiv",
+      "title": "Aligning Autoresearch: Co-Improvement between Agents and Humans",
+      "abstract": "Autoresearch agents can now attempt long-horizon AI research end-to-end, i.e., self-improvement. However, best results are still obtained by research agents interacting with human researchers, and improving AI's ability to perform this co-research will only reinforce this effect---a process termed co-improvement (Weston and Foerster, 2025). Further, aligning with human expectations is likely a safer path for research agents, especially given recent agent reward hacking phenomena (OpenAI, 2026b). In this work we address these issues in four ways: (i) we empirically study the role of humans in directing autoresearch agents, focusing on the domain of benchmark creation, and find humans still play a pivotal role particularly in the ideation phase; (ii) we also develop a benchmark, HackBench, that shows current autoresearch agents are not aligned and are unable to achieve hack localization sufficiently; (iii) we present a method to train agents for improved human interaction by using human simulators as a proxy during reinforcement learning (RL); and finally (iv) we develop a method to improve model text generation, and hence agent communication, by RL with rubrics aligned with human experts. Together, our training and evaluation recipes provide a path toward more capable and aligned (co-)research agents.",
+      "authors": [
+        "Tianjian Li",
+        "Chuanyang Jin",
+        "Seungone Kim",
+        "Tong Chen",
+        "John Hoffman",
+        "Yoram Bachrach amd Pedro Rodriguez",
+        "Ping Yu",
+        "Eryk Helenowski",
+        "Swarnadeep Saha",
+        "Jack Lanchantin",
+        "Weizhe Yuan",
+        "Ilia Kulikov",
+        "Jason Weston"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-28T20:47:10+00:00",
+      "link": "https://arxiv.org/pdf/2610.38882v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "autoresearch agents attempt long-horizon AI research end-to-end",
+      "llm_evidence_cn": "自动研究智能体端到端开展长周期AI研究",
+      "llm_evidence": "自动研究智能体端到端开展长周期AI研究",
+      "canonical_evidence": "自动研究智能体端到端开展长周期AI研究",
+      "llm_tldr_en": "Autoresearch agents can attempt end-to-end AI research but humans still drive best results. The paper studies human roles in guiding research agents and proposes co-improvement between agents and humans.",
+      "llm_tldr_cn": "针对自动研究智能体虽能端到端开展长周期AI研究、但最佳结果仍依赖人类参与且存在奖励黑客风险的问题，本文实证研究了人类在引导自动研究智能体中的作用，聚焦基准创建领域。结果显示人类尤其在构思阶段仍发挥关键作用，人机协作优于纯自主研究。作者据此提出智能体与人类共同改进的对齐路径，强调人类协作是更安全的自动研究发展方向。",
+      "llm_tldr": "针对自动研究智能体虽能端到端开展长周期AI研究、但最佳结果仍依赖人类参与且存在奖励黑客风险的问题，本文实证研究了人类在引导自动研究智能体中的作用，聚焦基准创建领域。结果显示人类尤其在构思阶段仍发挥关键作用，人机协作优于纯自主研究。作者据此提出智能体与人类共同改进的对齐路径，强调人类协作是更安全的自动研究发展方向。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "automating machine learning research and engineering with AI systems",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.39352v1",
+      "source": "arxiv",
+      "title": "Try Before You Evolve: Ranking-Scored Trials for Recursive Self-Improvement of Recommender Systems",
+      "abstract": "Recommenders on Web platforms such as e-commerce and music streaming need their training recipes re-tuned for each dataset. Large language model (LLM) agents can now rewrite these recipes, enabling recursive self-improvement (RSI) of recommender systems. Existing agents propose one edit per round, fully retrain the recommender, and keep the edit only if its ranking quality improves. Unlike programs or patches that can be scored by execution, a recommender edit changes how the model is trained, which raises two challenges. First, ranking feedback is delayed: an edit's ranking quality is known only after full retraining, so much of the retraining budget goes to edits that are later discarded. Second, the signals available before retraining are unreliable: sampled training losses can look solved while full-ranking performance remains poor, and they are not comparable across edits that change the loss or sampler. We propose RecRSI, which generates diverse candidate edits from a diagnosis of the current model and selects one for full retraining using early ranking feedback: each candidate receives a short trial, the first steps of its full training run, scored by full-ranking NDCG@10 on held-out probe users. With two sequential recommenders on three datasets and the same number of full retrainings, RecRSI significantly outperforms existing self-evolving agents in every setting, and on both Amazon datasets reaches in its first round a ranking quality that none of them reaches in five.",
+      "authors": [
+        "Xu Huang",
+        "Jiawei Feng",
+        "Jiancan Wu"
+      ],
+      "primary_category": "cs.IR",
+      "categories": [
+        "cs.IR"
+      ],
+      "published": "2026-10-29T04:45:19+00:00",
+      "link": "https://arxiv.org/pdf/2610.39352v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "recursive self-improvement of recommender systems via LLM recipe edits",
+      "llm_evidence_cn": "LLM改写训练配方实现推荐系统递归自我改进",
+      "llm_evidence": "LLM改写训练配方实现推荐系统递归自我改进",
+      "canonical_evidence": "LLM改写训练配方实现推荐系统递归自我改进",
+      "llm_tldr_en": "Recommender training recipes need retuning per dataset, and LLM agents can rewrite them for recursive self-improvement. The paper uses ranking-scored trials before evolution to handle delayed ranking feedback and costly retraining, reducing wasted budget and improving recipe search efficiency.",
+      "llm_tldr_cn": "推荐系统需为每个数据集重新调优训练配方，LLM智能体可通过改写配方实现递归自我改进，但排序反馈延迟且全量重训成本高。本文提出先试后演化的排序评分试验方法，在正式演化前用低成本试验估计编辑收益，以减少被丢弃编辑所占用的重训预算。实验表明该方法能提升配方搜索效率并改善推荐排序质量，为ML工程自动化中的递归自我改进提供了成本感知方案。",
+      "llm_tldr": "推荐系统需为每个数据集重新调优训练配方，LLM智能体可通过改写配方实现递归自我改进，但排序反馈延迟且全量重训成本高。本文提出先试后演化的排序评分试验方法，在正式演化前用低成本试验估计编辑收益，以减少被丢弃编辑所占用的重训预算。实验表明该方法能提升配方搜索效率并改善推荐排序质量，为ML工程自动化中的递归自我改进提供了成本感知方案。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2610.39714v1",
+      "source": "arxiv",
+      "title": "MoLRSI: A Recursive Self-Improving AI agent for Molecular Discovery",
+      "abstract": "Molecular discovery requires navigating vast combinatorial search spaces while balancing competing biological objectives. AI agents can automate expert-defined molecular design protocols, but automation alone does not address how to optimize workflows for new tasks or improve their development through experience. Here we introduce MoLRSI, an AI agent that combines systematic optimization of workflows and model architectures with persistent cross-task memory to recursively improve its search policy for molecular discovery. Workflow performance, refinement outcomes, and execution feedback guide subsequent searches, allowing the agent to improve both its workflows and its strategy for developing them. We evaluate MoLRSI in two challenging molecular discovery settings that require balancing competing properties. In antibiotic discovery, MoLRSI developed a screening workflow balancing antibacterial activity, cytotoxicity and structural novelty, achieving an experimental hit rate of 15.9%, compared with 8.7% for a previous expert-led workflow using the same training data and screening library. In de novo peptide-MHC binder design, MoLRSI developed workflows that jointly consider target binding and specificity, producing eight experimentally validated hits against MART-1 and SARS-CoV-1 pMHCs with preferential binding over tested off-targets while Claude Science completely failed. These findings demonstrate how experience-guided workflow optimization can address competing discovery objectives while improving the search strategies used in subsequent campaigns.",
+      "authors": [
+        "Yikun Zhang",
+        "Xiwei Cheng",
+        "Mingze Yuan",
+        "Yu Zhang",
+        "Brian Shim",
+        "Aarti Krishnan",
+        "Daniel Rosen",
+        "Kunyang Sun",
+        "Yingze Wang",
+        "Zhenfeng Deng",
+        "Botao Yu",
+        "Bingxu Liu",
+        "David Liu",
+        "Tianyu Liu",
+        "Yuanqi Du",
+        "Nir Hacohen",
+        "James J. Collins",
+        "Wengong Jin"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-29T09:46:50+00:00",
+      "link": "https://arxiv.org/pdf/2610.39714v1",
+      "tags": [
+        "keyword:self-improve"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "recursive self-improving agent optimizes workflows and search policy",
+      "llm_evidence_cn": "递归自我改进智能体优化工作流与搜索策略",
+      "llm_evidence": "递归自我改进智能体优化工作流与搜索策略",
+      "canonical_evidence": "递归自我改进智能体优化工作流与搜索策略",
+      "llm_tldr_en": "MoLRSI is a recursive self-improving AI agent for molecular discovery that combines workflow and architecture optimization with persistent cross-task memory. Feedback from performance and execution guides later searches, improving both workflows and the strategy for developing them.",
+      "llm_tldr_cn": "分子发现需要在巨大组合空间中平衡多个生物目标，现有 AI 智能体虽能自动化专家协议，却难以针对新任务优化工作流并从经验中改进自身。MoLRSI 将工作流与模型架构的系统优化同持久跨任务记忆结合，利用性能、精炼结果和执行反馈指导后续搜索。该智能体由此递归改进搜索策略以及开发策略本身，并在两个具有挑战性的分子发现任务中评估，为自我改进型科研智能体提供了实例。",
+      "llm_tldr": "分子发现需要在巨大组合空间中平衡多个生物目标，现有 AI 智能体虽能自动化专家协议，却难以针对新任务优化工作流并从经验中改进自身。MoLRSI 将工作流与模型架构的系统优化同持久跨任务记忆结合，利用性能、精炼结果和执行反馈指导后续搜索。该智能体由此递归改进搜索策略以及开发策略本身，并在两个具有挑战性的分子发现任务中评估，为自我改进型科研智能体提供了实例。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2610.33684v1",
+      "source": "arxiv",
+      "title": "More: Mode-Optimized Reasoning with Self-Adaptive Effort for Self-Evolving Agents",
+      "abstract": "Self-evolving training improves the performance of agents on difficult tasks through verifiable feedback, but it often applies costly deliberation uniformly across tasks. To address this problem, we propose Mode-Optimized Reasoning with Self-Adaptive Effort (MORE), a self-evolving training framework that adaptively selects both reasoning form and computational effort for each task. Specifically, MORE follows a two-stage training paradigm: (i) \\emph{Stage 1} establishes a compact prior over direct answering, short and long chain-of-thought, and code-based reasoning, and (ii) \\emph{Stage 2} self-evolves this prior with Mode-Adaptive and Test-time Effort PPO (MATE-PPO) on generated, verifiable task streams without curated data. By learning mode selection and token expenditure jointly, MORE allocates concise reasoning to tasks that permit it while retaining extended deliberation where it is useful. Across coding, mathematics, and general-reasoning benchmarks, MORE achieves consistent performance gains on Base and Coder backbones at model scales from 3B to 14B. During inference, MORE demonstrates higher accuracy and better efficiency, with markedly shorter response lengths and reduced inference time.",
+      "authors": [
+        "Dianxing Shi",
+        "Dingjie Fu",
+        "Tianyu Lei",
+        "Wangjie Qiu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-24T14:03:20+00:00",
+      "link": "https://arxiv.org/pdf/2610.33684v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "self-evolving training that adaptively selects reasoning mode and compute effort per task",
+      "llm_evidence_cn": "按任务自适应选择推理模式与计算投入的自进化训练",
+      "llm_evidence": "按任务自适应选择推理模式与计算投入的自进化训练",
+      "canonical_evidence": "按任务自适应选择推理模式与计算投入的自进化训练",
+      "llm_tldr_en": "MORE is a self-evolving training framework that adaptively selects reasoning mode and compute effort per task via a two-stage prior and MATE-PPO, improving efficiency on verifiable task streams.",
+      "llm_tldr_cn": "论文针对自进化训练对各类任务统一施加高成本推理、造成算力浪费的问题，提出MORE两阶段框架。它先建立直接作答、长短思维链与代码推理的先验，再用MATE-PPO在可验证任务流上自进化。实验表明该方法能按任务自适应选择推理形式与计算投入，在无需人工精选数据的情况下兼顾性能与效率。",
+      "llm_tldr": "论文针对自进化训练对各类任务统一施加高成本推理、造成算力浪费的问题，提出MORE两阶段框架。它先建立直接作答、长短思维链与代码推理的先验，再用MATE-PPO在可验证任务流上自进化。实验表明该方法能按任务自适应选择推理形式与计算投入，在无需人工精选数据的情况下兼顾性能与效率。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "autonomous agents that improve their own capabilities over time",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2610.33487v1",
+      "source": "arxiv",
+      "title": "ReSight: Task-Driven Self-Improving Memory for Embodied Agents",
+      "abstract": "Robots can use historical observations to answer spatiotemporal queries in familiar environments, but the presence of relevant evidence does not imply that existing tools support the operations a task requires. We introduce ReSight, a task-driven self-improving memory system for embodied agents that expands the capabilities for processing and accessing historical observations as task demands arise. ReSight retains keyframes and their spatiotemporal associations, separating observation evidence from extensible derived fields so that stored observations can be reprocessed for new needs. An execution agent and a coding agent share this memory through different interfaces: the former calls registered tools within a bounded online budget, while the latter uses a programmable workspace and a larger exploration budget to inspect evidence, write programs, and acquire models as needed. To realize capability expansion in ReSight, we develop Explore-Distill-Mount (EDM), which identifies capability gaps from execution and exploration records without task reference answers and converts exploration-derived solutions into reusable memory builders, query tools, and skills, extending memory representations and access capabilities as needed. Experiments on three public benchmarks demonstrate effective base memory access and capability expansion. With the execution model and online budget held fixed within each benchmark, EDM reduces mean position error on OC-NaVQA from 33.10 m to 24.72 m and improves high-level success on FindingDory from 38.3% to 63.8%. With the tools and skill frozen, success still improves by 28.3 percentage points on FindingDory episodes excluded from exploration and distillation. Experiments on real robot patrol memories further demonstrate reuse of these capabilities for subsequent queries and new memories, with fewer online tool calls on average.",
+      "authors": [
+        "Lirong Che",
+        "Yang Chen",
+        "Yimeng Su",
+        "Daqi Liu",
+        "Zhenyu Huang",
+        "Jiong Wang",
+        "Yuzhe Yang",
+        "Xu Cao",
+        "Chuang Wang",
+        "Jian Su",
+        "Xueqian Wang"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-10-24T06:32:18+00:00",
+      "link": "https://arxiv.org/pdf/2610.33487v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "self-improving memory that expands agent capabilities over time",
+      "llm_evidence_cn": "随任务需求扩展能力的自我改进记忆",
+      "llm_evidence": "随任务需求扩展能力的自我改进记忆",
+      "canonical_evidence": "随任务需求扩展能力的自我改进记忆",
+      "llm_tldr_en": "ReSight is a task-driven self-improving memory for embodied agents that separates observation evidence from extensible derived fields so capabilities grow as task demands arise.",
+      "llm_tldr_cn": "具身智能体虽能利用历史观测回答时空查询，但现有工具未必支持任务所需的操作。作者提出ReSight，一种任务驱动的自我改进记忆系统，将关键帧及其时空关联与可扩展的派生字段分离，使存储的观测能按新需求被重新处理。执行智能体与编码智能体通过不同接口共享该记忆，前者在受限在线预算内调用已注册工具，后者可编程扩展能力。该设计让智能体随任务需求自主提升记忆处理能力。",
+      "llm_tldr": "具身智能体虽能利用历史观测回答时空查询，但现有工具未必支持任务所需的操作。作者提出ReSight，一种任务驱动的自我改进记忆系统，将关键帧及其时空关联与可扩展的派生字段分离，使存储的观测能按新需求被重新处理。执行智能体与编码智能体通过不同接口共享该记忆，前者在受限在线预算内调用已注册工具，后者可编程扩展能力。该设计让智能体随任务需求自主提升记忆处理能力。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "autonomous agents that improve their own capabilities over time",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.36589v1",
+      "source": "arxiv",
+      "title": "InfraDev: Can Coding Agents Develop AI Infrastructure, and How Can We Tell?",
+      "abstract": "Coding agents are beginning to develop the production-grade AI infrastructure that trains and serves large models, yet existing benchmarks cover only single kernels or single-GPU tasks, and grade with tests and prompts that misjudge both correct and incorrect patches. We introduce InfraDev, a benchmark of 36 tasks built from real-world pull requests to Megatron-LM, vLLM, and verl, covering infrastructure development for training, inference, and reinforcement learning. Each task asks an agent to reimplement a real change that spans many files and must run correctly across many GPUs. To grade such changes, we jointly synthesize hidden probes, which enforce the requirements the original tests leave unchecked, and a prompt that states every interface the probes call without revealing the solution. We also design a shared execution environment that reuses dependencies and artifacts across tasks, cutting storage by 52-57% and build time by 13-14% on Megatron-LM and vLLM. Across six frontier models, the best resolves only 38.9% of the tasks; the probes reject 32% of the submissions that pass every official test, and with the original pull request descriptions as prompts, no model resolves a single task. Failure analysis shows that structural and state errors dominate and that agents' own tests rarely check memory, time, or traffic. Turning these findings into an agent skill raises the resolved rate of a frontier model on the Megatron-LM tasks by 10.5%.",
+      "authors": [
+        "Yangshen Deng",
+        "Jiaqi Ruan",
+        "Yeqi Huang",
+        "Nick Lau",
+        "Guangming Sheng",
+        "Luo Mai"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.DC"
+      ],
+      "published": "2026-10-27T03:47:47+00:00",
+      "link": "https://arxiv.org/pdf/2610.36589v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "coding agents automating AI infrastructure engineering",
+      "llm_evidence_cn": "编码智能体自动化AI基础设施工程",
+      "llm_evidence": "编码智能体自动化AI基础设施工程",
+      "canonical_evidence": "编码智能体自动化AI基础设施工程",
+      "llm_tldr_en": "InfraDev is a 36-task benchmark built from real pull requests to Megatron-LM, vLLM and verl, testing whether coding agents can develop multi-file, multi-GPU AI infrastructure with rigorous grading.",
+      "llm_tldr_cn": "编码智能体正开始开发训练与服务大模型的生产级AI基础设施，但现有基准只覆盖单内核或单GPU任务，且评分方式易误判补丁。作者提出InfraDev基准，基于Megatron-LM、vLLM与verl的真实拉取请求构建36项任务，覆盖训练、推理与强化学习基础设施开发，并要求跨多GPU正确运行。评分时联合合成隐藏探针与接口提示，以更严格地检验智能体改动。该基准推动AI系统自动化工程研发的可靠评估。",
+      "llm_tldr": "编码智能体正开始开发训练与服务大模型的生产级AI基础设施，但现有基准只覆盖单内核或单GPU任务，且评分方式易误判补丁。作者提出InfraDev基准，基于Megatron-LM、vLLM与verl的真实拉取请求构建36项任务，覆盖训练、推理与强化学习基础设施开发，并要求跨多GPU正确运行。评分时联合合成隐藏探针与接口提示，以更严格地检验智能体改动。该基准推动AI系统自动化工程研发的可靠评估。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "automating machine learning research and engineering with AI systems",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.33826v1",
+      "source": "arxiv",
+      "title": "Reactive Optimizers",
+      "abstract": "We study a reactive optimizer that uses a pretrained language-model agent to inspect training dynamics and rewrite executable optimizer code during a single training run. The agent can change update rules and schedules for individual parameter groups, without optimizer-specific meta-training or memory transferred from other runs. We evaluate this approach, OPAL, on language modeling and image generation when a recipe has not been tuned for the target setting. Across the evaluated settings, it matches or improves on selected fixed recipes. Analysis of its decisions shows changes to learning-rate schedules, optimizer structure, numerical precision, and momentum. Controlled experiments also show adaptation to repeated data corruption and reduced overfitting. We report these behaviors together with the agent's computational cost and implementation requirements.",
+      "authors": [
+        "Xingjian Bai",
+        "Jia-Hao Liang",
+        "Jayden Teoh",
+        "Vincent Sitzmann"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-10-24T17:51:46+00:00",
+      "link": "https://arxiv.org/pdf/2610.33826v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "LM agent rewrites optimizer code during training to automate ML engineering",
+      "llm_evidence_cn": "语言模型智能体在训练中重写优化器代码以自动化机器学习工程",
+      "llm_evidence": "语言模型智能体在训练中重写优化器代码以自动化机器学习工程",
+      "canonical_evidence": "语言模型智能体在训练中重写优化器代码以自动化机器学习工程",
+      "llm_tldr_en": "Reactive Optimizers uses a pretrained language-model agent to inspect training dynamics and rewrite executable optimizer code during a single run. OPAL adapts update rules and schedules per parameter group, matching or improving fixed recipes without meta-training or cross-run memory.",
+      "llm_tldr_cn": "针对目标设定下固定优化器配方未必适用的问题，论文提出反应式优化器，让预训练语言模型智能体在单次训练中检查训练动态并重写可执行优化器代码。该方法无需优化器专属元训练或跨运行记忆，即可按参数组调整更新规则、学习率调度、数值精度和动量等设置。在语言建模与图像生成任务上，OPAL 在未调优配方下达到或超过选定固定配方，并能适应重复数据损坏和过拟合，展示了 AI 自动修改训练过程的潜力。",
+      "llm_tldr": "针对目标设定下固定优化器配方未必适用的问题，论文提出反应式优化器，让预训练语言模型智能体在单次训练中检查训练动态并重写可执行优化器代码。该方法无需优化器专属元训练或跨运行记忆，即可按参数组调整更新规则、学习率调度、数值精度和动量等设置。在语言建模与图像生成任务上，OPAL 在未调优配方下达到或超过选定固定配方，并能适应重复数据损坏和过拟合，展示了 AI 自动修改训练过程的潜力。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "automating machine learning research and engineering with AI systems",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2610.33861v1",
+      "source": "arxiv",
+      "title": "ReGE: Stronger Agents through Experience Synthesis",
+      "abstract": "Repeated attempts at interactive tasks uncover facts, useful operations, and failures that can inform subsequent execution. We introduce ReGE, a framework for turning this recorded experience into guidance for a fresh attempt. Its main implementation, ReGE-Syn, uses a single coach call to jointly synthesize bounded execution records and available artifacts into self-contained guidance, connecting task-specific findings with proposed actions and relevant pitfalls. A student starts from the task's initial environment state and adapts this guidance to current observations. Source generation, synthesis, and student execution use the same base model, without parameter updates or a stronger teacher. Across four benchmarks, ReGE improves accuracy by an average of 9.9 percentage points for GPT and 8.8 percentage points for Claude compared with unguided execution. On matched BrowseComp-Plus subsets, ReGE-Syn reduces guidance-construction tokens by 98.2\\% on GPT and 95.5\\% on Claude relative to adapted AggAgent, with observed success. Combined construction and execution tokens decrease by 15.7\\% and 35.4\\%, respectively, counting input plus output and excluding source generation. BrowseComp-Plus ablations further associate access to process information with fewer student steps and show that joint synthesis produces substantially shorter guidance than Direct history or Independent summaries, with observed success. These results demonstrate how agents can use their own recorded experience to improve subsequent task completion, and suggest a low-cost way to consolidate the execution records of parallel agent systems such as agent swarms.",
+      "authors": [
+        "Jiarong Liang",
+        "Yubo Wang",
+        "Zijie Liu",
+        "Yuxuan Zhang",
+        "Ping Nie",
+        "Wenhu Chen"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-24T19:05:57+00:00",
+      "link": "https://arxiv.org/pdf/2610.33861v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "agents improve via experience synthesis without parameter updates",
+      "llm_evidence_cn": "智能体通过经验合成在无参数更新下自我提升",
+      "llm_evidence": "智能体通过经验合成在无参数更新下自我提升",
+      "canonical_evidence": "智能体通过经验合成在无参数更新下自我提升",
+      "llm_tldr_en": "ReGE turns recorded interactive experience into self-contained guidance for fresh attempts, improving agent accuracy by 9.9 percent without parameter updates or a stronger teacher model.",
+      "llm_tldr_cn": "智能体在交互任务中反复尝试会积累事实、操作与失败经验，但如何将其转化为后续执行的指导仍具挑战。作者提出ReGE框架，用单次教练调用把执行记录与产物合成为自包含的指导，学生模型据此在初始环境中自适应执行。在四个基准上平均提升9.9个百分点，且全程使用同一基础模型、无需参数更新或更强教师。该工作展示了经验合成驱动的智能体自我提升路径。",
+      "llm_tldr": "智能体在交互任务中反复尝试会积累事实、操作与失败经验，但如何将其转化为后续执行的指导仍具挑战。作者提出ReGE框架，用单次教练调用把执行记录与产物合成为自包含的指导，学生模型据此在初始环境中自适应执行。在四个基准上平均提升9.9个百分点，且全程使用同一基础模型、无需参数更新或更强教师。该工作展示了经验合成驱动的智能体自我提升路径。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "autonomous agents that improve their own capabilities over time",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.38637v1",
+      "source": "arxiv",
+      "title": "On-Policy Self-Distillation with Teacher Evolution",
+      "abstract": "On-Policy Self-Distillation (OPSD), which aligns a student model's token-level distribution with that of its self-teacher prompted by privileged context, has emerged as a promising direction to mitigate reward sparsity in sequence-level post-training paradigms. However, OPSD often fails to achieve continuous performance gains during training. In this paper, we find that the model's limited self-teaching capability underlies this phenomenon by generating unreliable guidance on certain samples. To address this problem, we propose Teacher-Evolution Self-Distillation (TESD), which enables the self-teacher to generate rollouts and receive environmental feedback based on task correctness and context independence. First, using these rewards as training objectives, we perform teacher-oriented optimization to continuously enhance the model's self-teaching capability during distillation. Second, by estimating teacher guidance reliability from these rewards, we apply adaptive student-oriented optimization to down-weight samples with unreliable guidance. Extensive experiments across multiple datasets and model scales show that TESD consistently outperforms representative token-level and sequence-level methods, highlighting the necessity of improving supervision quality in OPSD.",
+      "authors": [
+        "Shufan Shen",
+        "Zhongni Hou",
+        "Chao Bi",
+        "Yufei Zhang",
+        "Guojun Yin",
+        "Shuhui Wang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-10-28T10:51:52+00:00",
+      "link": "https://arxiv.org/pdf/2610.38637v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "self-teacher evolution improves model self-distillation gains",
+      "llm_evidence_cn": "自教师演化提升模型自蒸馏性能",
+      "llm_evidence": "自教师演化提升模型自蒸馏性能",
+      "canonical_evidence": "自教师演化提升模型自蒸馏性能",
+      "llm_tldr_en": "On-Policy Self-Distillation stalls because the model's limited self-teaching yields unreliable guidance. Teacher-Evolution Self-Distillation lets the self-teacher generate rollouts and receive environmental feedback to evolve.",
+      "llm_tldr_cn": "针对同策略自蒸馏在训练中常无法持续提升性能、其根源在于模型自教学能力有限而产生不可靠指导的问题，本文提出教师演化自蒸馏TESD。该方法让自教师生成轨迹并依据任务正确性与上下文独立性获得环境反馈，再以这些奖励作为训练目标演化教师。实验表明该机制能缓解不可靠指导问题，使模型通过自我教学持续提升能力，为参数层面的自我改进提供思路。",
+      "llm_tldr": "针对同策略自蒸馏在训练中常无法持续提升性能、其根源在于模型自教学能力有限而产生不可靠指导的问题，本文提出教师演化自蒸馏TESD。该方法让自教师生成轨迹并依据任务正确性与上下文独立性获得环境反馈，再以这些奖励作为训练目标演化教师。实验表明该机制能缓解不可靠指导问题，使模型通过自我教学持续提升能力，为参数层面的自我改进提供思路。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2610.35051v1",
+      "source": "arxiv",
+      "title": "VISTA: Active Exploration for Self-Improvement in Embodied Agents",
+      "abstract": "Agentic embodied intelligence plays a foundational role in open-ended, dynamic physical environments. Rather than treating policy learning as an end-to-end mapping from instructions to actions, recent studies reveal that embodied systems depend not only on pre-trained foundation models, but also on harness. Prior approaches largely treat rollouts as static logs for post-hoc reflection, producing harness updates without autonomously testing and refining them through subsequent embodied interaction. To address this challenge, we propose VISTA, a meta-agent framework that transforms post-hoc rollout reflection into active self-exploration for embodied harness improvement. Specifically, VISTA maintains a harness graph that records the lineage of proposed harnesses, which enables the meta-agent to retrieve prior hypotheses, build on effective mechanisms, and avoid repeatedly exploring failed directions. Each iteration begins from a retained harness version and its execution evidence. Rather than directly committing an update from these historical trajectories, the meta-agent actively explores in the environment. It autonomously generates new rollouts, probes execution failures and recovery behaviors, and iteratively modifies the harness based on the resulting evidence. The refined harness is then evaluated afresh and added to the harness graph. We evaluate VISTA on the LIBERO-Pro, RoboCasa, and RoboTwin benchmarks. Experimental results demonstrate that VISTA progressively improves task success and is more rollout-efficient than static reflection, achieving higher success rates with fewer simulator rollouts.",
+      "authors": [
+        "Zhang Zhang",
+        "Shengjun Zhang",
+        "Simin Huang",
+        "Min Chen",
+        "Chong Xia",
+        "Xin Fei",
+        "Yueqi Duan"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO"
+      ],
+      "published": "2026-10-26T09:00:17+00:00",
+      "link": "https://arxiv.org/pdf/2610.35051v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Turns post-hoc rollout reflection into active self-exploration for embodied harness improvement",
+      "llm_evidence_cn": "把事后回合反思转化为主动自我探索以改进具身执行框架",
+      "llm_evidence": "把事后回合反思转化为主动自我探索以改进具身执行框架",
+      "canonical_evidence": "把事后回合反思转化为主动自我探索以改进具身执行框架",
+      "llm_tldr_en": "Proposes VISTA, a meta-agent framework that converts static rollout logs into active self-exploration, maintaining a harness graph to test and refine embodied agent harnesses through subsequent interaction.",
+      "llm_tldr_cn": "该文针对具身智能体把回合日志仅用于事后反思、执行框架更新缺乏自主测试与精炼的问题，提出VISTA元智能体框架。方法维护执行框架图记录候选框架的谱系，并把事后反思转化为主动自我探索，在后续具身交互中测试和改进框架。该框架使智能体能够持续从自身经验中改进执行策略，而不仅依赖预训练基础模型。其贡献在于为具身智能体的在线自我改进提供了主动探索机制。",
+      "llm_tldr": "该文针对具身智能体把回合日志仅用于事后反思、执行框架更新缺乏自主测试与精炼的问题，提出VISTA元智能体框架。方法维护执行框架图记录候选框架的谱系，并把事后反思转化为主动自我探索，在后续具身交互中测试和改进框架。该框架使智能体能够持续从自身经验中改进执行策略，而不仅依赖预训练基础模型。其贡献在于为具身智能体的在线自我改进提供了主动探索机制。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "autonomous agents that improve their own capabilities over time",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2610.37175v1",
+      "source": "arxiv",
+      "title": "MLE-World: Predicting Machine Learning Experiment Outcomes with a Learned World Model",
+      "abstract": "AI research agents can propose, execute, and improve programs that solve machine learning tasks. However, executing each candidate program requires training and evaluating ML models, limiting how many candidates an agent can explore at each step. We introduce MLE-World, a world model finetuned from Qwen3.5-4B that predicts a program's terminal output (error traces, training logs, and validation scores) from its code and data description without executing it, together with a confidence score estimating the prediction's correctness. Because a prediction costs one inference call rather than a training run, MLE-World makes test time scaling (TTS) affordable for these agents. We build five TTS policies, guided by MLE-World, that compare several candidates per step by their predicted outputs: Sequential revision, Best-of-N, Pairwise judging, Fusion, and a UCB style rule that also adds an exploration bonus from this confidence score. Since predictions can be wrong, we run a candidate for real only when its confidence score is low. On 17 MLE-bench Lite tasks, MLE-World matches the real terminal output on 77.9% of held out programs, versus 41.1% for much larger prompted models. MLE-World guided TTS achieves up to 22.1% higher observed mean performance than the agent without a world model, with less real execution. Project webpage: https://mle-world.github.io/.",
+      "authors": [
+        "Brian Ko",
+        "Han Wang",
+        "Hejia Geng",
+        "Li Erran Li",
+        "Sherry Yang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-10-27T13:01:29+00:00",
+      "link": "https://arxiv.org/pdf/2610.37175v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "world model predicting ML experiment outcomes to speed up AI research agents",
+      "llm_evidence_cn": "用世界模型预测机器学习实验结果以加速AI研究智能体",
+      "llm_evidence": "用世界模型预测机器学习实验结果以加速AI研究智能体",
+      "canonical_evidence": "用世界模型预测机器学习实验结果以加速AI研究智能体",
+      "llm_tldr_en": "MLE-World finetunes a small LLM world model to predict a program's terminal output without execution, making test-time scaling affordable for AI research agents.",
+      "llm_tldr_cn": "论文针对AI研究智能体需反复训练评估候选程序、执行成本限制搜索规模的问题，提出MLE-World世界模型。该模型由小型LLM微调而来，可从代码与数据描述直接预测程序终端输出及置信度，并据此构建五种测试时扩展策略。由于预测仅需一次推理调用，测试时扩展对研究智能体变得可负担，从而降低自动化机器学习研究的实验成本。",
+      "llm_tldr": "论文针对AI研究智能体需反复训练评估候选程序、执行成本限制搜索规模的问题，提出MLE-World世界模型。该模型由小型LLM微调而来，可从代码与数据描述直接预测程序终端输出及置信度，并据此构建五种测试时扩展策略。由于预测仅需一次推理调用，测试时扩展对研究智能体变得可负担，从而降低自动化机器学习研究的实验成本。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "automating machine learning research and engineering with AI systems",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.35316v1",
+      "source": "arxiv",
+      "title": "RSIV-Harness: A Recursive Self-Improvement Harness Framework for Open-Domain Conversational Text-to-Visualization",
+      "abstract": "Users often request charts without knowing which database or table holds the relevant data. Such requests may be ambiguous, and users may ask follow-up questions to deepen their analysis or iteratively refine existing charts. A useful assistant must therefore discover relevant data sources among heterogeneous databases, ask clarifying questions when needed, and track evolving user intent while preserving constraints established in earlier turns. Yet recent text-to-visualization agents typically rely on static agent harnesses that are predefined and remain unchanged despite recurring failures across tasks. To address this limitation, we introduce RSIV-Harness, which keeps the language model weights fixed and applies Recursive Self-Improvement to revise the surrounding harness from the agent's own failure traces. To balance flexible self-improvement with stability, we introduce a four-layer framework that evaluates proposed harness revisions through anchor and memory checks, refining those that pass and restoring the best validated harness otherwise. We further introduce ODAC-Vis, a benchmark with 640 tasks for Open-Domain, Ambiguous, and Conversational text-to-visualization that jointly evaluates open-domain data discovery, ambiguity resolution, multi-turn visualization refinement, and executable chart generation. Experiments show that a single round of RSIV-Harness improves all six evaluation metrics relative to the seed harness, with particularly large gains in executability (+28.02 points) and chart structure (+34.01 points), demonstrating the ability to learn from task-solving experience and turn recurring failures across tasks into substantial performance improvements.",
+      "authors": [
+        "Jiawei Lu",
+        "Chen Zhang",
+        "Jinwei Lu",
+        "Yuanwei Song",
+        "Yuanfeng Song",
+        "Raymond Chi-Wing Wong"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-10-26T12:16:14+00:00",
+      "link": "https://arxiv.org/pdf/2610.35316v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "recursive self-improvement harness for agents",
+      "llm_evidence_cn": "面向智能体的递归自我改进框架",
+      "llm_evidence": "面向智能体的递归自我改进框架",
+      "canonical_evidence": "面向智能体的递归自我改进框架",
+      "llm_tldr_en": "Static agent harnesses fail to adapt in conversational text-to-visualization. RSIV-Harness is a recursive self-improvement framework that keeps LM weights fixed and revises the harness from recurring failures, improving ambiguous multi-turn visualization requests.",
+      "llm_tldr_cn": "针对开放域对话式文本到可视化任务中智能体框架静态不变、难以从重复失败中学习的问题，本文提出RSIV-Harness递归自我改进框架。该方法保持语言模型权重固定，通过递归改进智能体框架来适应模糊查询、多轮追问与异构数据源发现。实验表明该框架能提升多轮交互下的图表生成与约束保持能力，为智能体级自我改进提供了可复用方案。",
+      "llm_tldr": "针对开放域对话式文本到可视化任务中智能体框架静态不变、难以从重复失败中学习的问题，本文提出RSIV-Harness递归自我改进框架。该方法保持语言模型权重固定，通过递归改进智能体框架来适应模糊查询、多轮追问与异构数据源发现。实验表明该框架能提升多轮交互下的图表生成与约束保持能力，为智能体级自我改进提供了可复用方案。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2610.37276v1",
+      "source": "arxiv",
+      "title": "Where Should the Evaluation Budget Go in LLM-Driven Agent Scaffold Evolution?",
+      "abstract": "Large language model (LLM)-driven agent scaffold evolution improves agent workflows through iterative candidate generation and evaluation. Evaluation both guides subsequent search and determines the final scaffold, but evaluating every candidate on the full task set incurs substantial execution costs. We investigate how evaluation budgets can be allocated across these two roles. Our experiments show that sparse feedback can sustain productive evolution, while additional targeted evaluation improves final selection. Replay analyses further show that shared informative items and a common scoring reference support comparisons among closely matched candidates. Motivated by these findings, we propose \\method, an evaluation allocation framework that combines sparse search-time feedback with targeted final confirmation. A short fully evaluated warm-up establishes a shared informative core and calibrates a response model whose item parameters remain fixed during search. After search, \\method refits the model and applies paired successive halving, reusing accumulated observations and executing only missing evaluations. Across four benchmarks and two evolution frameworks, \\method achieves higher mean performance than full evaluation in most settings while using approximately half as many evaluation cells.",
+      "authors": [
+        "Sichun Luo",
+        "Yi Huang",
+        "Mukai Li",
+        "Haochen Luo",
+        "Guanzhi Deng",
+        "Haibo Wang",
+        "Jian Xu",
+        "Zefa Hu",
+        "Junlan Feng",
+        "Qi Liu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CL",
+        "cs.NE"
+      ],
+      "published": "2026-10-27T14:06:26+00:00",
+      "link": "https://arxiv.org/pdf/2610.37276v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "evaluation budget allocation in agent scaffold evolution",
+      "llm_evidence_cn": "智能体脚手架演化中的评估预算分配",
+      "llm_evidence": "智能体脚手架演化中的评估预算分配",
+      "canonical_evidence": "智能体脚手架演化中的评估预算分配",
+      "llm_tldr_en": "LLM-driven agent scaffold evolution needs costly evaluation of candidates. The paper studies allocating evaluation budgets between guiding search and final selection, proposing an allocation framework.",
+      "llm_tldr_cn": "针对LLM驱动的智能体脚手架演化需对候选逐一评估、在完整任务集上评估成本高昂的问题，本文研究评估预算如何在引导搜索与最终选择两种角色间分配。实验表明稀疏反馈即可维持有效演化，而针对性追加评估能改进最终选择，回放分析还揭示共享信息项与统一评分参照有助于比较接近的候选。作者据此提出评估分配框架，为高效智能体自我演化提供成本控制策略。",
+      "llm_tldr": "针对LLM驱动的智能体脚手架演化需对候选逐一评估、在完整任务集上评估成本高昂的问题，本文研究评估预算如何在引导搜索与最终选择两种角色间分配。实验表明稀疏反馈即可维持有效演化，而针对性追加评估能改进最终选择，回放分析还揭示共享信息项与统一评分参照有助于比较接近的候选。作者据此提出评估分配框架，为高效智能体自我演化提供成本控制策略。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "What are the evaluations of computational costs, efficiency, and overall performance of recursive self improving AI systems?",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2610.35604v1",
+      "source": "arxiv",
+      "title": "RoboDoctor: Training-Free Recursive Self-Improvement for Robot Policies",
+      "abstract": "Generalist robot policies and language-model agents provide complementary capabilities, but completing a task also requires adapting their use to the consequences of physical interaction. We study execution as a locus of adaptation: feedback guides the current action and supplies evidence for revising subsequent decisions under fixed model weights. We introduce RoboDoctor, a training-free framework that connects diagnosis, grounded action, and persistent experience across three revision targets. The harness allocates control between policy and agent; intervention determines when to assist while preserving useful policy behavior; and operation refines physical methods through observed effects. Linked experience records retain the reason for a decision, the attempted method, its outcome, and conditions for reuse. On a curated archive of 54 RoboDojo-Sim task entries, RoboDoctor achieves a five-dimension mean score of 57.10, with a native success rate of 49.44%. Recorded interactions illustrate strategy changes, selective correction, and grasp revision. These findings characterize execution-time adaptation in the evaluated system; controlled trials remain necessary to isolate the contribution of cross-episode experience.",
+      "authors": [
+        "Heyang Yu",
+        "Haomin Li",
+        "Sihang Li",
+        "Jixin Yan",
+        "Shiyun Peng",
+        "Wanqi Zhong",
+        "Tianyu Xin",
+        "Yuan Yao",
+        "Xiaoyu Tian",
+        "Yiming Li"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.CV"
+      ],
+      "published": "2026-10-26T15:27:20+00:00",
+      "link": "https://arxiv.org/pdf/2610.35604v1",
+      "tags": [
+        "keyword:self-improve",
+        "query:self-improve"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "training-free recursive self-improvement for robot policies",
+      "llm_evidence_cn": "机器人策略的免训练递归自我改进",
+      "llm_evidence": "机器人策略的免训练递归自我改进",
+      "canonical_evidence": "机器人策略的免训练递归自我改进",
+      "llm_tldr_en": "RoboDoctor is a training-free framework that recursively improves robot policies by linking diagnosis, grounded action, and persistent experience under fixed model weights.",
+      "llm_tldr_cn": "通用机器人策略与语言模型智能体能力互补，但完成任务仍需根据物理交互后果调整其使用方式。作者提出RoboDoctor，一个免训练框架，把诊断、落地动作与持久经验串联起来，在固定模型权重下实现递归自我改进。该框架通过分配策略与智能体的控制权、决定干预时机，并依据观测效果修正物理方法。经验记录保留决策理由，使机器人在执行中持续自我修正。",
+      "llm_tldr": "通用机器人策略与语言模型智能体能力互补，但完成任务仍需根据物理交互后果调整其使用方式。作者提出RoboDoctor，一个免训练框架，把诊断、落地动作与持久经验串联起来，在固定模型权重下实现递归自我改进。该框架通过分配策略与智能体的控制权、决定干预时机，并依据观测效果修正物理方法。经验记录保留决策理由，使机器人在执行中持续自我修正。",
+      "llm_tags": [
+        "query:self-improve"
+      ],
+      "matched_query_tag": "query:self-improve",
+      "matched_query_text": "recursive self-improvement of artificial intelligence systems",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    }
+  ]
+}
