@@ -1,0 +1,57 @@
+{
+  "date": "20261103",
+  "date_label": "",
+  "generated_at": "2026-11-03 02:10:51 UTC",
+  "recommend_exists": true,
+  "run_count": 1,
+  "papers": [
+    {
+      "paper_id": "2610.37651v1",
+      "route": "202611/03/2610.37651v1-gepa-curator-curated-learning-for-self-improving-agents",
+      "title": "GEPA-Curator: Curated Learning for Self Improving Agents",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "通过筛选经验实现自我改进智能体的框架",
+      "first_seen_at": "2026-11-03 02:10:51 UTC",
+      "updated_at": "2026-11-03 02:10:51 UTC"
+    },
+    {
+      "paper_id": "2610.38392v1",
+      "route": "202611/03/2610.38392v1-masked-erosion-how-acceptance-gates-lose-redundant-safeguards-in-self-improving-agents",
+      "title": "Masked Erosion: How Acceptance Gates Lose Redundant Safeguards in Self-Improving Agents",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "分析自我改进智能体验收门控与冗余防护的侵蚀",
+      "first_seen_at": "2026-11-03 02:10:51 UTC",
+      "updated_at": "2026-11-03 02:10:51 UTC"
+    },
+    {
+      "paper_id": "2610.39508v1",
+      "route": "202611/03/2610.39508v1-compile-away-uncertainty-self-evolving-agent-skills-via-programmatic-compilation",
+      "title": "Compile Away Uncertainty: Self-Evolving Agent Skills via Programmatic Compilation",
+      "section": "deep",
+      "tags": [
+        {
+          "kind": "query",
+          "label": "self-improve"
+        }
+      ],
+      "score": 8.0,
+      "evidence": "自我演化智能体技能积累并精炼可复用知识",
+      "first_seen_at": "2026-11-03 02:10:51 UTC",
+      "updated_at": "2026-11-03 02:10:51 UTC"
+    }
+  ]
+}

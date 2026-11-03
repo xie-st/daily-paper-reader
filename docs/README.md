@@ -48,17 +48,17 @@
 <section class="dpr-home-dashboard-card dpr-home-report-card">
   <div class="dpr-home-dashboard-header">
     <div>
-      <span class="dpr-home-dashboard-kicker">2026-11-01</span>
+      <span class="dpr-home-dashboard-kicker">2026-11-03</span>
       <h3 class="dpr-home-dashboard-title">今日汇总</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">共 19 篇</strong>
+    <strong class="dpr-home-dashboard-count">共 3 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
     <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>8</dd></div>
-    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>11</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>3</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>0</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-11-01 22:27:09 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-11-03 02:10:51 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,9 +69,9 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今天筛选了19篇AI论文，其中8篇精读，重点关注AI智能体的自我改进。</p>
-<p>最值得关注的是两篇满分论文：一篇讲用于研究的自我改进AI智能体Infinity Machine，另一篇系统梳理物理AI递归自我改进的机制、证据与评估；速读中，自适应推理和具身智能体主动探索也值得关注。</p>
-<p>建议普通读者优先从“AI如何自我改进”入手，理解递归改进的证据与风险，再按兴趣看具体应用。</p>
+<p>今日成功完成 3 篇精读，主题集中在自我改进智能体：既关注其学习策展，也关注安全护栏失效，两篇核心文献均获 8.0 分。</p>
+<p>最值得看的是两个方向：GEPA-Curator 如何通过“策展式学习”让智能体自我提升，以及验收门（acceptance gates）为何会侵蚀冗余防护，使自我改进智能体失去多层保障。</p>
+<p>普通读者可先读这两篇的摘要与失败案例，再思考在自己的智能体流程中，冗余安全检查和独立复核是否会被“一次通过”逐步削弱。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
@@ -80,12 +80,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">精读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">8 篇</strong>
+    <strong class="dpr-home-dashboard-count">3 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="Infinity Machine: a self-improving AI agent for research">Infinity Machine: a self-improving AI agent for research</span></li><li><span class="dpr-home-dashboard-paper-title" title="Recursive Self-Improvement in Physical AI: Mechanisms, Evidence, and Evaluation">Recursive Self-Improvement in Physical AI: Mechanisms, Evidence, and Evaluation</span></li><li><span class="dpr-home-dashboard-paper-title" title="The View from Nowhere: Population-Centered Agent Evolution">The View from Nowhere: Population-Centered Agent Evolution</span></li></ul>
+<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="GEPA-Curator: Curated Learning for Self Improving Agents">GEPA-Curator: Curated Learning for Self Improving Agents</span></li><li><span class="dpr-home-dashboard-paper-title" title="Masked Erosion: How Acceptance Gates Lose Redundant Safeguards in Self-Improving Agents">Masked Erosion: How Acceptance Gates Lose Redundant Safeguards in Self-Improving Agents</span></li><li><span class="dpr-home-dashboard-paper-title" title="Compile Away Uncertainty: Self-Evolving Agent Skills via Programmatic Compilation">Compile Away Uncertainty: Self-Evolving Agent Skills via Programmatic Compilation</span></li></ul>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">self-improve <strong>8</strong></span></div>
+  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">self-improve <strong>3</strong></span></div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-skim-card">
   <div class="dpr-home-dashboard-header">
@@ -93,12 +93,12 @@
       <span class="dpr-home-dashboard-kicker">今日累计</span>
       <h3 class="dpr-home-dashboard-title">速读推荐</h3>
     </div>
-    <strong class="dpr-home-dashboard-count">11 篇</strong>
+    <strong class="dpr-home-dashboard-count">0 篇</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<ul class="dpr-home-dashboard-paper-list"><li><span class="dpr-home-dashboard-paper-title" title="More: Mode-Optimized Reasoning with Self-Adaptive Effort for Self-Evolving Agents">More: Mode-Optimized Reasoning with Self-Adaptive Effort for Self-Evolving Agents</span></li><li><span class="dpr-home-dashboard-paper-title" title="Reactive Optimizers">Reactive Optimizers</span></li><li><span class="dpr-home-dashboard-paper-title" title="VISTA: Active Exploration for Self-Improvement in Embodied Agents">VISTA: Active Exploration for Self-Improvement in Embodied Agents</span></li></ul>
+<p class="dpr-home-dashboard-empty">今日暂无推荐。</p>
   </div>
-  <div class="dpr-home-dashboard-tags"><span class="dpr-home-dashboard-tag">self-improve <strong>11</strong></span></div>
+
 </section>
 </div>
 
