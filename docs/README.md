@@ -54,11 +54,11 @@
     <strong class="dpr-home-dashboard-count">共 3 篇</strong>
   </div>
   <dl class="dpr-home-dashboard-stats">
-    <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>1 次</dd></div>
+    <div class="dpr-home-dashboard-stat"><dt>累计更新</dt><dd>2 次</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>精读</dt><dd>3</dd></div>
     <div class="dpr-home-dashboard-stat"><dt>速读</dt><dd>0</dd></div>
   </dl>
-  <p class="dpr-home-dashboard-body">最近更新：2026-11-03 02:10:51 UTC<br>状态：成功</p>
+  <p class="dpr-home-dashboard-body">最近更新：2026-11-03 23:40:56 UTC<br>状态：成功</p>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-brief-card">
   <div class="dpr-home-dashboard-header">
@@ -69,9 +69,7 @@
     <strong class="dpr-home-dashboard-count">AI</strong>
   </div>
   <div class="dpr-home-dashboard-body">
-<p>今日成功完成 3 篇精读，主题集中在自我改进智能体：既关注其学习策展，也关注安全护栏失效，两篇核心文献均获 8.0 分。</p>
-<p>最值得看的是两个方向：GEPA-Curator 如何通过“策展式学习”让智能体自我提升，以及验收门（acceptance gates）为何会侵蚀冗余防护，使自我改进智能体失去多层保障。</p>
-<p>普通读者可先读这两篇的摘要与失败案例，再思考在自己的智能体流程中，冗余安全检查和独立复核是否会被“一次通过”逐步削弱。</p>
+<p>今天精读3篇自改进智能体论文，其中两篇8.0分聚焦“策展式学习”与“安全护栏失效”，主题集中且值得关注。最值得看的是 GEPA-Curator 如何用策展提升自改进效果，以及 Masked Erosion 揭示验收门为何会丢失冗余保障。普通读者可优先读这两篇，重点留意自改进系统的学习筛选机制和安全冗余是否真的可靠。</p>
   </div>
 </section>
 <section class="dpr-home-dashboard-card dpr-home-deep-card">
